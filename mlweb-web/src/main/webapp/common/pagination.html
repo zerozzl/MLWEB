@@ -1,0 +1,105 @@
+<style>
+.paging {
+	padding: 10px;
+	text-align: right;
+}
+
+.paging .operator .pg {
+	margin: 0px -1px 0px 0px;
+	padding: 6px 12px;
+	color: #337ab7;
+	text-decoration: none;
+	background-color: #ffffff;
+	border: 1px solid #dddddd;
+}
+
+.paging .operator .pg:hover {
+	color: #23527c;
+	background-color: #eeeeee;
+}
+
+.paging .operator .previous {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.paging .operator .next {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.paging .operator .active {
+	border: 1px solid #337ab7;
+	background-color: #337ab7;
+	color: #ffffff;
+}
+
+.paging .operator .active:hover {
+	background-color: #337ab7;
+	color: #ffffff;
+	cursor: default;
+}
+
+.paging .operator .disabled {
+	color: #333333;
+	cursor: default;
+}
+
+.paging .operator .disabled:hover {
+	background-color: #ffffff;
+}
+
+.paging .operator .separt {
+	padding: 0px 5px;
+}
+</style>
+
+<script>
+function init_pagination(empty, pageCount, pagesDisplayed, currentPage, backPage, fwdPage, click_func) {
+	var paging = $(".paging"), operator = paging.find(".operator");
+	operator.html("");
+	if(empty == true ||　parseInt(pageCount) <= 1) {
+		paging.hide();
+	} else {
+		if(parseInt(currentPage) == 1) {
+			operator.append("<a class='pg previous disabled' page='" + backPage + "'>«</a>");
+		} else {
+			operator.append("<a class='pg previous' page='" + backPage + "' onclick='" + click_func + "(" + backPage + ");'>«</a>");
+		}
+		
+		if(parseInt(pagesDisplayed[0]) > 1) {
+			operator.append("<a class='pg' page='1' onclick='" + click_func + "(1);'>1</a>");
+		}
+		if(parseInt(pagesDisplayed[0]) > 2) {
+			operator.append("<span class='separt'>...</span>");
+		}
+		
+		for(var i = 0; i < pagesDisplayed.length; i++) {
+			var p = parseInt(pagesDisplayed[i]);
+			if(p == parseInt(currentPage)) {
+				operator.append("<a class='pg active'>" + p + "</a>");
+			} else {
+				operator.append("<a class='pg' page='" + p + "' onclick='" + click_func + "(" + p + ");'>" + p + "</a>");
+			}
+		}
+		
+		if(parseInt(pagesDisplayed[pagesDisplayed.length - 1]) < parseInt(pageCount) - 1) {
+			operator.append("<span class='separt'>...</span>");
+		}
+		if(parseInt(pagesDisplayed[pagesDisplayed.length - 1]) < parseInt(pageCount)) {
+			operator.append("<a class='pg' page='" + pageCount + "' onclick='" + click_func + "(" + pageCount + ");'>" + pageCount + "</a>");
+		}
+		
+		if(parseInt(currentPage) == parseInt(pageCount)) {
+			operator.append("<a class='pg next disabled' page='" + fwdPage + "'>»</a>");
+		} else {
+			operator.append("<a class='pg next' page='" + fwdPage + "' onclick='" + click_func + "(" + fwdPage + ");'>»</a>");
+		}
+		paging.show();
+	}
+}
+</script>
+
+<div class="paging">
+	<div class="operator"></div>
+</div>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+		"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.action.extension" value="action" />
+	<constant name="struts.multipart.maxSize" value="524288000" />
+
+	<package name="base" namespace="/" extends="json-default">
+		<global-results>
+			<result name="401">/sys/404.html</result>
+			<result name="404">/sys/404.html</result>
+			<result name="ajaxInvoSuccess" type="json">
+				<param name="includeProperties">ajaxObj.*</param>
+			</result>
+			<result name="getImageSuccess" type="stream">
+	            <param name="inputName">imageStream</param>
+	        </result>
+		</global-results>
+	</package>
+
+	<package name="authenticate" namespace="/" extends="base">
+	
+		<action name="adLogin" class="authenticateAction" method="adminLogin" />
+		
+		<action name="adLogout" class="authenticateAction" method="adminLogout">
+			<result name="logout" type="redirect">/ad_login.html</result>
+		</action>
+		
+		<action name="checkLogin" class="authenticateAction" method="checkLogin" />
+		
+		<action name="checkVisitor" class="authenticateAction" method="checkVisitor" />
+		
+	</package>
+
+	<package name="user" namespace="/" extends="base">
+	
+		<!-- 用户展示 -->
+	
+		<action name="uploadImage" class="showcaseAction" method="uploadImage" />
+		
+		<action name="getUploadImage" class="showcaseAction" method="getUploadImage" />
+	    
+		<action name="detectImage" class="showcaseAction" method="detectImage" />
+		
+		<action name="getDetectionImage" class="showcaseAction" method="getDetectionImage" />
+	    
+	    <!-- 访客意见 -->
+	    
+		<action name="uploadImageOfOpinion" class="visitorOpinionAction" method="uploadImage" />
+		
+		<action name="getImageOfOpinion" class="visitorOpinionAction" method="getUploadImage" />
+	    
+		<action name="submitOpinion" class="visitorOpinionAction" method="submitOpinion" />
+		
+	</package>
+
+	<package name="admin" namespace="/admin" extends="base">
+
+		<interceptors>
+			<interceptor name="adminInterceptor" class="com.zerozzl.mlweb.web.interceptor.AdminInterceptor" />
+			<interceptor-stack name="adminInterceptorStack">
+				<interceptor-ref name="adminInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="adminInterceptorStack" />
+
+		<action name="adIndex">
+			<result type="redirect">/admin/index.html</result>
+		</action>
+		
+		<action name="initNavLeft" class="adminAction" method="initNavLeft" />
+		
+		<!-- 用户意见 -->
+		
+		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
+		
+		<action name="readVisitorOpinion" class="adVisitorOpinionAction" method="readOpinion" />
+
+		<action name="getImageOfVisitorOpinion" class="adVisitorOpinionAction" method="getImageOfOpinion" />
+	    
+		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
+		
+		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
+	    
+	    
+	    
+	    
+	    
+	    
+	    <action name="test" class="adminAction" method="test" />
+	    
+	</package>
+
+</struts>

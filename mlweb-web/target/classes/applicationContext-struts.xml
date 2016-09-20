@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="authenticateAction" class="com.zerozzl.mlweb.web.action.AuthenticateAction" scope="prototype">
+		<property name="userService" ref="userService" />
+		<property name="visitorService" ref="visitorService" />
+	</bean>
+	
+	<bean id="showcaseAction" class="com.zerozzl.mlweb.web.action.visitor.ShowcaseAction" scope="prototype">
+		<property name="detectionRecordService" ref="detectionRecordService" />
+	</bean>
+	
+	<bean id="visitorOpinionAction" class="com.zerozzl.mlweb.web.action.visitor.VisitorOpinionAction" scope="prototype">
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
+	</bean>
+	
+	<bean id="adminAction" class="com.zerozzl.mlweb.web.action.admin.AdminAction" scope="prototype">
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
+	</bean>
+	
+	<bean id="adVisitorOpinionAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorOpinionAction" scope="prototype">
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
+	</bean>
+
+</beans>

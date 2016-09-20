@@ -1,0 +1,121 @@
+
+<style>
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.msg-container {
+	padding: 0px 5px;
+}
+
+.loading-container {
+	text-align: center;
+}
+
+.placeholders {
+  margin-bottom: 30px;
+}
+
+.placeholders h4 {
+  margin-bottom: 0;
+}
+
+.placeholder {
+  margin-bottom: 20px;
+}
+
+#visitor-opinion-container>table {
+	display: none;
+}
+</style>
+
+<script>
+function init_dashboard() {
+	init_visitor_opinion();
+	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
+}
+
+function init_visitor_opinion() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "findUnreadVisitorOpinions.action",
+		success : function(data, textStatus) {
+			var container = $("#visitor-opinion-container"), opinions = data.ajaxObj.opinions;
+			if (opinions.length > 0) {
+				container.find(".msg-container").remove();
+				var table = container.find("table");
+				table.show();
+				for(var i = 0; i < opinions.length; i++) {
+					var item = opinions[i], image = "";
+					if(item.includePic == "1") {
+						image = "<i class='icon icon-blue icon-image'></i>";
+					}
+					var tr = "<tr><td>" + (i+1) + "</td><td><a class='font-blod' uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a></td><td>" + image
+							+ "</td><td>" + item.creationDateS + "</td><td><a visitorid='" + item.visitorId + "'>" + item.visitorId + "</a></td></tr>";
+					table.append(tr);
+				}
+			} else {
+				container.find(".msg-container").html("<p class='help-block'>暂无未读访客评价</p>");
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#visitor-opinion-container").find(".msg-container").html(ERROR_MSG);
+		}
+	});
+}
+
+</script>
+
+<h2 class="page-header">Dashboard</h2>
+
+<div class="row placeholders">
+	<div class="col-xs-6 col-sm-3 placeholder">
+		<h4>Label</h4>
+		<img src="../images/sys/not_found_image.jpg">
+		<!-- <span class="text-muted">Something else</span> -->
+	</div>
+	<div class="col-xs-6 col-sm-3 placeholder">
+		<h4>Label</h4>
+		<span class="text-muted">Something else</span>
+		<img src="../images/sys/not_found_image.jpg">
+	</div>
+	<div class="col-xs-6 col-sm-3 placeholder">
+		<h4>Label</h4>
+		<img src="../images/sys/not_found_image.jpg">
+		<span class="text-muted">Something else</span>
+	</div>
+	<div class="col-xs-6 col-sm-3 placeholder">
+		<img src="../images/sys/not_found_image.jpg">
+		<h4>Label</h4>
+		<span class="text-muted">Something else</span>
+	</div>
+</div>
+
+<!-- 访客意见 -->
+<h3 class="sub-header font-blod">访客意见</h3>
+<div id="visitor-opinion-container" class="table-responsive">
+	<div class="msg-container">
+		<div class="loading-container">
+			<img src="../images/sys/loading_l.gif" />
+		</div>
+	</div>
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th width="5%">序号</th>
+				<th>标题</th>
+				<th width="5%">图片</th>
+				<th width="13%">提交日期</th>
+				<th width="20%">访客ID</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+
+<div id="visitor-opinion-dialog-container"></div>

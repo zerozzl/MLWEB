@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="hog" class="com.zerozzl.mlweb.opencv.HOG" />
+	
+	<bean id="openCVService" class="com.zerozzl.mlweb.service.impl.OpenCVServiceImpl">
+		<property name="hog" ref="hog" />
+	</bean>
+            
+	<bean id="userService" class="com.zerozzl.mlweb.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+	</bean>
+	
+	<bean id="visitorService" class="com.zerozzl.mlweb.service.impl.VisitorServiceImpl">
+		<property name="ipInfoUrl" value="${ipinfo.sina}" />
+		<property name="useProxy" value="${ipinfo.proxy.use}" />
+		<property name="visitorDao" ref="visitorDao" />
+	</bean>
+            
+	<bean id="visitorOpinionService" class="com.zerozzl.mlweb.service.impl.VisitorOpinionServiceImpl">
+		<property name="visitorOpinionDao" ref="visitorOpinionDao" />
+	</bean>
+	
+	<bean id="detectionRecordService" class="com.zerozzl.mlweb.service.impl.DetectionRecordServiceImpl">
+		<property name="detectionRecordDao" ref="detectionRecordDao" />
+		<property name="openCVService" ref="openCVService" />
+	</bean>
+	
+</beans>

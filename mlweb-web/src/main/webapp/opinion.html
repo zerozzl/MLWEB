@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="images/sys/favicon.ico">
+<title>MLWEB意见反馈</title>
+<link href="bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/visitor/opinion.css" rel="stylesheet">
+<link href="css/icons.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="bootstrap/support/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="bootstrap/support/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body onload="init_opinion();">
+
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar"
+					aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">切换导航</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html">
+					<img src="images/sys/logo_web.png" height="20" />
+				</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav nav-pills navbar-right">
+					<li role="presentation">
+						<button onclick="return_index();">返回首页</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Begin page content -->
+	<div class="container">
+		<div class="row">
+		  <div class="col-md-6 col-md-offset-3">
+		  	<div class="panel panel-black">
+		  		<div class="panel-heading">
+		  			<h3 class="panel-title">意见反馈</h3>
+		  		</div>
+		  		<div class="panel-body">
+				  	<form id="image-form">
+						<div class="form-group">
+							<label for="upload-image">图片</label>
+							<input type="file" id="upload-image" name="upimage">
+							<div class="align-center">
+								<canvas id="image-canvas" onclick="upload();"></canvas>
+								<div id="image-loading"><img src="images/sys/loading_l.gif" /></div>
+								<p id="help-msg" class="help-block">请把检测失败的图片上传，吐槽作者</p>
+							</div>
+						</div>
+					</form>
+					<form id="opinion-form">
+						<input type="hidden" id="input-image" name="inimage" />
+				  		<div class="form-group">
+				  			<label for="input-title">标题</label>
+				  			<input type="text" class="form-control" id="input-title" name="intitle">
+						</div>
+						<div class="form-group">
+							<label for="input-opinion">意见反馈</label>
+							<textarea class="form-control" rows="5" id="input-opinion" name="inopinion"></textarea>
+							<div id="alert-opinion" class="alert alert-danger">
+								<i class="icon icon-orange icon-alert"></i>请提出您宝贵的意见
+							</div>
+						</div>
+					</form>
+					<button id="submit-but" class="btn btn-primary" onclick="submit();">提交意见</button>
+				</div>
+			</div>
+		  </div>
+		</div>
+	</div>
+
+	<div id="dialog-msg-container"></div>
+
+	<div class="hidden-xs">
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">机器学习算法展示&nbsp;&nbsp;|&nbsp;&nbsp;仅供学习研究使用&nbsp;&nbsp;|&nbsp;&nbsp;作者：ZEROZZL</p>
+			</div>
+		</footer>
+	</div>
+
+	<!-- ================================================== -->
+	<script src="js/jquery/jquery-1.11.3.min.js"></script>
+	<script src="bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="js/visitor/opinion.js"></script>
+	<script src="bootstrap/support/assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

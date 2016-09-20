@@ -1,0 +1,96 @@
+<style>
+#visitor-opinion-dialog-body .info div {
+	margin: 0px 0px 13px 0px;
+	padding: 6px 12px;
+	max-height: 200px;
+	color: #555555;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	word-break: break-all;
+	overflow-x: none;
+	overflow-y: auto;
+}
+
+#visitor-opinion-dialog-body img {
+	max-width: 250px;
+	max-height: 250px;
+}
+</style>
+
+<script>
+
+function show_visitor_opinion(item) {
+	var container = $("#visitor-opinion-dialog-body"),
+			msg = container.find(".msg").hide(),
+			info = container.find(".info").hide();
+	item = $(item);
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "readVisitorOpinion.action",
+		data : "id=" + item.attr("uuid"),
+		success : function(data, textStatus) {
+			if (data.ajaxObj.flag == 1) {
+				var opinion = data.ajaxObj.opinion;
+				if(opinion.includePic == "1") {
+					$("#visitor-opinion-dialog-body-pic").html("<img src='getImageOfVisitorOpinion.action?uuid=" + opinion.DBID + "'>");
+				} else {
+					$("#visitor-opinion-dialog-body-pic").html("无");
+				}
+				$("#visitor-opinion-dialog-body-visitorid").html("<a>" + opinion.visitorId + "</a>");
+				$("#visitor-opinion-dialog-body-createdate").html(opinion.creationDateS);
+				$("#visitor-opinion-dialog-body-title").html(opinion.title);
+				$("#visitor-opinion-dialog-body-content").html(opinion.content);
+				info.show();
+				item.removeClass("font-blod");
+			} else {
+				msg.html("<div class='alert alert-warning'><i class='icon icon-orange icon-alert'></i>没有相关记录</div>");
+				msg.show();
+			}
+			$("#visitor-opinion-dialog").modal("show");
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg.html(ERROR_MSG);
+			msg.show();
+			$("#visitor-opinion-dialog").modal("show");
+		}
+	});
+}
+</script>
+
+<div class="modal fade" id="visitor-opinion-dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">访客意见</h4>
+			</div>
+			<div class="modal-body" id="visitor-opinion-dialog-body">
+				<div class="msg"></div>
+				<div class="info">
+		  			<label for="visitor-opinion-dialog-body-pic">图片</label>
+		  			<p id="visitor-opinion-dialog-body-pic"></p>
+		  			<label for="visitor-opinion-dialog-body-visitorid">访客ID</label>
+		  			<div id="visitor-opinion-dialog-body-visitorid"></div>
+		  			<label for="visitor-opinion-dialog-body-createdate">提交时间</label>
+		  			<div id="visitor-opinion-dialog-body-createdate"></div>
+		  			<label for="visitor-opinion-dialog-body-title">标题</label>
+		  			<div id="visitor-opinion-dialog-body-title"></div>
+					<label for="visitor-opinion-dialog-body-content">意见反馈</label>
+					<div id="visitor-opinion-dialog-body-content"></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>

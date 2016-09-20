@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="images/sys/favicon.ico">
+<title>MLWEB管理员登陆</title>
+<link href="bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/admin/signin.css" rel="stylesheet">
+<link href="css/icons.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="bootstrap/support/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="bootstrap/support/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+	<div class="container">
+		<div class="login-logo">
+			<img src="images/sys/logo_ai.png" />
+		</div>
+		<form id="login-form" class="form-signin">
+			<div id="signin-response" class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" aria-label="Close" onclick="close_msg();">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<span class='icon icon-red icon-info'></span>
+				<span class="sr-only">错误:</span>
+				<span id="signin-msg"></span>
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon"><i class='icon icon-user'></i></span>
+				<label for="inemail" class="sr-only">账号</label>
+				<input type="text" id="inemail" name="inemail"
+						class="form-control" placeholder="账号" autofocus>
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon"><i class='icon icon-key'></i></span>
+				<label for="inpassword" class="sr-only">密码</label>
+				<input type="password" id="inpassword" name="inpassword"
+						class="form-control" placeholder="密码">
+			</div>
+			<input type="button" id="submit-but" class="btn btn-lg btn-success btn-block" onclick="login();" value="登录">
+		</form>
+	</div>
+
+	<!-- ================================================== -->
+	<script src="js/jquery/jquery-1.11.3.min.js"></script>
+	<script src="bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="js/admin/login.js"></script>
+	<script src="bootstrap/support/assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<script>
+function init_dialog_msg() {
+	var len = arguments.length;
+	if(len == 3) {
+		if(typeof(arguments[2]) == "string") {
+			_init_dialog_msg(arguments[0], arguments[1], arguments[2], null, null);
+		} else {
+			_init_dialog_msg(arguments[0], null, arguments[1], arguments[2], null);
+		}
+	} else if(len == 4) {
+		if(typeof(arguments[2]) == "string") {
+			_init_dialog_msg(arguments[0], arguments[1], arguments[2], arguments[3], null);
+		} else {
+			_init_dialog_msg(arguments[0], null, arguments[1], arguments[2], arguments[3]);
+		}
+	} else if(len == 5) {
+		_init_dialog_msg(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+	}
+}
+
+function _init_dialog_msg(type, title_val, body_val, btn_vals, btn_funcs) {
+	var dialog = $("#dialog-msg"),
+			title = $("#dialog-msg-title"),
+			body = $("#dialog-msg-body"),
+			footer = dialog.find(".modal-footer"),
+			btn_def = dialog.find(".btn-default"),
+			btn_pri = dialog.find(".btn-primary"),
+			btn_dan = dialog.find(".btn-danger");
+	if(typeof (title_val) != "undefined" &&　title_val != null
+			&& title_val.length > 0) {
+		title.html(title_val);
+	} else {
+		title.html("系统提示");
+	}
+	
+	if(typeof(body_val) != "undefined" &&　body_val != null
+			&& body_val.length > 0) {
+		body.html(body_val);
+	} else {
+		body.html("");
+	}
+	
+	if(type == 0) {
+		footer.hide();
+		btn_def.hide();
+		btn_pri.hide();
+		btn_dan.hide();
+	} else if(type == 1) {
+		if(typeof (btn_vals) != "undefined" &&　btn_vals != null
+				&& btn_vals.length > 0) {
+			btn_def.html(btn_vals[0]);
+		} else {
+			btn_def.html("取消");
+		}
+		if(typeof (btn_funcs) != "undefined" &&　btn_funcs != null
+				&& btn_funcs.length > 0) {
+			btn_def.attr("onclick", btn_funcs[0]);
+		} else {
+			btn_def.attr("data-dismiss", "modal");
+		}
+		btn_def.show();
+		btn_pri.hide();
+		btn_dan.hide();
+		footer.show();
+	} else if(type == 2) {
+		if(typeof (btn_vals) != "undefined" &&　btn_vals != null
+				&& btn_vals.length > 0) {
+			if(btn_vals.length > 1) {
+				btn_def.html(btn_vals[0]);
+				btn_pri.html(btn_vals[1]);
+			} else {
+				btn_def.html("取消");
+				btn_pri.html(btn_vals[0]);
+			}
+		} else {
+			btn_def.html("取消");
+			btn_pri.html("确认");
+		}
+		if(typeof (btn_funcs) != "undefined" &&　btn_funcs != null
+				&& btn_funcs.length > 0) {
+			if(btn_funcs.length > 1) {
+				btn_def.attr("onclick", btn_funcs[0]);
+				btn_pri.attr("onclick", btn_funcs[1]);
+			} else {
+				btn_def.attr("data-dismiss", "modal");
+				btn_pri.attr("onclick", btn_funcs[0]);
+			}
+		} else {
+			btn_def.attr("data-dismiss", "modal");
+			btn_pri.attr("data-dismiss", "modal");
+		}
+		btn_def.show();
+		btn_pri.show();
+		btn_dan.hide();
+		footer.show();
+	} else if(type == 3) {
+		if(typeof (btn_vals) != "undefined" &&　btn_vals != null
+				&& btn_vals.length > 0) {
+			if(btn_vals.length > 1) {
+				btn_def.html(btn_vals[0]);
+				btn_dan.html(btn_vals[1]);
+			} else {
+				btn_def.html("取消");
+				btn_dan.html(btn_vals[0]);
+			}
+		} else {
+			btn_def.html("取消");
+			btn_dan.html("确认");
+		}
+		if(typeof (btn_funcs) != "undefined" &&　btn_funcs != null
+				&& btn_funcs.length > 0) {
+			if(btn_funcs.length > 1) {
+				btn_def.attr("onclick", btn_funcs[0]);
+				btn_dan.attr("onclick", btn_funcs[1]);
+			} else {
+				btn_def.attr("data-dismiss", "modal");
+				btn_dan.attr("onclick", btn_funcs[0]);
+			}
+		} else {
+			btn_def.attr("data-dismiss", "modal");
+			btn_dan.attr("data-dismiss", "modal");
+		}
+		btn_def.show();
+		btn_pri.hide();
+		btn_dan.show();
+		footer.show();
+	}
+}
+</script>
+
+<div id="dialog-msg" class="modal fade">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 id="dialog-msg-title" class="modal-title"></h4>
+			</div>
+			<div id="dialog-msg-body" class="modal-body"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default"></button>
+				<button type="button" class="btn btn-primary"></button>
+				<button type="button" class="btn btn-danger"></button>
+			</div>
+	    </div>
+	</div>
+</div>
