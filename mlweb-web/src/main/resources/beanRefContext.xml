@@ -15,6 +15,7 @@
 				<value>applicationContext-transaction.xml</value>
 				<value>applicationContext-dao.xml</value>
 				<value>applicationContext-service.xml</value>
+				<value>applicationContext-quartz.xml</value>
 			</list>
 		</constructor-arg>
 	</bean>

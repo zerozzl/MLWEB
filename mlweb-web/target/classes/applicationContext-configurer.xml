@@ -10,8 +10,8 @@
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 			<list>
-				<!-- <value>classpath:config.properties</value> -->
-				<value>classpath:config_csair.properties</value>
+				<value>classpath:config.properties</value>
+				<!-- <value>classpath:config_csair.properties</value> -->
 			</list>
 		</property>
 	</bean>

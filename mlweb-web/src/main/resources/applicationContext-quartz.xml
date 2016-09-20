@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 每小时运行一次，把每日访问人数更新到数据库 -->
+	<!-- JOB -->
+	<bean id="dailyUVCountPersistentJob" class="com.zerozzl.mlweb.quartz.job.DailyUVCountPersistentJob">
+	</bean>
+	<!-- Task -->
+    <bean id="dailyUVCountPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dailyUVCountPersistentJob" />
+        <property name="targetMethod" value="execute" />
+    </bean>
+    <!-- Trigger -->  
+    <bean id="dailyUVCountPersistentTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail" ref="dailyUVCountPersistentTask" />  
+        <property name="cronExpression" value="0 0/1 * * * ?" />  
+    </bean>
+    
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" autowire="no">
+		<property name="waitForJobsToCompleteOnShutdown" value="true" />
+		<property name="triggers">
+			<list>
+				<ref bean="dailyUVCountPersistentTaskCronTrigger" />
+			</list>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.threadCount">1</prop>
+				<prop key="org.quartz.scheduler.threadsInheritContextClassLoaderOfInitializer">true</prop>
+				<!-- <prop key="org.quartz.scheduler.instanceName">scheduler</prop> -->
+				<!-- <prop key="org.quartz.scheduler.wrapJobExecutionInUserTransaction">true</prop> -->
+				<!-- <prop key="org.quartz.scheduler.rmi.export">false</prop> -->
+				<!-- <prop key="org.quartz.scheduler.rmi.proxy">false</prop> -->
+				<!-- <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop> -->
+				<!-- <prop key="org.quartz.threadPool.threadPriority">5</prop> -->
+				<!-- <prop key="org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread">false</prop> -->
+				<!-- <prop key="org.quartz.jobStore.misfireThreshold">60000</prop> -->
+				<!-- <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop> -->
+			</props>
+		</property>
+	</bean>
+
+</beans>

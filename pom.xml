@@ -14,6 +14,7 @@
   	<module>mlweb-persistent</module>
   	<module>mlweb-service</module>
   	<module>mlweb-web</module>
+  	<module>mlweb-quartz</module>
   </modules>
   
   <properties>
@@ -30,6 +31,7 @@
 		<c3p0.version>0.9.5</c3p0.version>
 		<jboss-transaction-api.version>1.0.0.Final</jboss-transaction-api.version>
 		<aspectjweaver.version>1.8.9</aspectjweaver.version>
+		<quartz.version>2.2.1</quartz.version>
 		<commons-validator.version>1.5.1</commons-validator.version>
 		<httpclient.version>4.5.2</httpclient.version>
 		<org-json.version>20160810</org-json.version>
@@ -37,8 +39,8 @@
 		<mysql-connector.version>5.1.39</mysql-connector.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<opencv-api.version>2.4.13</opencv-api.version>
-		<!-- <opencv-api.location>/home/zero/0_worktools/opencv/opencv2_4_13/share/OpenCV/java/opencv-2413.jar</opencv-api.location> -->
-		<opencv-api.location>D:/WorkTools/OpenCV/OpenCV2_4_13/build/java/opencv-2413.jar</opencv-api.location>
+		<opencv-api.location>/home/zero/0_worktools/opencv/opencv2_4_13/share/OpenCV/java/opencv-2413.jar</opencv-api.location>
+		<!-- <opencv-api.location>D:/WorkTools/OpenCV/OpenCV2_4_13/build/java/opencv-2413.jar</opencv-api.location> -->
 	</properties>
 
 	<dependencyManagement>
@@ -124,6 +126,12 @@
 	
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+	
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
@@ -133,7 +141,7 @@
 				<artifactId>spring-orm</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-	
+			
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
@@ -171,7 +179,13 @@
 				<artifactId>aspectjweaver</artifactId>
 				<version>${aspectjweaver.version}</version>
 			</dependency>
-	
+			
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>${quartz.version}</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>commons-validator</groupId>
 				<artifactId>commons-validator</artifactId>
@@ -237,7 +251,6 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-			
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
@@ -246,13 +259,11 @@
 						<target>${jdk.version}</target>
 					</configuration>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
 					<version>${maven-war-plugin.version}</version>
 				</plugin>
-				
 			</plugins>
 		</pluginManagement>
 	</build>

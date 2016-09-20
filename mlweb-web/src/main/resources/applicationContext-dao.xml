@@ -20,5 +20,9 @@
 	<bean id="detectionRecordDao" class="com.zerozzl.mlweb.dao.impl.DetectionRecordDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
+	
+	<bean id="systemVisitsRecordDao" class="com.zerozzl.mlweb.dao.impl.SystemVisitsRecordDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 
 </beans>
