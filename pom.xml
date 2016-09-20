@@ -18,7 +18,6 @@
   
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.packageName>mlweb</project.packageName>
 		<maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
 		<maven-war-plugin.version>2.6</maven-war-plugin.version>
 		<jdk.version>1.8</jdk.version>

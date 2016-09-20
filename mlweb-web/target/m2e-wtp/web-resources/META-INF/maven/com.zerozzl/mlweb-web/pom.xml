@@ -92,8 +92,4 @@
 	
   </dependencies>
   
-  <build>
-  	<finalName>${project.packageName}</finalName>
-  </build>
-  
 </project>
