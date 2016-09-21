@@ -1,5 +1,12 @@
+<script src="../highcharts/4.2.6/highcharts.js"></script>
+<script src="../highcharts/4.2.6/highcharts-more.js"></script>
+<script src="../highcharts/4.2.6/modules/solid-gauge.js"></script>
 
 <style>
+img {
+	margin-top: 50px;
+}
+
 .sub-header {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
@@ -13,16 +20,23 @@
 	text-align: center;
 }
 
-.placeholders {
-  margin-bottom: 30px;
-}
-
 .placeholders h4 {
   margin-bottom: 0;
 }
 
 .placeholder {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+#uv-chart {
+	width: 300px;
+	height: 180px;
+	/* border:1px solid #000; */
+}
+
+#visitor-opinion-count {
+	height: 180px;
+	/* border:1px solid #000; */
 }
 
 #visitor-opinion-container>table {
@@ -33,6 +47,7 @@
 <script>
 function init_dashboard() {
 	init_visitor_opinion();
+	load_uv_info();
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
@@ -69,20 +84,99 @@ function init_visitor_opinion() {
 	});
 }
 
+function load_uv_info() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getUVInfo.action",
+		success : function(data, textStatus) {
+			draw_uv_info(data.ajaxObj);
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#uv-chart").html(ERROR_MSG);
+		}
+	});
+}
+
+function draw_uv_info(data) {
+	$("#uv-chart").highcharts({
+		chart: {
+            type: "solidgauge"
+        },
+        title: null,
+        pane: {
+            center: ["50%", "80%"],
+            size: "160%",
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor: "#eeeeee",
+                innerRadius: "60%",
+                outerRadius: "100%",
+                shape: "arc"
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            max: data.uv,
+            stops: [
+                [1.0, "#428bca"] // red
+            ],
+            lineWidth: 0,
+            minorTickInterval: null,
+            tickPixelInterval: 400,
+            tickWidth: 0,
+            labels: {
+            	enabled: false
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: "访客数",
+            data: [data.online],
+            dataLabels: {
+                format: "<div style='text-align:center'><span style='font-size:25px;color:#333333;'>"
+                		+ data.online + "/" + data.uv
+                		+ "</span><br/><span style='font-size:12px;color:#777777;'>在线人数/总访问量</span></div>"
+            }
+        }]
+    });
+}
+
 </script>
 
 <h2 class="page-header">Dashboard</h2>
 
+<!-- 本日访问情况 -->
+<h3 class="sub-header font-blod">本日访问情况</h3>
 <div class="row placeholders">
 	<div class="col-xs-6 col-sm-3 placeholder">
-		<h4>Label</h4>
-		<img src="../images/sys/not_found_image.jpg">
-		<!-- <span class="text-muted">Something else</span> -->
+		<h4>访客数</h4>
+		<div id="uv-chart"><img src="../images/sys/loading_l.gif" /></div>
 	</div>
 	<div class="col-xs-6 col-sm-3 placeholder">
-		<h4>Label</h4>
-		<span class="text-muted">Something else</span>
-		<img src="../images/sys/not_found_image.jpg">
+		<h4>访客意见</h4>
+		<div id="visitor-opinion-count">
+			<div style="float:left;margin-top:5px;margin-left:10px;font-size:120px;">0</div>
+			<div style="float:left;margin-top:100px;margin-left:10px;font-size:30px;color:#777;">条</div>
+		</div>
 	</div>
 	<div class="col-xs-6 col-sm-3 placeholder">
 		<h4>Label</h4>

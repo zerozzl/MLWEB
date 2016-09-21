@@ -76,6 +76,10 @@
 		
 		<action name="initNavLeft" class="adminAction" method="initNavLeft" />
 		
+		<!-- 控制台 -->
+		
+		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
+		
 		<!-- 用户意见 -->
 		
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
@@ -87,13 +91,6 @@
 		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
 		
 		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
-	    
-	    
-	    
-	    
-	    
-	    
-	    <action name="test" class="adminAction" method="test" />
 	    
 	</package>
 

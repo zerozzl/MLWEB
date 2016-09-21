@@ -2,7 +2,6 @@ package com.zerozzl.mlweb.web.action.admin;
 
 import java.util.Map;
 
-import com.zerozzl.mlweb.common.statistics.WebTraffic;
 import com.zerozzl.mlweb.service.VisitorOpinionService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
@@ -12,14 +11,7 @@ public class AdminAction extends _BaseAction {
 	private VisitorOpinionService visitorOpinionService;
 	
 	public String initNavLeft() {
-		long unReadOpinions = visitorOpinionService.countUnreadOpinions();
-		ajaxObj.put("opinions", unReadOpinions);
-		return "ajaxInvoSuccess";
-	}
-	
-	public String test() {
-		System.out.println("DailyUVCount: " + WebTraffic.getDailyUVCount());
-		System.out.println("OnlineCount: " + WebTraffic.getOnlineCount());
+		ajaxObj.put("opinions", visitorOpinionService.countUnreadOpinions());
 		return "ajaxInvoSuccess";
 	}
 	
