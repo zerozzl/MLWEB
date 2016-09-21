@@ -29,7 +29,7 @@ import org.apache.struts2.util.ServletContextAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
-import com.zerozzl.mlweb.ConstantStub;
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.domain.MLUser;
 import com.zerozzl.mlweb.persistent.Visitor;
 

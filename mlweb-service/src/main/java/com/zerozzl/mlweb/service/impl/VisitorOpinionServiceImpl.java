@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.common.paging.PagedBean;
 import com.zerozzl.mlweb.common.paging.PagedList;
-import com.zerozzl.mlweb.ConstantStub;
 import com.zerozzl.mlweb.dao.VisitorOpinionDao;
 import com.zerozzl.mlweb.domain.MLVisitorOpinion;
 import com.zerozzl.mlweb.persistent.VisitorOpinion;

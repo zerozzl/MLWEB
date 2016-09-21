@@ -2,7 +2,7 @@ package com.zerozzl.mlweb.web.action.admin;
 
 import java.util.Map;
 
-import com.zerozzl.mlweb.web.WebTraffic;
+import com.zerozzl.mlweb.common.statistics.WebTraffic;
 import com.zerozzl.mlweb.service.VisitorOpinionService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 

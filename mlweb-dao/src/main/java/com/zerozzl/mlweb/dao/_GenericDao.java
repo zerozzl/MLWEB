@@ -8,6 +8,8 @@ public interface _GenericDao<T, PK extends Serializable> {
 	PK save(T entity);
 
 	void delete(PK id);
+	
+	void delete(T entity);
 
 	void update(T entity);
 

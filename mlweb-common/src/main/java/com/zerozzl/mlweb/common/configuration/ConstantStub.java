@@ -1,4 +1,4 @@
-package com.zerozzl.mlweb;
+package com.zerozzl.mlweb.common.configuration;
 
 import java.io.File;
 

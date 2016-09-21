@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.zerozzl.mlweb.ConstantStub;
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.dao.DetectionRecordDao;
 import com.zerozzl.mlweb.domain.MLDetection;
 import com.zerozzl.mlweb.persistent.DetectionRecord;

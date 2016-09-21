@@ -3,7 +3,7 @@ package com.zerozzl.mlweb.web.listener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import com.zerozzl.mlweb.web.WebTraffic;
+import com.zerozzl.mlweb.common.statistics.WebTraffic;
 
 public class MLSessionListener implements HttpSessionListener {
 

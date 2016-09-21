@@ -8,6 +8,7 @@
 	<!-- 每小时运行一次，把每日访问人数更新到数据库 -->
 	<!-- JOB -->
 	<bean id="dailyUVCountPersistentJob" class="com.zerozzl.mlweb.quartz.job.DailyUVCountPersistentJob">
+        <property name="systemVisitsRecordService" ref="systemVisitsRecordService" />
 	</bean>
 	<!-- Task -->
     <bean id="dailyUVCountPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -17,7 +18,7 @@
     <!-- Trigger -->  
     <bean id="dailyUVCountPersistentTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
         <property name="jobDetail" ref="dailyUVCountPersistentTask" />  
-        <property name="cronExpression" value="0 0/1 * * * ?" />  
+        <property name="cronExpression" value="0 0 0/1 * * ?" />  
     </bean>
     
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" autowire="no">

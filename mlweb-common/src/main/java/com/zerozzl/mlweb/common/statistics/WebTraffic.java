@@ -1,4 +1,4 @@
-package com.zerozzl.mlweb.web;
+package com.zerozzl.mlweb.common.statistics;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

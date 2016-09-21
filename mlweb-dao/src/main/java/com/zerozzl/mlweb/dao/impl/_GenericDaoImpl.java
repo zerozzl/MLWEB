@@ -48,14 +48,19 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 
 	@Override
 	public void delete(PK id) {
-		if (id == null) {
-			return;
+		if (id != null) {
+			T entity = this.get(id);
+			if (entity != null) {
+				hibernateTemplate.delete(entity);
+			}
 		}
-		T entity = this.get(id);
-		if (entity == null) {
-			return;
+	}
+	
+	@Override
+	public void delete(T entity) {
+		if (entity != null) {
+			hibernateTemplate.delete(entity);
 		}
-		hibernateTemplate.delete(entity);
 	}
 
 	@Override

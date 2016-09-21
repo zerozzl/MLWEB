@@ -7,4 +7,21 @@
   </parent>
   <artifactId>mlweb-quartz</artifactId>
   <name>MLWeb Webapp Quartz Module</name>
+  
+  <dependencies>
+  
+  	<dependency>
+  		<groupId>${project.groupId}</groupId>
+		<artifactId>mlweb-common</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	
+  	<dependency>
+  		<groupId>${project.groupId}</groupId>
+		<artifactId>mlweb-service</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	
+  </dependencies>
+  
 </project>

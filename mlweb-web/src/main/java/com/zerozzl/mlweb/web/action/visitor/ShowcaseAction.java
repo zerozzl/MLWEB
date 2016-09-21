@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
-import com.zerozzl.mlweb.ConstantStub;
 import com.zerozzl.mlweb.domain.MLDetection;
 import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.web.action._BaseAction;

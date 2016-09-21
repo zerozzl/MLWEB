@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.zerozzl.mlweb.ConstantStub;
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.service.VisitorOpinionService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 

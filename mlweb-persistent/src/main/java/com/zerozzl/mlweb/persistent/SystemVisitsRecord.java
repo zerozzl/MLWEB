@@ -1,6 +1,7 @@
 package com.zerozzl.mlweb.persistent;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,18 @@ public class SystemVisitsRecord implements Serializable {
 	private int FaceDetectionCount; // 人脸检测统计
 	private int SemanticSegmentationCount; // 图像语义分割统计
 
+	public SystemVisitsRecord() {
+		Calendar cal = Calendar.getInstance();  
+	    this.Year = cal.get(Calendar.YEAR);  
+	    this.Month = (cal.get(Calendar.MONTH)) + 1;  
+	    this.Day = cal.get(Calendar.DAY_OF_MONTH);
+	    this.UniqueVisitorCount = 0;
+	    this.VisitorOpinionCount = 0;
+	    this.PedestrianDetectionCount = 0;
+	    this.FaceDetectionCount = 0;
+	    this.SemanticSegmentationCount = 0;
+	}
+	
 	@Id
 	@Column(name = "dbid", nullable = false, unique = true, length = 32)
 	@GenericGenerator(name = "idGenerator", strategy = "uuid")
