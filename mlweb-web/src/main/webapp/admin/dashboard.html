@@ -1,12 +1,5 @@
-<script src="../highcharts/4.2.6/highcharts.js"></script>
-<script src="../highcharts/4.2.6/highcharts-more.js"></script>
-<script src="../highcharts/4.2.6/modules/solid-gauge.js"></script>
 
 <style>
-img {
-	margin-top: 50px;
-}
-
 .sub-header {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
@@ -17,26 +10,57 @@ img {
 }
 
 .loading-container {
+	padding-top: 50px;
 	text-align: center;
 }
 
-.placeholders h4 {
-  margin-bottom: 0;
+#statistical-today-container {
+	overflow: auto;
+	/* border: 1px solid #000; */
 }
 
-.placeholder {
-  margin-bottom: 10px;
+#statistical-today-container>.statistical-holder {
+	float: left;
+	margin-right: 50px;
+	/* border:1px solid #000; */
 }
 
 #uv-chart {
 	width: 300px;
 	height: 180px;
-	/* border:1px solid #000; */
+	text-align: center;
+}
+
+#uv-chart .quantity {
+	font-size: 25px;
+	color: #333333;
+}
+
+#uv-chart .unit {
+	font-size: 12px;
+	color: #777777;
+	font-family: inherit;
+	font-weight: bold;
 }
 
 #visitor-opinion-count {
 	height: 180px;
-	/* border:1px solid #000; */
+}
+
+#visitor-opinion-count .quantity {
+	float: left;
+	margin-top: 5px;
+	margin-left: 10px;
+	font-size: 120px;
+}
+
+#visitor-opinion-count .unit{
+	float: left;
+	margin-top: 100px;
+	margin-left: 10px;
+	font-size: 30px;
+	color: #777777;
+	font-weight: bold;
 }
 
 #visitor-opinion-container>table {
@@ -46,8 +70,14 @@ img {
 
 <script>
 function init_dashboard() {
+	load_dependent_js(new Array("../highcharts/4.2.6/highcharts.js",
+			"../highcharts/4.2.6/highcharts-more.js",
+    		"../highcharts/4.2.6/modules/solid-gauge.js"),
+    		function(){
+				load_uv_info();
+			}
+	);
 	init_visitor_opinion();
-	load_uv_info();
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
@@ -152,9 +182,9 @@ function draw_uv_info(data) {
             name: "访客数",
             data: [data.online],
             dataLabels: {
-                format: "<div style='text-align:center'><span style='font-size:25px;color:#333333;'>"
+                format: "<div style='text-align:center;'><span class='quantity'>"
                 		+ data.online + "/" + data.uv
-                		+ "</span><br/><span style='font-size:12px;color:#777777;'>在线人数/总访问量</span></div>"
+                		+ "</span><br/><span class='unit'>在线人数/总访问量</span></div>"
             }
         }]
     });
@@ -166,27 +196,24 @@ function draw_uv_info(data) {
 
 <!-- 本日访问情况 -->
 <h3 class="sub-header font-blod">本日访问情况</h3>
-<div class="row placeholders">
-	<div class="col-xs-6 col-sm-3 placeholder">
+<div id="statistical-today-container">
+	<div class="statistical-holder">
 		<h4>访客数</h4>
-		<div id="uv-chart"><img src="../images/sys/loading_l.gif" /></div>
-	</div>
-	<div class="col-xs-6 col-sm-3 placeholder">
-		<h4>访客意见</h4>
-		<div id="visitor-opinion-count">
-			<div style="float:left;margin-top:5px;margin-left:10px;font-size:120px;">0</div>
-			<div style="float:left;margin-top:100px;margin-left:10px;font-size:30px;color:#777;">条</div>
+		<div id="uv-chart">
+			<div class="loading-container">
+				<img src="../images/sys/loading_l.gif" />
+			</div>
 		</div>
 	</div>
-	<div class="col-xs-6 col-sm-3 placeholder">
-		<h4>Label</h4>
-		<img src="../images/sys/not_found_image.jpg">
-		<span class="text-muted">Something else</span>
-	</div>
-	<div class="col-xs-6 col-sm-3 placeholder">
-		<img src="../images/sys/not_found_image.jpg">
-		<h4>Label</h4>
-		<span class="text-muted">Something else</span>
+	<div class="statistical-holder">
+		<h4>访客意见</h4>
+		<div id="visitor-opinion-count">
+			<div class="loading-container">
+				<img src="../images/sys/loading_l.gif" />
+			</div>
+			<!-- <div class="quantity">0</div>
+			<div class="unit">条</div> -->
+		</div>
 	</div>
 </div>
 

@@ -26,13 +26,10 @@
 	<package name="authenticate" namespace="/" extends="base">
 	
 		<action name="adLogin" class="authenticateAction" method="adminLogin" />
-		
 		<action name="adLogout" class="authenticateAction" method="adminLogout">
 			<result name="logout" type="redirect">/ad_login.html</result>
 		</action>
-		
 		<action name="checkLogin" class="authenticateAction" method="checkLogin" />
-		
 		<action name="checkVisitor" class="authenticateAction" method="checkVisitor" />
 		
 	</package>
@@ -42,19 +39,14 @@
 		<!-- 用户展示 -->
 	
 		<action name="uploadImage" class="showcaseAction" method="uploadImage" />
-		
 		<action name="getUploadImage" class="showcaseAction" method="getUploadImage" />
-	    
 		<action name="detectImage" class="showcaseAction" method="detectImage" />
-		
 		<action name="getDetectionImage" class="showcaseAction" method="getDetectionImage" />
 	    
 	    <!-- 访客意见 -->
 	    
 		<action name="uploadImageOfOpinion" class="visitorOpinionAction" method="uploadImage" />
-		
 		<action name="getImageOfOpinion" class="visitorOpinionAction" method="getUploadImage" />
-	    
 		<action name="submitOpinion" class="visitorOpinionAction" method="submitOpinion" />
 		
 	</package>
@@ -79,17 +71,14 @@
 		<!-- 控制台 -->
 		
 		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
+		<action name="getTheCountOfOpinionsOfToday" class="adDashboardAction" method="getTheCountOfOpinionsOfToday" />
 		
 		<!-- 用户意见 -->
 		
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
-		
 		<action name="readVisitorOpinion" class="adVisitorOpinionAction" method="readOpinion" />
-
 		<action name="getImageOfVisitorOpinion" class="adVisitorOpinionAction" method="getImageOfOpinion" />
-	    
 		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
-		
 		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
 	    
 	</package>

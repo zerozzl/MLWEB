@@ -1,4 +1,5 @@
-<link href="../js/jquery/jquery-ui/1.12.0/jquery-ui.min.css" rel="stylesheet">
+<link href="../jquery/jquery-ui/1.12.0/jquery-ui.min.css" rel="stylesheet">
+
 <style>
 .search-container {
 	margin-bottom: 20px;
@@ -55,18 +56,21 @@ table .operator .icon {
 
 </style>
 
-<script type="text/javascript" src="../js/jquery/jquery-ui/1.12.0/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/jquery/jquery-ui/1.12.0/language/jquery-ui.zh-CN.js"></script>
-
 <script>
 function init_visitor_opinion_list() {
-	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
-	$("#ui-datepicker-div").remove();
-	$(".date-picker").datepicker({
-		dateFormat: "yy-mm-dd",
-		changeMonth: true,
-		changeYear: true
-	});
+	load_dependent_js(new Array("../jquery/jquery-ui/1.12.0/jquery-ui.min.js",
+			"../jquery/jquery-ui/1.12.0/language/jquery-ui.zh-CN.js"),
+    		function(){
+				$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+				$("#ui-datepicker-div").remove();
+				$(".date-picker").datepicker({
+					dateFormat: "yy-mm-dd",
+					changeMonth: true,
+					changeYear: true
+				});
+			}
+	);
+	
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search();
 	});

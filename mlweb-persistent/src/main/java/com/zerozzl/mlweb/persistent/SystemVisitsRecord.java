@@ -32,7 +32,7 @@ public class SystemVisitsRecord implements Serializable {
 	public SystemVisitsRecord() {
 		Calendar cal = Calendar.getInstance();  
 	    this.Year = cal.get(Calendar.YEAR);  
-	    this.Month = (cal.get(Calendar.MONTH)) + 1;  
+	    this.Month = cal.get(Calendar.MONTH) + 1;  
 	    this.Day = cal.get(Calendar.DAY_OF_MONTH);
 	    this.UniqueVisitorCount = 0;
 	    this.VisitorOpinionCount = 0;

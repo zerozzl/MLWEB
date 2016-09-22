@@ -15,6 +15,11 @@ public interface VisitorOpinionDao extends _GenericDao<VisitorOpinion, String> {
 	long countByStatus(int status);
 	
 	/**
+	 * 根据Status统计
+	 */
+	long countByDate(int year, int month, int day);
+	
+	/**
 	 * 根据Status查找
 	 */
 	List<VisitorOpinion> findByStatus(int status, String sortColumn, int sortType);

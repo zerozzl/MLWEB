@@ -2,6 +2,7 @@ package com.zerozzl.mlweb.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,13 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 			}
 		}
 		return image;
+	}
+
+	@Override
+	public long countOpinionsOfToday() {
+		Calendar cal = Calendar.getInstance();  
+		return visitorOpinionDao.countByDate(cal.get(Calendar.YEAR),
+				cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
 	}
 	
 }

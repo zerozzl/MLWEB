@@ -1,8 +1,11 @@
 package com.zerozzl.mlweb.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,8 +20,30 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 
 	@Override
 	public long countByStatus(int status) {
+		Map<String, Integer> params = new HashMap<String, Integer>();
+		params.put("status", status);
 		@SuppressWarnings("rawtypes")
-		List list = super.find("select count(DBID) from VisitorOpinion where status = " + status);
+		List list = super._find("select count(DBID) from VisitorOpinion where status = :status", params);
+		return (long) list.get(0);
+	}
+
+	@Override
+	public long countByDate(int year, int month, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2016);
+		calendar.set(Calendar.MONTH, 9 - 1);
+		calendar.set(Calendar.DAY_OF_MONTH, 22);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date begin = calendar.getTime();
+		calendar.add(Calendar.DATE, 1);
+        Date end = calendar.getTime();
+        Map<String, Date> params = new HashMap<String, Date>();
+		params.put("begin", begin);
+		params.put("end", end);
+		@SuppressWarnings("rawtypes")
+		List list = super._find("select count(DBID) from VisitorOpinion where createDate >= :begin and createDate < :end", params);
 		return (long) list.get(0);
 	}
 

@@ -68,3 +68,46 @@ function switch_module(item) {
 	}
 	init_nav_left();
 }
+
+function load_dependent_js(jsFiles, func) {
+	var head = document.getElementsByTagName('head')[0];
+	var scripts = new Array();
+	for(var i = 0; i < jsFiles.length; i++) {
+		if(!has_include_js(jsFiles[i])) {
+			var script= document.createElement('script');
+			script.type= 'text/javascript';
+			script.src= jsFiles[i];
+			scripts[i] = script;
+		}
+	}
+	
+	if(scripts.length > 0) {
+		var last = scripts[scripts.length - 1];
+		last.onload = last.onreadystatechange = function() {
+			if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+				func();
+				last.onload = last.onreadystatechange = null;
+			}
+		};
+		
+		for(var i = 0; i < scripts.length; i++) {
+			head.appendChild(scripts[i]);
+		}
+	} else {
+		func();
+	}
+}
+
+function has_include_js(jsFile) {
+	var a = document.createElement('a');
+	a.href = jsFile;
+	var scripts = document.getElementsByTagName("script");
+	if(scripts && scripts.length > 0) {
+		for(var i = 0; i < scripts.length; i++) {
+			if(scripts[i].src && scripts[i].src == a.href) {
+				return true;
+			}
+		}
+	}
+	return false;
+}

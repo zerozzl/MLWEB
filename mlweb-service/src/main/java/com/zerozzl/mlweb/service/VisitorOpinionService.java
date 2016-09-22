@@ -20,7 +20,7 @@ public interface VisitorOpinionService {
 	void deleteOpinion(String uuid) throws IOException;
 	
 	/**
-	 * 统计未读的访客意见
+	 * 统计未读的访客意见数量
 	 */
 	long countUnreadOpinions();
 	
@@ -45,5 +45,10 @@ public interface VisitorOpinionService {
 	 * 查找访客意见的图片
 	 */
 	String getImageOfOpinion(String uuid);
+	
+	/**
+	 * 统计本日提交的访客意见数量
+	 */
+	long countOpinionsOfToday();
 		
 }
