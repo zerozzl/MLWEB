@@ -4,15 +4,28 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.zerozzl.mlweb.dao.SystemVisitsRecordDao;
+import com.zerozzl.mlweb.domain.MLSystemVisitsRecord;
 import com.zerozzl.mlweb.persistent.SystemVisitsRecord;
+import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.service.SystemVisitsRecordService;
+import com.zerozzl.mlweb.service.VisitorOpinionService;
 
 public class SystemVisitsRecordServiceImpl implements SystemVisitsRecordService {
 
 	private SystemVisitsRecordDao systemVisitsRecordDao;
+	private DetectionRecordService detectionRecordService;
+	private VisitorOpinionService visitorOpinionService;
 
 	public void setSystemVisitsRecordDao(SystemVisitsRecordDao systemVisitsRecordDao) {
 		this.systemVisitsRecordDao = systemVisitsRecordDao;
+	}
+	
+	public void setDetectionRecordService(DetectionRecordService detectionRecordService) {
+		this.detectionRecordService = detectionRecordService;
+	}
+	
+	public void setVisitorOpinionService(VisitorOpinionService visitorOpinionService) {
+		this.visitorOpinionService = visitorOpinionService;
 	}
 
 	private SystemVisitsRecord getHodiernal() {
@@ -43,6 +56,18 @@ public class SystemVisitsRecordServiceImpl implements SystemVisitsRecordService 
 		SystemVisitsRecord record = getHodiernal();
 		record.setUniqueVisitorCount(count);
 		systemVisitsRecordDao.update(record);
+	}
+
+	@Override
+	public MLSystemVisitsRecord getCurrentVisitsCount() {
+		Calendar calendar = Calendar.getInstance();
+		return new MLSystemVisitsRecord(calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH) + 1,
+				calendar.get(Calendar.DAY_OF_MONTH),
+				(int)visitorOpinionService.countOpinions(calendar.getTime()),
+				(int)detectionRecordService.countDetectionRecords(1, calendar.getTime()),
+				(int)detectionRecordService.countDetectionRecords(2, calendar.getTime()),
+				(int)detectionRecordService.countDetectionRecords(3, calendar.getTime()));
 	}
 
 }

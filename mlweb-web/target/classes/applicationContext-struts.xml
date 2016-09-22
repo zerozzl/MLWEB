@@ -23,7 +23,7 @@
 	</bean>
 	
 	<bean id="adDashboardAction" class="com.zerozzl.mlweb.web.action.admin.AdDashboardAction" scope="prototype">
-		<property name="visitorOpinionService" ref="visitorOpinionService" />
+		<property name="systemVisitsRecordService" ref="systemVisitsRecordService" />
 	</bean>
 	
 	<bean id="adVisitorOpinionAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorOpinionAction" scope="prototype">

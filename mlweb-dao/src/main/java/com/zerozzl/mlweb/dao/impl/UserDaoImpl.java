@@ -14,7 +14,7 @@ public class UserDaoImpl extends _GenericDaoImpl<User, String> implements UserDa
 		List<QueryParameter> params = new ArrayList<QueryParameter>();
 		params.add(new QueryParameter("email", email));
 		params.add(new QueryParameter("password", password));
-		return super._find(params);
+		return super.find(params);
 	}
 
 }

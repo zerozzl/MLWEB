@@ -49,6 +49,6 @@ public interface VisitorOpinionService {
 	/**
 	 * 统计本日提交的访客意见数量
 	 */
-	long countOpinionsOfToday();
+	long countOpinions(Date date);
 		
 }

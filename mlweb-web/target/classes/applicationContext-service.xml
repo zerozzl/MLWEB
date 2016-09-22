@@ -32,6 +32,8 @@
 	
 	<bean id="systemVisitsRecordService" class="com.zerozzl.mlweb.service.impl.SystemVisitsRecordServiceImpl">
 		<property name="systemVisitsRecordDao" ref="systemVisitsRecordDao" />
+		<property name="detectionRecordService" ref="detectionRecordService" />
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
 	</bean>
 	
 </beans>

@@ -15,7 +15,7 @@ public class SystemVisitsRecordDaoImpl extends _GenericDaoImpl<SystemVisitsRecor
 		params.add(new QueryParameter("year", year));
 		params.add(new QueryParameter("month", month));
 		params.add(new QueryParameter("day", day));
-		return super._find(params);
+		return super.find(params);
 	}
 
 }

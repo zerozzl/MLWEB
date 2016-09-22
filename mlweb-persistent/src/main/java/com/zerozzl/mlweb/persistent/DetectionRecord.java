@@ -22,7 +22,7 @@ public class DetectionRecord implements Serializable {
 
 	private static final long serialVersionUID = -1490500340741264280L;
 	private String DBID; // 数据库UUID
-	private int DetectType; // 检测类型, 1:行人检测
+	private int DetectType; // 检测类型, 1:行人检测, 2:人脸检测, 3:图像语义分割
 	private Date DetectDate; // 检测时间
 	private int DetectCode; // 检测结果, 0:未检测, -1:检测失败, 1:检测成功
 	private String ImageType; // 图片类型: PNG, JPG

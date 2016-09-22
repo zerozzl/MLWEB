@@ -88,19 +88,19 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 		return list;
 	}
 
-	protected List<T> _find(final String HQL, final PagedBean pagedBean) {
-		return _find(HQL, null, pagedBean);
+	protected List<T> find(final String HQL, final PagedBean pagedBean) {
+		return find(HQL, null, pagedBean);
 	}
 
-	protected List<T> _find(String HQL, Map parameters) {
-		return this._find(HQL, parameters, null, false);
+	protected List<T> find(String HQL, Map parameters) {
+		return this.find(HQL, parameters, null, false);
 	}
 
-	protected List<T> _find(String HQL, Map parameters, PagedBean pagedBean) {
-		return this._find(HQL, parameters, pagedBean, false);
+	protected List<T> find(String HQL, Map parameters, PagedBean pagedBean) {
+		return this.find(HQL, parameters, pagedBean, false);
 	}
 
-	protected List<T> _find (final String HQL, final Map parameters,
+	protected List<T> find (final String HQL, final Map parameters,
 			final PagedBean pagedBean, final boolean useCache) {
 		return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException {
@@ -143,15 +143,15 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 		return 0;
 	}
 
-	protected List<T> _find(List<QueryParameter> queryParams) {
-		return this._find(null, queryParams, null);
+	protected List<T> find(List<QueryParameter> queryParams) {
+		return this.find(null, queryParams, null);
 	}
 
-	protected List<T> _find(List<QueryParameter> queryParams, List<OrderByParameter> orderBys) {
-		return this._find(null, queryParams, orderBys);
+	protected List<T> find(List<QueryParameter> queryParams, List<OrderByParameter> orderBys) {
+		return this.find(null, queryParams, orderBys);
 	}
 
-	protected List<T> _find(final String property, final List<QueryParameter> queryParams,
+	protected List<T> find(final String property, final List<QueryParameter> queryParams,
 			final List<OrderByParameter> orderBys) {
 		StringBuilder buf = new StringBuilder();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -176,14 +176,14 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 			buf.append(orderByStat);
 		}
 		
-		return this._find(buf.toString(), params);
+		return this.find(buf.toString(), params);
 	}
 
-	protected PagedList _findByPage(List<QueryParameter> queryParams, PagedBean pageBean) {
-		return this._findByPage(queryParams, null, pageBean);
+	protected PagedList findByPage(List<QueryParameter> queryParams, PagedBean pageBean) {
+		return this.findByPage(queryParams, null, pageBean);
 	}
 
-	protected PagedList _findByPage(List<QueryParameter> queryParams, List<OrderByParameter> orderBys,
+	protected PagedList findByPage(List<QueryParameter> queryParams, List<OrderByParameter> orderBys,
 			PagedBean pageBean) {
 		StringBuilder countHql = new StringBuilder(), hql = new StringBuilder();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -208,16 +208,16 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 			hql.append(orderByStat);
 		}
 		
-		return this._findByPage(countHql.toString(), hql.toString(), params, pageBean);
+		return this.findByPage(countHql.toString(), hql.toString(), params, pageBean);
 	}
 
-	protected PagedList _findByPage(String HQLStringForCount, String HQLString, Map parameters, PagedBean pageBean) {
+	protected PagedList findByPage(String HQLStringForCount, String HQLString, Map parameters, PagedBean pageBean) {
 		return _findByPage(1, HQLStringForCount, HQLString, parameters, pageBean);
 	}
 
 	private long findRowCount(String HQLString, Map parameters) {
 		long rowCount = 0;
-		List list = this._find(HQLString, parameters);
+		List list = this.find(HQLString, parameters);
 		if (list.size() > 0) {
 			rowCount = (Long) list.get(0);
 		}
@@ -321,7 +321,7 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 		if (type == 2) {
 			// currentPageList = this._findBySQL(QLString, parameters, _pagingAndSorting);
 		} else {
-			currentPageList = this._find(QLString, parameters, pagedBean);
+			currentPageList = this.find(QLString, parameters, pagedBean);
 		}
 
 		List<String> pagesDisplayedList = new ArrayList<String>();

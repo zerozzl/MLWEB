@@ -140,10 +140,11 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 	}
 
 	@Override
-	public long countOpinionsOfToday() {
-		Calendar cal = Calendar.getInstance();  
-		return visitorOpinionDao.countByDate(cal.get(Calendar.YEAR),
-				cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+	public long countOpinions(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return visitorOpinionDao.countByDate(calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 	}
 	
 }

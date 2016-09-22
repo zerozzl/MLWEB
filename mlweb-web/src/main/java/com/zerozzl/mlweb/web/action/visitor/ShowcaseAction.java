@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
-import com.zerozzl.mlweb.domain.MLDetection;
+import com.zerozzl.mlweb.domain.MLDetectionRecord;
 import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
@@ -54,7 +54,7 @@ public class ShowcaseAction extends _BaseAction {
 				visitorId = _getSessionVisitor() != null ? _getSessionVisitor().getDBID() : "";
 		int type = FormatUtils.toPositiveInteger(typeS);
 		image = StringUtils.isNotBlank(image) ? ConstantStub.initPath(ConstantStub.TEMP, "images", image.trim()) : "";
-		MLDetection record = detectionRecordService.detect(type, image, visitorId);
+		MLDetectionRecord record = detectionRecordService.detect(type, image, visitorId);
 		if (record.getRecordCode() == 1) {
 			ajaxObj.put("flag", 1);
 		} else {

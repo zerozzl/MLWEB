@@ -71,7 +71,7 @@
 		<!-- 控制台 -->
 		
 		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
-		<action name="getTheCountOfOpinionsOfToday" class="adDashboardAction" method="getTheCountOfOpinionsOfToday" />
+		<action name="getCurrentVisitsCount" class="adDashboardAction" method="getCurrentVisitsCount" />
 		
 		<!-- 用户意见 -->
 		

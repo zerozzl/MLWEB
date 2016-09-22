@@ -23,16 +23,16 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("status", status);
 		@SuppressWarnings("rawtypes")
-		List list = super._find("select count(DBID) from VisitorOpinion where status = :status", params);
+		List list = super.find("select count(DBID) from VisitorOpinion where status = :status", params);
 		return (long) list.get(0);
 	}
 
 	@Override
 	public long countByDate(int year, int month, int day) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, 2016);
-		calendar.set(Calendar.MONTH, 9 - 1);
-		calendar.set(Calendar.DAY_OF_MONTH, 22);
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month - 1);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
@@ -43,7 +43,7 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 		params.put("begin", begin);
 		params.put("end", end);
 		@SuppressWarnings("rawtypes")
-		List list = super._find("select count(DBID) from VisitorOpinion where createDate >= :begin and createDate < :end", params);
+		List list = super.find("select count(DBID) from VisitorOpinion where createDate >= :begin and createDate < :end", params);
 		return (long) list.get(0);
 	}
 
@@ -55,7 +55,7 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 		} else {
 			orders = OrderByParameter.init("createDate");
 		}
-		return super._find(QueryParameter.init("status", status), orders);
+		return super.find(QueryParameter.init("status", status), orders);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 		if(StringUtils.isNotBlank(pagedBean.getSortColumn())) {
 			orders = OrderByParameter.init(pagedBean.getSortColumn(), pagedBean.getSortOrder());
 		}
-		return super._findByPage(qparams, orders, pagedBean);
+		return super.findByPage(qparams, orders, pagedBean);
 	}
 
 }

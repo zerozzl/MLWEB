@@ -2,13 +2,15 @@ package com.zerozzl.mlweb.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.dao.DetectionRecordDao;
-import com.zerozzl.mlweb.domain.MLDetection;
+import com.zerozzl.mlweb.domain.MLDetectionRecord;
 import com.zerozzl.mlweb.persistent.DetectionRecord;
 import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.service.OpenCVService;
@@ -27,9 +29,9 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 	}
 
 	@Override
-	public MLDetection detect(int type, String image, String visitorId) {
-		MLDetection detection = null;
-		if(MLDetection.isValidType(type)) {
+	public MLDetectionRecord detect(int type, String image, String visitorId) {
+		MLDetectionRecord detection = null;
+		if(MLDetectionRecord.isValidType(type)) {
 			try {
 				File imageF = new File(image);
 				if(imageF.exists() && imageF.isFile()) {
@@ -55,7 +57,7 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 						record.setDetectCode(code);
 						detectionRecordDao.update(record);
 						
-						detection = new MLDetection(record);
+						detection = new MLDetectionRecord(record);
 					}
 				}
 			} catch(IOException e) {
@@ -73,6 +75,14 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 		} else {
 			return "";
 		}
+	}
+
+	@Override
+	public long countDetectionRecords(int type, Date date) {
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(date);
+		return detectionRecordDao.countByTypeAndDate(type, calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 }

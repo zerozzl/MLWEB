@@ -16,6 +16,7 @@
 
 #statistical-today-container {
 	overflow: auto;
+	margin-bottom: 10px;
 	/* border: 1px solid #000; */
 }
 
@@ -25,18 +26,26 @@
 	/* border:1px solid #000; */
 }
 
-#uv-chart {
-	width: 300px;
-	height: 180px;
-	text-align: center;
+#statistical-today-container>.statistical-holder>h4 {
+	margin-bottom: 20px;
 }
 
-#uv-chart .quantity {
+#current_visits_count {
+	width: 350px;
+	height: 180px;
+}
+
+#uv-count {
+	width: 300px;
+	height: 180px;
+}
+
+#uv-count .quantity {
 	font-size: 25px;
 	color: #333333;
 }
 
-#uv-chart .unit {
+#uv-count .unit {
 	font-size: 12px;
 	color: #777777;
 	font-family: inherit;
@@ -49,14 +58,14 @@
 
 #visitor-opinion-count .quantity {
 	float: left;
-	margin-top: 5px;
-	margin-left: 10px;
-	font-size: 120px;
+	margin-top: -20px;
+	margin-left: 20px;
+	font-size: 150px;
 }
 
 #visitor-opinion-count .unit{
 	float: left;
-	margin-top: 100px;
+	margin-top: 105px;
 	margin-left: 10px;
 	font-size: 30px;
 	color: #777777;
@@ -75,13 +84,14 @@ function init_dashboard() {
     		"../highcharts/4.2.6/modules/solid-gauge.js"),
     		function(){
 				load_uv_info();
+				load_current_visits_count();
 			}
 	);
-	init_visitor_opinion();
+	load_visitor_opinion();
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
-function init_visitor_opinion() {
+function load_visitor_opinion() {
 	$.ajax({
 		traditional : true,
 		type : "post",
@@ -126,19 +136,19 @@ function load_uv_info() {
 			draw_uv_info(data.ajaxObj);
 		},
 		error : function(jqXHR, status, errorThrown) {
-			$("#uv-chart").html(ERROR_MSG);
+			$("#uv-count").html(ERROR_MSG);
 		}
 	});
 }
 
 function draw_uv_info(data) {
-	$("#uv-chart").highcharts({
+	$("#uv-count").highcharts({
 		chart: {
             type: "solidgauge"
         },
         title: null,
         pane: {
-            center: ["50%", "80%"],
+            center: ["50%", "85%"],
             size: "160%",
             startAngle: -90,
             endAngle: 90,
@@ -190,6 +200,76 @@ function draw_uv_info(data) {
     });
 }
 
+function load_current_visits_count() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getCurrentVisitsCount.action",
+		success : function(data, textStatus) {
+			draw_current_visits_count(data.ajaxObj);
+			$("#visitor-opinion-count").html("<div class='quantity'>"
+					+ data.ajaxObj.vocount + "</div><div class='unit'>条</div>");
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#current_visits_count").html(ERROR_MSG);
+			$("#visitor-opinion-count").html(ERROR_MSG);
+		}
+	});
+}
+
+function draw_current_visits_count(data) {
+	$("#current_visits_count").highcharts({
+        chart: {
+            type: "column"
+        },
+        title: null,
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            type: "category"
+        },
+        yAxis: {
+        	title: null
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.0f}次"
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}次</b>'
+        },
+
+        series: [{
+            name: "检测类型",
+            colorByPoint: true,
+            data: [{
+                name: "行人检测",
+                y: data.pdcount
+            }, {
+                name: "人脸检测",
+                y: data.fdcount
+            }, {
+                name: "图像语义分割",
+                y: data.sscount
+            }]
+        }]
+	});
+}
+
 </script>
 
 <h2 class="page-header">Dashboard</h2>
@@ -198,8 +278,16 @@ function draw_uv_info(data) {
 <h3 class="sub-header font-blod">本日访问情况</h3>
 <div id="statistical-today-container">
 	<div class="statistical-holder">
+		<h4>检测统计</h4>
+		<div id="current_visits_count">
+			<div class="loading-container">
+				<img src="../images/sys/loading_l.gif" />
+			</div>
+		</div>
+	</div>
+	<div class="statistical-holder">
 		<h4>访客数</h4>
-		<div id="uv-chart">
+		<div id="uv-count">
 			<div class="loading-container">
 				<img src="../images/sys/loading_l.gif" />
 			</div>
@@ -211,8 +299,6 @@ function draw_uv_info(data) {
 			<div class="loading-container">
 				<img src="../images/sys/loading_l.gif" />
 			</div>
-			<!-- <div class="quantity">0</div>
-			<div class="unit">条</div> -->
 		</div>
 	</div>
 </div>
