@@ -52,9 +52,15 @@ public class SystemVisitsRecordServiceImpl implements SystemVisitsRecordService 
 	}
 	
 	@Override
-	public void updateDailyUVCount(int count) {
+	public void updateDailyVisitsCount(int uniqueVisitorCount,
+			int visitorOpinionCount, int pedestrianDetectionCount,
+			int faceDetectionCount, int semanticSegmentationCount) {
 		SystemVisitsRecord record = getHodiernal();
-		record.setUniqueVisitorCount(count);
+		record.setUniqueVisitorCount(uniqueVisitorCount);
+		record.setVisitorOpinionCount(visitorOpinionCount);
+		record.setPedestrianDetectionCount(pedestrianDetectionCount);
+		record.setFaceDetectionCount(faceDetectionCount);
+		record.setSemanticSegmentationCount(semanticSegmentationCount);
 		systemVisitsRecordDao.update(record);
 	}
 
