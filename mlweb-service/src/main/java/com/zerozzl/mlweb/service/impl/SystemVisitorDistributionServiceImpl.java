@@ -53,8 +53,9 @@ public class SystemVisitorDistributionServiceImpl implements SystemVisitorDistri
 
 	@Override
 	public MLSystemVisitorDistribution findByDate(Date begin, Date end) {
-		List<SystemVisitorDistribution> list = systemVisitorDistributionDao.findByDate(begin, end);
-		return null;
+		MLSystemVisitorDistribution distribution = new MLSystemVisitorDistribution();
+		distribution.convertFromDBModel(systemVisitorDistributionDao.findByDate(begin, end));
+		return distribution;
 	}
 	
 }

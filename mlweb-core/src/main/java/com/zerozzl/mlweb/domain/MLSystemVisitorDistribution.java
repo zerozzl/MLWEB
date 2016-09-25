@@ -24,6 +24,13 @@ public class MLSystemVisitorDistribution implements Serializable {
 			this.Provinces.put(visitor.getProvince(), new Province(visitor));
 		}
 		
+		public Country(SystemVisitorDistribution distribution) {
+			this.Name = distribution.getCountry();
+			this.Quantity = distribution.getQuantity();
+			this.Provinces = new HashMap<String, Province>();
+			this.Provinces.put(distribution.getProvince(), new Province(distribution));
+		}
+		
 		public String getName() {
 			return Name;
 		}
@@ -46,6 +53,17 @@ public class MLSystemVisitorDistribution implements Serializable {
 				this.Quantity += 1;
 			}
 		}
+		
+		public void addDistribution(SystemVisitorDistribution distribution) {
+			if(distribution != null) {
+				if(Provinces.containsKey(distribution.getProvince())) {
+					Provinces.get(distribution.getProvince()).addDistribution(distribution);
+				} else {
+					Provinces.put(distribution.getProvince(), new Province(distribution));
+				}
+				this.Quantity += distribution.getQuantity();
+			}
+		}
 
 	}
 
@@ -60,6 +78,13 @@ public class MLSystemVisitorDistribution implements Serializable {
 			this.Quantity = 1;
 			this.Cities = new HashMap<String, City>();
 			this.Cities.put(visitor.getCity(), new City(visitor));
+		}
+		
+		public Province(SystemVisitorDistribution distribution) {
+			this.Name = distribution.getProvince();
+			this.Quantity = distribution.getQuantity();
+			this.Cities = new HashMap<String, City>();
+			this.Cities.put(distribution.getCity(), new City(distribution));
 		}
 		
 		public String getName() {
@@ -84,6 +109,17 @@ public class MLSystemVisitorDistribution implements Serializable {
 				this.Quantity += 1;
 			}
 		}
+		
+		public void addDistribution(SystemVisitorDistribution distribution) {
+			if(distribution != null) {
+				if(Cities.containsKey(distribution.getCity())) {
+					Cities.get(distribution.getCity()).addDistribution(distribution);
+				} else {
+					Cities.put(distribution.getCity(), new City(distribution));
+				}
+				this.Quantity += distribution.getQuantity();
+			}
+		}
 
 	}
 
@@ -97,6 +133,11 @@ public class MLSystemVisitorDistribution implements Serializable {
 			this.Quantity = 1;
 		}
 		
+		public City(SystemVisitorDistribution distribution) {
+			this.Name = distribution.getCity();
+			this.Quantity = distribution.getQuantity();
+		}
+		
 		public String getName() {
 			return Name;
 		}
@@ -107,6 +148,12 @@ public class MLSystemVisitorDistribution implements Serializable {
 		
 		public void addVisitor() {
 			this.Quantity += 1;
+		}
+		
+		public void addDistribution(SystemVisitorDistribution distribution) {
+			if(distribution != null) {
+				this.Quantity += distribution.getQuantity();
+			}
 		}
 
 	}
@@ -162,6 +209,10 @@ public class MLSystemVisitorDistribution implements Serializable {
 				}
 			}
 		}
+	}
+
+	public Map<String, Country> getCountries() {
+		return Countries;
 	}
 	
 }

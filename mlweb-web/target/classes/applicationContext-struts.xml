@@ -26,6 +26,7 @@
 	
 	<bean id="adDashboardAction" class="com.zerozzl.mlweb.web.action.admin.AdDashboardAction" scope="prototype">
 		<property name="systemVisitsRecordService" ref="systemVisitsRecordService" />
+		<property name="systemVisitorDistributionService" ref="systemVisitorDistributionService" />
 	</bean>
 	
 	<bean id="adVisitorOpinionAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorOpinionAction" scope="prototype">

@@ -39,8 +39,8 @@
 		<mysql-connector.version>5.1.39</mysql-connector.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<opencv-api.version>2.4.13</opencv-api.version>
-		<opencv-api.location>/home/zero/0_worktools/opencv/opencv2_4_13/share/OpenCV/java/opencv-2413.jar</opencv-api.location>
-		<!-- <opencv-api.location>D:/WorkTools/OpenCV/OpenCV2_4_13/build/java/opencv-2413.jar</opencv-api.location> -->
+		<!-- <opencv-api.location>/home/zero/0_worktools/opencv/opencv2_4_13/share/OpenCV/java/opencv-2413.jar</opencv-api.location> -->
+		<opencv-api.location>E:/WordTools/OpenCV/OpenCV2_4_13/build/java/opencv-2413.jar</opencv-api.location>
 	</properties>
 
 	<dependencyManagement>
