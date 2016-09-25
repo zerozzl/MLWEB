@@ -1,16 +1,25 @@
 package com.zerozzl.mlweb.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import com.zerozzl.mlweb.common.paging.PagedBean;
+import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.common.tools.HttpUtils;
 import com.zerozzl.mlweb.common.tools.ValidatorUtils;
 import com.zerozzl.mlweb.dao.VisitorDao;
+import com.zerozzl.mlweb.domain.MLVisitor;
 import com.zerozzl.mlweb.persistent.Visitor;
 import com.zerozzl.mlweb.service.VisitorService;
 
 public class VisitorServiceImpl implements VisitorService {
 
+	private static Logger logger = LogManager.getLogger();
 	private String ipInfoUrl;
 	private boolean useProxy;
 	private VisitorDao visitorDao;
@@ -47,6 +56,7 @@ public class VisitorServiceImpl implements VisitorService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		uuid = visitorDao.save(new Visitor(ip, country, province, city));
@@ -54,12 +64,40 @@ public class VisitorServiceImpl implements VisitorService {
 	}
 	
 	@Override
-	public Visitor getVisitor(String uuid) {
+	public MLVisitor getVisitor(String uuid) {
 		if(StringUtils.isNotBlank(uuid)) {
-			return visitorDao.get(uuid);
+			return new MLVisitor(visitorDao.get(uuid));
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public PagedList findVisitors(String ip, String country, String province, String city, Date begin, Date end,
+			int page, int pageSize, String sortColumn, int sortType) {
+		ip = StringUtils.isNotBlank(ip) ? ip.trim() : "";
+		country = StringUtils.isNotBlank(country) ? country.trim() : "";
+		province = StringUtils.isNotBlank(province) ? province.trim() : "";
+		city = StringUtils.isNotBlank(city) ? city.trim() : "";
+		
+		PagedBean pagedBean = null;
+		if(StringUtils.isNotBlank(sortColumn)) {
+			pagedBean = new PagedBean(page, pageSize, sortColumn, sortType);
+		} else {
+			pagedBean = new PagedBean(page, pageSize, "loginDate", 0);
+		}
+		
+		PagedList pagedList = visitorDao.findByPage(
+				ip, country, province, city, begin, end, pagedBean);
+		@SuppressWarnings("unchecked")
+		List<MLVisitor> dataList = MLVisitor.init(pagedList.getCurrentPageList());
+		pagedList.setCurrentPageList(dataList);
+		return pagedList;
+	}
+
+	@Override
+	public List<MLVisitor> findByDate(Date begin, Date end) {
+		return MLVisitor.init(visitorDao.findByDate(begin, end));
 	}
 
 }

@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.domain.MLUser;
-import com.zerozzl.mlweb.persistent.Visitor;
+import com.zerozzl.mlweb.domain.MLVisitor;
 
 public abstract class _BaseAction extends ActionSupport
 		implements Preparable, ServletRequestAware, SessionAware, ServletResponseAware, ServletContextAware {
@@ -140,10 +140,10 @@ public abstract class _BaseAction extends ActionSupport
 	/**
 	 * 获取SESSION里面的Visitor
 	 */
-	protected Visitor _getSessionVisitor() {
-		Visitor visitor = null;
+	protected MLVisitor _getSessionVisitor() {
+		MLVisitor visitor = null;
 		if (_getSessionAttribute("visitor") != null) {
-			visitor = (Visitor) _getSessionAttribute("visitor");
+			visitor = (MLVisitor) _getSessionAttribute("visitor");
 		}
 		return visitor;
 	}
@@ -151,7 +151,7 @@ public abstract class _BaseAction extends ActionSupport
 	/**
 	 * 设置SESSION里面的Visitor
 	 */
-	protected void _setSessionVisitor(Visitor visitor) {
+	protected void _setSessionVisitor(MLVisitor visitor) {
 		_setSessionAttribute("visitor", visitor);
 	}
 	

@@ -29,6 +29,10 @@ public class DetectionRecord implements Serializable {
 	private String VisitorId; // 提交检测的VisitorId ID
 	private int Status; // 状态, 0:未读, 1:已读
 
+	public DetectionRecord() {
+		super();
+	}
+	
 	public DetectionRecord(int dtype, String itype, String visitroId) {
 		this.DetectType = dtype;
 		this.DetectDate = new Date();

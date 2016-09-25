@@ -1,6 +1,7 @@
 package com.zerozzl.mlweb.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.zerozzl.mlweb.common.paging.QueryParameter;
@@ -15,6 +16,18 @@ public class SystemVisitsRecordDaoImpl extends _GenericDaoImpl<SystemVisitsRecor
 		params.add(new QueryParameter("year", year));
 		params.add(new QueryParameter("month", month));
 		params.add(new QueryParameter("day", day));
+		return super.find(params);
+	}
+
+	@Override
+	public List<SystemVisitsRecord> findByDate(Date begin, Date end) {
+		List<QueryParameter> params = new ArrayList<QueryParameter>();
+		if(begin != null) {
+			params.add(new QueryParameter("date", "beginDate", 4, begin));
+		}
+		if(end != null) {
+			params.add(new QueryParameter("date", "endDate", 5, end));
+		}
 		return super.find(params);
 	}
 

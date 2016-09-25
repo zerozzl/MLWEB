@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.common.paging.PagedBean;
@@ -19,6 +21,7 @@ import com.zerozzl.mlweb.service.VisitorOpinionService;
 
 public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 
+	private static Logger logger = LogManager.getLogger();
 	private VisitorOpinionDao visitorOpinionDao;
 	
 	public void setVisitorOpinionDao(VisitorOpinionDao visitorOpinionDao) {
@@ -61,6 +64,7 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 					}
 				}
 			} catch (IOException e) {
+				logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}

@@ -40,10 +40,10 @@ public class MLVisitorOpinion implements Serializable {
 		}
 	}
 	
-	public static List<MLVisitorOpinion> init(List<VisitorOpinion> opinions) {
+	public static List<MLVisitorOpinion> init(List<VisitorOpinion> datas) {
 		List<MLVisitorOpinion> list = new ArrayList<MLVisitorOpinion>();
-		if(opinions != null && !opinions.isEmpty()) {
-			for(VisitorOpinion o : opinions) {
+		if(datas != null && !datas.isEmpty()) {
+			for(VisitorOpinion o : datas) {
 				list.add(new MLVisitorOpinion(o));
 			}
 		}

@@ -37,14 +37,12 @@
 	<package name="user" namespace="/" extends="base">
 	
 		<!-- 用户展示 -->
-	
 		<action name="uploadImage" class="showcaseAction" method="uploadImage" />
 		<action name="getUploadImage" class="showcaseAction" method="getUploadImage" />
 		<action name="detectImage" class="showcaseAction" method="detectImage" />
 		<action name="getDetectionImage" class="showcaseAction" method="getDetectionImage" />
 	    
 	    <!-- 访客意见 -->
-	    
 		<action name="uploadImageOfOpinion" class="visitorOpinionAction" method="uploadImage" />
 		<action name="getImageOfOpinion" class="visitorOpinionAction" method="getUploadImage" />
 		<action name="submitOpinion" class="visitorOpinionAction" method="submitOpinion" />
@@ -67,19 +65,23 @@
 		</action>
 		
 		<action name="initNavLeft" class="adminAction" method="initNavLeft" />
+		<action name="runHourlyVisitsCountPersistentJob" class="adminAction" method="runHourlyVisitsCountPersistentJob" />
+		<action name="runDailyVisitorInfoPersistentJob" class="adminAction" method="runDailyVisitorInfoPersistentJob" />
 		
 		<!-- 控制台 -->
-		
+		<action name="getGeneralOverview" class="adDashboardAction" method="getGeneralOverview" />
 		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
 		<action name="getCurrentVisitsCount" class="adDashboardAction" method="getCurrentVisitsCount" />
 		
 		<!-- 用户意见 -->
-		
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
 		<action name="readVisitorOpinion" class="adVisitorOpinionAction" method="readOpinion" />
 		<action name="getImageOfVisitorOpinion" class="adVisitorOpinionAction" method="getImageOfOpinion" />
 		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
 		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
+		
+		<!-- 用户 -->
+		<action name="findVisitors" class="adVisitorAction" method="findVisitors" />
 	    
 	</package>
 

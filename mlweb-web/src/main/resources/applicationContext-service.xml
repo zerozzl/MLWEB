@@ -36,4 +36,8 @@
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
 	</bean>
 	
+	<bean id="systemVisitorDistributionService" class="com.zerozzl.mlweb.service.impl.SystemVisitorDistributionServiceImpl">
+		<property name="systemVisitorDistributionDao" ref="systemVisitorDistributionDao" />
+	</bean>
+	
 </beans>

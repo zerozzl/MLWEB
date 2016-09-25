@@ -27,4 +27,8 @@ public class WebTraffic {
 		OnlineCount.getAndDecrement();
 	}
 	
+	public static void resetDailyUVCount() {
+		DailyUVCount.set(OnlineCount.get());
+	}
+	
 }

@@ -4,9 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FormatUtils {
 
+	private static Logger logger = LogManager.getLogger();
+	
 	// 日期处理：日期转字符串
 	public static String dateFormat(Date orginal, String pattern) {
 		String result = "";
@@ -15,6 +19,7 @@ public class FormatUtils {
 				result = new SimpleDateFormat(pattern).format(orginal);
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
@@ -28,6 +33,7 @@ public class FormatUtils {
 				date = new SimpleDateFormat(pattern).parse(orginal);
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return date;
@@ -41,6 +47,7 @@ public class FormatUtils {
 				result = Integer.parseInt(orginal);
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;

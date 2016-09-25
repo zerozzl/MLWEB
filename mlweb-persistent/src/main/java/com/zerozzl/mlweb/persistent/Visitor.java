@@ -31,7 +31,7 @@ public class Visitor implements Serializable {
 	public Visitor() {
 		super();
 	}
-
+	
 	public Visitor(String ip, String country, String province, String city) {
 		this.Ip = ip;
 		this.Country = country;

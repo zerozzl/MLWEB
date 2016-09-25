@@ -65,6 +65,10 @@ function switch_module(item) {
 		$("#main").load("visitor_opinion_list.html", function() {
 			init_visitor_opinion_list();
 		});
+	} else if(module == "visitor-record") {
+		$("#main").load("visitor_record.html", function() {
+			init_visitor_record_list();
+		});
 	}
 	init_nav_left();
 }

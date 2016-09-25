@@ -25,7 +25,7 @@ public interface VisitorOpinionDao extends _GenericDao<VisitorOpinion, String> {
 	List<VisitorOpinion> findByStatus(int status, String sortColumn, int sortType);
 	
 	/**
-	 * 查找
+	 * 分页查找
 	 */
 	PagedList findByPage(String title, String content, String visitorId,
 			List<Integer> status, Date begin, Date end, PagedBean pagedBean);

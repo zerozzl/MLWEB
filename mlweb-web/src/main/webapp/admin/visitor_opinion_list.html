@@ -1,5 +1,3 @@
-<link href="../jquery/jquery-ui/1.12.0/jquery-ui.min.css" rel="stylesheet">
-
 <style>
 .search-container {
 	margin-bottom: 20px;
@@ -27,6 +25,14 @@
 	padding: 6px 15px;
 	margin-left: 10px;
 	margin-right: 5px;
+}
+
+#indatebegin {
+	width: 150px;
+}
+
+#indateend {
+	width: 150px;
 }
 
 table .operator {
@@ -58,24 +64,24 @@ table .operator .icon {
 
 <script>
 function init_visitor_opinion_list() {
-	load_dependent_js(new Array("../jquery/jquery-ui/1.12.0/jquery-ui.min.js",
-			"../jquery/jquery-ui/1.12.0/language/jquery-ui.zh-CN.js"),
-    		function(){
-				$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
-				$("#ui-datepicker-div").remove();
-				$(".date-picker").datepicker({
-					dateFormat: "yy-mm-dd",
-					changeMonth: true,
-					changeYear: true
-				});
-			}
-	);
+	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+	$("#ui-datepicker-div").remove();
+	$(".date-picker").datepicker({
+		dateFormat: "yy-mm-dd",
+		changeMonth: true,
+		changeYear: true
+	});
 	
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search();
 	});
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 	$("#dialog-msg-container").load("../common/dialog_msg.html");
+}
+
+function toPage(page) {
+	$("#inpage").val(page);
+	search();
 }
 
 function search() {
@@ -93,16 +99,16 @@ function search() {
 		data: $("#search-form").serialize(),
 		success : function(data, textStatus) {
 			var pagedList = data.ajaxObj.pagedList,
-					opinions = pagedList.currentPageList;
-			if(typeof (opinions) != "undefined" &&　opinions != null
-					&& opinions.length > 0) {
+					items = pagedList.currentPageList;
+			if(typeof (items) != "undefined" &&　items != null
+					&& items.length > 0) {
 				msg_container.hide();
-				fill_datatable(table, opinions);
-				init_pagination(pagedList.empty, pagedList.pageCount, pagedList.pagesDisplayed,
-						pagedList.currentPage, pagedList.backPage, pagedList.fwdPage, "toPage");
+				fill_datatable(table, items);
 			} else {
 				msg_container.html("<p class='help-block'>暂无相关记录</p>");
 			}
+			init_pagination(pagedList.empty, pagedList.pageCount, pagedList.pagesDisplayed,
+					pagedList.currentPage, pagedList.backPage, pagedList.fwdPage, "toPage");
 		},
 		error : function(jqXHR, status, errorThrown) {
 			msg_container.html(ERROR_MSG);
@@ -161,11 +167,6 @@ function confirm_delete_visitor_opinion(id) {
 			init_dialog_msg(1, ERROR_MSG, ["返回"]);
 		}
 	});
-}
-
-function toPage(page) {
-	$("#inpage").val(page);
-	search();
 }
 
 </script>

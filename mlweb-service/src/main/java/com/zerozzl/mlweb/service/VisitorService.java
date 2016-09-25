@@ -1,6 +1,10 @@
 package com.zerozzl.mlweb.service;
 
-import com.zerozzl.mlweb.persistent.Visitor;
+import java.util.Date;
+import java.util.List;
+
+import com.zerozzl.mlweb.common.paging.PagedList;
+import com.zerozzl.mlweb.domain.MLVisitor;
 
 public interface VisitorService {
 
@@ -12,6 +16,18 @@ public interface VisitorService {
 	/**
 	 * 查找访客
 	 */
-	Visitor getVisitor(String uuid);
+	MLVisitor getVisitor(String uuid);
+	
+	/**
+	 * 查找访客
+	 */
+	PagedList findVisitors(String ip, String country, String province,
+			String city, Date begin, Date end,
+			int page, int pageSize, String sortColumn, int sortType);
+
+	/**
+	 * 根据日期范围查找访客
+	 */
+	List<MLVisitor> findByDate(Date begin, Date end);
 	
 }

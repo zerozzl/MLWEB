@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.dao.DetectionRecordDao;
@@ -17,6 +19,7 @@ import com.zerozzl.mlweb.service.OpenCVService;
 
 public class DetectionRecordServiceImpl implements DetectionRecordService {
 
+	private static Logger logger = LogManager.getLogger();
 	private DetectionRecordDao detectionRecordDao;
 	private OpenCVService openCVService;
 
@@ -61,6 +64,7 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 					}
 				}
 			} catch(IOException e) {
+				logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}

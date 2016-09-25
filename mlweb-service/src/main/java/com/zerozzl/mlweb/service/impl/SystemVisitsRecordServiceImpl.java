@@ -1,6 +1,7 @@
 package com.zerozzl.mlweb.service.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.zerozzl.mlweb.dao.SystemVisitsRecordDao;
@@ -66,14 +67,17 @@ public class SystemVisitsRecordServiceImpl implements SystemVisitsRecordService 
 
 	@Override
 	public MLSystemVisitsRecord getCurrentVisitsCount() {
-		Calendar calendar = Calendar.getInstance();
-		return new MLSystemVisitsRecord(calendar.get(Calendar.YEAR),
-				calendar.get(Calendar.MONTH) + 1,
-				calendar.get(Calendar.DAY_OF_MONTH),
-				(int)visitorOpinionService.countOpinions(calendar.getTime()),
-				(int)detectionRecordService.countDetectionRecords(1, calendar.getTime()),
-				(int)detectionRecordService.countDetectionRecords(2, calendar.getTime()),
-				(int)detectionRecordService.countDetectionRecords(3, calendar.getTime()));
+		Date now = new Date();
+		return new MLSystemVisitsRecord(now,
+				(int)visitorOpinionService.countOpinions(now),
+				(int)detectionRecordService.countDetectionRecords(1, now),
+				(int)detectionRecordService.countDetectionRecords(2, now),
+				(int)detectionRecordService.countDetectionRecords(3, now));
+	}
+
+	@Override
+	public List<MLSystemVisitsRecord> findByDate(Date begin, Date end) {
+		return MLSystemVisitsRecord.init(systemVisitsRecordDao.findByDate(begin, end));
 	}
 
 }

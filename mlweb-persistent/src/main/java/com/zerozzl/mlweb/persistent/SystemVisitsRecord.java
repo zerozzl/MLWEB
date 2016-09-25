@@ -2,12 +2,15 @@ package com.zerozzl.mlweb.persistent;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,6 +23,7 @@ public class SystemVisitsRecord implements Serializable {
 
 	private static final long serialVersionUID = -6880866357674911843L;
 	private String DBID; // 数据库UUID
+	private Date Date; // 日期
 	private int Year; // 年
 	private int Month; // 月
 	private int Day; // 日
@@ -30,10 +34,15 @@ public class SystemVisitsRecord implements Serializable {
 	private int SemanticSegmentationCount; // 图像语义分割统计
 
 	public SystemVisitsRecord() {
-		Calendar cal = Calendar.getInstance();  
-	    this.Year = cal.get(Calendar.YEAR);  
-	    this.Month = cal.get(Calendar.MONTH) + 1;  
-	    this.Day = cal.get(Calendar.DAY_OF_MONTH);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		this.Date = calendar.getTime();
+	    this.Year = calendar.get(Calendar.YEAR);
+	    this.Month = calendar.get(Calendar.MONTH) + 1;
+	    this.Day = calendar.get(Calendar.DAY_OF_MONTH);
 	    this.UniqueVisitorCount = 0;
 	    this.VisitorOpinionCount = 0;
 	    this.PedestrianDetectionCount = 0;
@@ -51,6 +60,16 @@ public class SystemVisitsRecord implements Serializable {
 
 	public void setDBID(String dBID) {
 		DBID = dBID;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "date", nullable = false)
+	public Date getDate() {
+		return Date;
+	}
+
+	public void setDate(Date date) {
+		Date = date;
 	}
 
 	@Column(name = "year", nullable = false)

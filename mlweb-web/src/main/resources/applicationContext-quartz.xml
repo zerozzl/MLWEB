@@ -5,27 +5,45 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- 每小时运行一次，把每日访问人数更新到数据库 -->
+	<!-- 每小时运行一次，把当天检测数量、访客意见数量、访问人数等信息更新到数据库 -->
 	<!-- JOB -->
-	<bean id="dailyVisitsCountPersistentJob" class="com.zerozzl.mlweb.quartz.job.DailyVisitsCountPersistentJob">
+	<bean id="hourlyVisitsCountPersistentJob" class="com.zerozzl.mlweb.quartz.job.HourlyVisitsCountPersistentJob">
         <property name="systemVisitsRecordService" ref="systemVisitsRecordService" />
 	</bean>
 	<!-- Task -->
-    <bean id="dailyUVCountPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="dailyVisitsCountPersistentJob" />
+    <bean id="hourlyVisitsCountPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="hourlyVisitsCountPersistentJob" />
+        <property name="targetMethod" value="execute" />
+    </bean>
+    <!-- Trigger -->
+    <bean id="hourlyVisitsCountPersistentTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="hourlyVisitsCountPersistentTask" />
+        <property name="cronExpression" value="0 0 0/1 * * ?" />
+    </bean>
+    
+	<!-- 每日23:30运行一次, 把访客分布信息更新到数据库, 同时清空当天访问人数 -->
+	<!-- JOB -->
+	<bean id="dailyVisitorInfoPersistentJob" class="com.zerozzl.mlweb.quartz.job.DailyVisitorInfoPersistentJob">
+        <property name="visitorService" ref="visitorService" />
+        <property name="systemVisitorDistributionService" ref="systemVisitorDistributionService" />
+	</bean>
+	<!-- Task -->
+    <bean id="dailyVisitorInfoPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dailyVisitorInfoPersistentJob" />
         <property name="targetMethod" value="execute" />
     </bean>
     <!-- Trigger -->  
-    <bean id="dailyUVCountPersistentTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
-        <property name="jobDetail" ref="dailyUVCountPersistentTask" />  
-        <property name="cronExpression" value="0 0 0/1 * * ?" />  
+    <bean id="dailyVisitorInfoPersistentTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail" ref="dailyVisitorInfoPersistentTask" />  
+        <property name="cronExpression" value="0 30 23 * * ?" />  
     </bean>
     
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" autowire="no">
 		<property name="waitForJobsToCompleteOnShutdown" value="true" />
 		<property name="triggers">
 			<list>
-				<ref bean="dailyUVCountPersistentTaskCronTrigger" />
+				<ref bean="hourlyVisitsCountPersistentTaskCronTrigger" />
+				<ref bean="dailyVisitorInfoPersistentTaskCronTrigger" />
 			</list>
 		</property>
 		<property name="quartzProperties">

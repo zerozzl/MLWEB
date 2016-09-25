@@ -24,5 +24,9 @@
 	<bean id="systemVisitsRecordDao" class="com.zerozzl.mlweb.dao.impl.SystemVisitsRecordDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
+	
+	<bean id="systemVisitorDistributionDao" class="com.zerozzl.mlweb.dao.impl.SystemVisitorDistributionDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 
 </beans>

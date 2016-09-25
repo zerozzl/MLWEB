@@ -1,4 +1,3 @@
-
 <style>
 .sub-header {
   padding-bottom: 10px;
@@ -14,30 +13,28 @@
 	text-align: center;
 }
 
+#general_overview {
+	height: 300px;
+}
+
 #statistical-today-container {
-	overflow: auto;
-	margin-bottom: 10px;
-	/* border: 1px solid #000; */
-}
-
-#statistical-today-container>.statistical-holder {
-	float: left;
-	margin-right: 50px;
-	/* border:1px solid #000; */
-}
-
-#statistical-today-container>.statistical-holder>h4 {
 	margin-bottom: 20px;
 }
 
-#current_visits_count {
-	width: 350px;
-	height: 180px;
+#statistical-today-container h4 {
+	margin-bottom: 20px;
+}
+
+#statistical-today-container .col-xs-6 {
+	border-left: 1px solid #eeeeee;
+}
+
+#current-visits-count {
+	height: 200px;
 }
 
 #uv-count {
-	width: 300px;
-	height: 180px;
+	height: 200px;
 }
 
 #uv-count .quantity {
@@ -53,23 +50,35 @@
 }
 
 #visitor-opinion-count {
-	height: 180px;
+	text-align: center;
+	height: 200px;
 }
 
 #visitor-opinion-count .quantity {
-	float: left;
-	margin-top: -20px;
-	margin-left: 20px;
 	font-size: 150px;
 }
 
 #visitor-opinion-count .unit{
-	float: left;
-	margin-top: 105px;
 	margin-left: 10px;
-	font-size: 30px;
 	color: #777777;
+	font-size: 30px;
 	font-weight: bold;
+}
+
+#visitor-distribution-container {
+	margin-bottom: 20px;
+}
+
+#visitor-distribution-container .col-xs-12 {
+	border-right: 1px solid #eeeeee;
+}
+
+#visitor-distribution {
+	height: 400px;
+}
+
+#visitor-distribution-pie {
+	height: 400px;
 }
 
 #visitor-opinion-container>table {
@@ -79,49 +88,118 @@
 
 <script>
 function init_dashboard() {
-	load_dependent_js(new Array("../highcharts/4.2.6/highcharts.js",
-			"../highcharts/4.2.6/highcharts-more.js",
-    		"../highcharts/4.2.6/modules/solid-gauge.js"),
-    		function(){
-				load_uv_info();
-				load_current_visits_count();
-			}
-	);
+	test();
+	test2();
+	load_general_overview();
+	load_uv_info();
+	load_current_visits_count();
 	load_visitor_opinion();
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
-function load_visitor_opinion() {
+function load_general_overview() {
 	$.ajax({
 		traditional : true,
 		type : "post",
 		dataType : "json",
 		cache : false,
 		timeout : 10000,
-		url : "findUnreadVisitorOpinions.action",
+		url : "getGeneralOverview.action",
 		success : function(data, textStatus) {
-			var container = $("#visitor-opinion-container"), opinions = data.ajaxObj.opinions;
-			if (opinions.length > 0) {
-				container.find(".msg-container").remove();
-				var table = container.find("table");
-				table.show();
-				for(var i = 0; i < opinions.length; i++) {
-					var item = opinions[i], image = "";
-					if(item.includePic == "1") {
-						image = "<i class='icon icon-blue icon-image'></i>";
-					}
-					var tr = "<tr><td>" + (i+1) + "</td><td><a class='font-blod' uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a></td><td>" + image
-							+ "</td><td>" + item.creationDateS + "</td><td><a visitorid='" + item.visitorId + "'>" + item.visitorId + "</a></td></tr>";
-					table.append(tr);
-				}
-			} else {
-				container.find(".msg-container").html("<p class='help-block'>暂无未读访客评价</p>");
-			}
+			plot_general_overview(data.ajaxObj);
 		},
 		error : function(jqXHR, status, errorThrown) {
-			$("#visitor-opinion-container").find(".msg-container").html(ERROR_MSG);
+			$("#general_overview").html(ERROR_MSG);
 		}
 	});
+}
+
+function plot_general_overview(data) {
+	var xaxis = new Array(), pd = new Array(), fd = new Array(), ss = new Array(), average = new Array();
+	var records = data.records;
+	if(typeof (records) != "undefined" &&　records != null
+			&& records.length > 0) {
+		for(var i = 0; i < records.length; i++) {
+			var item = records[i];
+			xaxis.push(item.dateS);
+			pd.push(item.pedestrianDetectionCount);
+			fd.push(item.faceDetectionCount);
+			ss.push(item.semanticSegmentationCount);
+			average.push(item.averageDetectTimes);
+		}
+	}
+	$("#general_overview").highcharts({
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: xaxis
+        },
+        yAxis: {
+        	title: null
+        },
+        labels: {
+            items: [{
+                html: "总体检测比例",
+                style: {
+                    left: "40px",
+                    top: "10px",
+                    fontSize: 15,
+                    color: "#777777"
+                }
+            }]
+        },
+        series: [{
+            type: "column",
+            name: "行人检测",
+            data: pd
+        }, {
+            type: "column",
+            name: "人脸检测",
+            data: fd
+        }, {
+            type: "column",
+            name: "图像语义分割",
+            data: ss
+        }, {
+            type: "spline",
+            name: "平均检测次数",
+            data: average,
+            marker: {
+                lineWidth: 2,
+                lineColor: Highcharts.getOptions().colors[3],
+                fillColor: "white"
+            }
+        }, {
+            type: "pie",
+            name: "检测次数",
+            data: [{
+                name: "行人检测",
+                y: data.pdCount,
+                color: Highcharts.getOptions().colors[0]
+            }, {
+                name: "人脸检测",
+                y: data.fdCount,
+                color: Highcharts.getOptions().colors[1]
+            }, {
+                name: "图像语义分割",
+                y: data.ssCount,
+                color: Highcharts.getOptions().colors[2]
+            }],
+            center: [70, 60],
+            size: 100,
+            showInLegend: false,
+            dataLabels: {
+                enabled: false
+            }
+        }]
+    });
 }
 
 function load_uv_info() {
@@ -133,7 +211,7 @@ function load_uv_info() {
 		timeout : 10000,
 		url : "getUVInfo.action",
 		success : function(data, textStatus) {
-			draw_uv_info(data.ajaxObj);
+			plot_uv_info(data.ajaxObj);
 		},
 		error : function(jqXHR, status, errorThrown) {
 			$("#uv-count").html(ERROR_MSG);
@@ -141,14 +219,14 @@ function load_uv_info() {
 	});
 }
 
-function draw_uv_info(data) {
+function plot_uv_info(data) {
 	$("#uv-count").highcharts({
 		chart: {
             type: "solidgauge"
         },
         title: null,
         pane: {
-            center: ["50%", "85%"],
+            center: ["50%", "90%"],
             size: "160%",
             startAngle: -90,
             endAngle: 90,
@@ -175,7 +253,7 @@ function draw_uv_info(data) {
             min: 0,
             max: data.uv,
             stops: [
-                [1.0, "#428bca"] // red
+                [1.0, "#f7a35c"]
             ],
             lineWidth: 0,
             minorTickInterval: null,
@@ -209,19 +287,19 @@ function load_current_visits_count() {
 		timeout : 10000,
 		url : "getCurrentVisitsCount.action",
 		success : function(data, textStatus) {
-			draw_current_visits_count(data.ajaxObj);
-			$("#visitor-opinion-count").html("<div class='quantity'>"
-					+ data.ajaxObj.vocount + "</div><div class='unit'>条</div>");
+			plot_current_visits_count(data.ajaxObj);
+			$("#visitor-opinion-count").html("<span class='quantity'>"
+					+ data.ajaxObj.vocount + "</span><span class='unit'>条</span>");
 		},
 		error : function(jqXHR, status, errorThrown) {
-			$("#current_visits_count").html(ERROR_MSG);
+			$("#current-visits-count").html(ERROR_MSG);
 			$("#visitor-opinion-count").html(ERROR_MSG);
 		}
 	});
 }
 
-function draw_current_visits_count(data) {
-	$("#current_visits_count").highcharts({
+function plot_current_visits_count(data) {
+	$("#current-visits-count").highcharts({
         chart: {
             type: "column"
         },
@@ -270,22 +348,526 @@ function draw_current_visits_count(data) {
 	});
 }
 
+function load_visitor_opinion() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "findUnreadVisitorOpinions.action",
+		success : function(data, textStatus) {
+			var container = $("#visitor-opinion-container"), opinions = data.ajaxObj.opinions;
+			if (opinions.length > 0) {
+				container.find(".msg-container").remove();
+				var table = container.find("table");
+				table.show();
+				for(var i = 0; i < opinions.length; i++) {
+					var item = opinions[i], image = "";
+					if(item.includePic == "1") {
+						image = "<i class='icon icon-blue icon-image'></i>";
+					}
+					var tr = "<tr><td>" + (i+1) + "</td><td><a class='font-blod' uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a></td><td>" + image
+							+ "</td><td>" + item.creationDateS + "</td><td><a visitorid='" + item.visitorId + "'>" + item.visitorId + "</a></td></tr>";
+					table.append(tr);
+				}
+			} else {
+				container.find(".msg-container").html("<p class='help-block'>暂无未读访客评价</p>");
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#visitor-opinion-container").find(".msg-container").html(ERROR_MSG);
+		}
+	});
+}
+
+function test() {
+    // Prepare demo data
+    var data = [
+        {
+            "hc-key": "tw-ph",
+            "value": 0
+        },
+        {
+            "hc-key": "cn-sh",
+            "value": 1
+        },
+        {
+            "hc-key": "tw-km",
+            "value": 2
+        },
+        {
+            "hc-key": "cn-zj",
+            "value": 3
+        },
+        {
+            "hc-key": "tw-lk",
+            "value": 4
+        },
+        {
+            "hc-key": "cn-3664",
+            "value": 5
+        },
+        {
+            "hc-key": "cn-3681",
+            "value": 6
+        },
+        {
+            "hc-key": "cn-fj",
+            "value": 7
+        },
+        {
+            "hc-key": "cn-gd",
+            "value": 8
+        },
+        {
+            "hc-key": "tw-tw",
+            "value": 9
+        },
+        {
+            "hc-key": "tw-cs",
+            "value": 10
+        },
+        {
+            "hc-key": "cn-6657",
+            "value": 11
+        },
+        {
+            "hc-key": "cn-6663",
+            "value": 12
+        },
+        {
+            "hc-key": "cn-6665",
+            "value": 13
+        },
+        {
+            "hc-key": "cn-6666",
+            "value": 14
+        },
+        {
+            "hc-key": "cn-6667",
+            "value": 15
+        },
+        {
+            "hc-key": "cn-6669",
+            "value": 16
+        },
+        {
+            "hc-key": "cn-6670",
+            "value": 17
+        },
+        {
+            "hc-key": "cn-6671",
+            "value": 18
+        },
+        {
+            "hc-key": "tw-kh",
+            "value": 19
+        },
+        {
+            "hc-key": "tw-hs",
+            "value": 20
+        },
+        {
+            "hc-key": "cn-yn",
+            "value": 21
+        },
+        {
+            "hc-key": "cn-xz",
+            "value": 22
+        },
+        {
+            "hc-key": "tw-hh",
+            "value": 23
+        },
+        {
+            "hc-key": "tw-cl",
+            "value": 24
+        },
+        {
+            "hc-key": "tw-ml",
+            "value": 25
+        },
+        {
+            "hc-key": "cn-nx",
+            "value": 26
+        },
+        {
+            "hc-key": "cn-sa",
+            "value": 27
+        },
+        {
+            "hc-key": "tw-ty",
+            "value": 28
+        },
+        {
+            "hc-key": "cn-3682",
+            "value": 29
+        },
+        {
+            "hc-key": "tw-cg",
+            "value": 30
+        },
+        {
+            "hc-key": "cn-6655",
+            "value": 31
+        },
+        {
+            "hc-key": "cn-ah",
+            "value": 32
+        },
+        {
+            "hc-key": "cn-hu",
+            "value": 33
+        },
+        {
+            "hc-key": "tw-hl",
+            "value": 34
+        },
+        {
+            "hc-key": "tw-th",
+            "value": 35
+        },
+        {
+            "hc-key": "cn-6656",
+            "value": 36
+        },
+        {
+            "hc-key": "tw-nt",
+            "value": 37
+        },
+        {
+            "hc-key": "cn-6658",
+            "value": 38
+        },
+        {
+            "hc-key": "cn-6659",
+            "value": 39
+        },
+        {
+            "hc-key": "cn-cq",
+            "value": 40
+        },
+        {
+            "hc-key": "cn-hn",
+            "value": 41
+        },
+        {
+            "hc-key": "tw-yl",
+            "value": 42
+        },
+        {
+            "hc-key": "cn-6660",
+            "value": 43
+        },
+        {
+            "hc-key": "cn-6661",
+            "value": 44
+        },
+        {
+            "hc-key": "cn-6662",
+            "value": 45
+        },
+        {
+            "hc-key": "cn-6664",
+            "value": 46
+        },
+        {
+            "hc-key": "cn-6668",
+            "value": 47
+        },
+        {
+            "hc-key": "tw-pt",
+            "value": 48
+        },
+        {
+            "hc-key": "tw-tt",
+            "value": 49
+        },
+        {
+            "hc-key": "tw-tn",
+            "value": 50
+        },
+        {
+            "hc-key": "cn-bj",
+            "value": 51
+        },
+        {
+            "hc-key": "cn-hb",
+            "value": 52
+        },
+        {
+            "hc-key": "tw-il",
+            "value": 53
+        },
+        {
+            "hc-key": "tw-tp",
+            "value": 54
+        },
+        {
+            "hc-key": "cn-sd",
+            "value": 55
+        },
+        {
+            "hc-key": "tw-ch",
+            "value": 56
+        },
+        {
+            "hc-key": "cn-tj",
+            "value": 57
+        },
+        {
+            "hc-key": "cn-ha",
+            "value": 58
+        },
+        {
+            "hc-key": "cn-jl",
+            "value": 59
+        },
+        {
+            "hc-key": "cn-qh",
+            "value": 60
+        },
+        {
+            "hc-key": "cn-xj",
+            "value": 61
+        },
+        {
+            "hc-key": "cn-nm",
+            "value": 62
+        },
+        {
+            "hc-key": "cn-hl",
+            "value": 63
+        },
+        {
+            "hc-key": "cn-sc",
+            "value": 64
+        },
+        {
+            "hc-key": "cn-gz",
+            "value": 65
+        },
+        {
+            "hc-key": "cn-gx",
+            "value": 66
+        },
+        {
+            "hc-key": "cn-ln",
+            "value": 67
+        },
+        {
+            "hc-key": "cn-js",
+            "value": 68
+        },
+        {
+            "hc-key": "cn-gs",
+            "value": 69
+        },
+        {
+            "hc-key": "cn-sx",
+            "value": 70
+        },
+        {
+            "hc-key": "cn-he",
+            "value": 71
+        },
+        {
+            "hc-key": "cn-jx",
+            "value": 72
+        }
+    ];
+
+    // Initiate the chart
+    $("#visitor-distribution").highmaps("Map", {
+        title: null,
+        credits: {
+            enabled: false
+        },
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: "top"
+            }
+        },
+        legend: {
+            layout: "vertical",
+            borderWidth: 0,
+            align: "left",
+            verticalAlign: "middle",
+            y: 20
+        },
+        colorAxis: {
+            min: 0
+           /*  minColor: '#EEEEFF',
+            maxColor: '#000022',
+            stops: [
+                [0, '#EFEFFF'],
+                [0.67, '#4444FF'],
+                [1, '#000022']
+            ] */
+        },
+        series : [{
+            data : data,
+            mapData: Highmaps.maps["countries/cn/custom/cn-all-sar-taiwan"],
+            joinBy: "hc-key",
+            name: "访客数量",
+            states: {
+                hover: {
+                    color: "#BADA55"
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: "{point.name}"
+            }
+        }]
+    });
+}
+
+function test2() {
+	$("#visitor-distribution-pie").highcharts({
+        chart: {
+            type: "pie"
+        },
+        title: null,
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.name}: {point.y:.1f}%"
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'Microsoft Internet Explorer',
+                y: 56.33,
+                drilldown: 'Microsoft Internet Explorer'
+            }, {
+                name: 'Chrome',
+                y: 24.03,
+                drilldown: 'Chrome'
+            }, {
+                name: 'Firefox',
+                y: 10.38,
+                drilldown: 'Firefox'
+            }, {
+                name: 'Safari',
+                y: 4.77,
+                drilldown: 'Safari'
+            }, {
+                name: 'Opera',
+                y: 0.91,
+                drilldown: 'Opera'
+            }, {
+                name: 'Proprietary or Undetectable',
+                y: 0.2,
+                drilldown: null
+            }]
+        }],
+        drilldown: {
+            series: [{
+                name: 'Microsoft Internet Explorer',
+                id: 'Microsoft Internet Explorer',
+                data: [
+                    ['v11.0', 24.13],
+                    ['v8.0', 17.2],
+                    ['v9.0', 8.11],
+                    ['v10.0', 5.33],
+                    ['v6.0', 1.06],
+                    ['v7.0', 0.5]
+                ]
+            }, {
+                name: 'Chrome',
+                id: 'Chrome',
+                data: [
+                    ['v40.0', 5],
+                    ['v41.0', 4.32],
+                    ['v42.0', 3.68],
+                    ['v39.0', 2.96],
+                    ['v36.0', 2.53],
+                    ['v43.0', 1.45],
+                    ['v31.0', 1.24],
+                    ['v35.0', 0.85],
+                    ['v38.0', 0.6],
+                    ['v32.0', 0.55],
+                    ['v37.0', 0.38],
+                    ['v33.0', 0.19],
+                    ['v34.0', 0.14],
+                    ['v30.0', 0.14]
+                ]
+            }, {
+                name: 'Firefox',
+                id: 'Firefox',
+                data: [
+                    ['v35', 2.76],
+                    ['v36', 2.32],
+                    ['v37', 2.31],
+                    ['v34', 1.27],
+                    ['v38', 1.02],
+                    ['v31', 0.33],
+                    ['v33', 0.22],
+                    ['v32', 0.15]
+                ]
+            }, {
+                name: 'Safari',
+                id: 'Safari',
+                data: [
+                    ['v8.0', 2.56],
+                    ['v7.1', 0.77],
+                    ['v5.1', 0.42],
+                    ['v5.0', 0.3],
+                    ['v6.1', 0.29],
+                    ['v7.0', 0.26],
+                    ['v6.2', 0.17]
+                ]
+            }, {
+                name: 'Opera',
+                id: 'Opera',
+                data: [
+                    ['v12.x', 0.34],
+                    ['v28', 0.24],
+                    ['v27', 0.17],
+                    ['v29', 0.16]
+                ]
+            }]
+        }
+    });	
+}
+
 </script>
 
-<h2 class="page-header">Dashboard</h2>
+<h2 class="page-header">控制台</h2>
+<!-- 总体检测情况 -->
+<div id="general_overview">
+	<div class="loading-container">
+		<img src="../images/sys/loading_l.gif" />
+	</div>
+</div>
 
 <!-- 本日访问情况 -->
 <h3 class="sub-header font-blod">本日访问情况</h3>
-<div id="statistical-today-container">
-	<div class="statistical-holder">
+<div id="statistical-today-container" class="row">
+	<div class="col-xs-6 col-md-4" style="border-left:none;">
 		<h4>检测统计</h4>
-		<div id="current_visits_count">
+		<div id="current-visits-count">
 			<div class="loading-container">
 				<img src="../images/sys/loading_l.gif" />
 			</div>
 		</div>
 	</div>
-	<div class="statistical-holder">
+	<div class="col-xs-6 col-md-4">
 		<h4>访客数</h4>
 		<div id="uv-count">
 			<div class="loading-container">
@@ -293,7 +875,7 @@ function draw_current_visits_count(data) {
 			</div>
 		</div>
 	</div>
-	<div class="statistical-holder">
+	<div class="col-xs-6 col-md-4">
 		<h4>访客意见</h4>
 		<div id="visitor-opinion-count">
 			<div class="loading-container">
@@ -302,6 +884,26 @@ function draw_current_visits_count(data) {
 		</div>
 	</div>
 </div>
+
+<!-- 访客分布情况 -->
+<h3 class="sub-header font-blod">访客分布情况</h3>
+<div id="visitor-distribution-container" class="row">
+	<div class="col-xs-12 col-md-8">
+	  	<div id="visitor-distribution">
+			<div class="loading-container">
+				<img src="../images/sys/loading_l.gif" />
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-4">
+		<div id="visitor-distribution-pie">
+			<div class="loading-container">
+				<img src="../images/sys/loading_l.gif" />
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <!-- 访客意见 -->
 <h3 class="sub-header font-blod">访客意见</h3>

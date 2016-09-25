@@ -6,7 +6,7 @@ import java.util.Random;
 import org.apache.commons.lang3.StringUtils;
 
 import com.zerozzl.mlweb.domain.MLUser;
-import com.zerozzl.mlweb.persistent.Visitor;
+import com.zerozzl.mlweb.domain.MLVisitor;
 import com.zerozzl.mlweb.service.UserService;
 import com.zerozzl.mlweb.service.VisitorService;
 
@@ -49,7 +49,7 @@ public class AuthenticateAction extends _BaseAction {
 	}
 
 	public String checkVisitor() {
-		Visitor visitor = _getSessionVisitor();
+		MLVisitor visitor = _getSessionVisitor();
 		if (visitor == null) {
 //			String uuid = visitorService.addVisitor(_getRequestIp());
 			String uuid = visitorService.addVisitor(getRandomIp());

@@ -20,6 +20,8 @@
 	
 	<bean id="adminAction" class="com.zerozzl.mlweb.web.action.admin.AdminAction" scope="prototype">
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
+		<property name="hourlyVisitsCountPersistentJob" ref="hourlyVisitsCountPersistentJob" />
+		<property name="dailyVisitorInfoPersistentJob" ref="dailyVisitorInfoPersistentJob" />
 	</bean>
 	
 	<bean id="adDashboardAction" class="com.zerozzl.mlweb.web.action.admin.AdDashboardAction" scope="prototype">
@@ -28,6 +30,10 @@
 	
 	<bean id="adVisitorOpinionAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorOpinionAction" scope="prototype">
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
+	</bean>
+	
+	<bean id="adVisitorAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorAction" scope="prototype">
+		<property name="visitorService" ref="visitorService" />
 	</bean>
 
 </beans>
