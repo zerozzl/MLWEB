@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.zerozzl.mlweb.common.paging.OrderByParameter;
 import com.zerozzl.mlweb.common.paging.QueryParameter;
 import com.zerozzl.mlweb.dao.SystemVisitsRecordDao;
 import com.zerozzl.mlweb.persistent.SystemVisitsRecord;
@@ -28,7 +29,7 @@ public class SystemVisitsRecordDaoImpl extends _GenericDaoImpl<SystemVisitsRecor
 		if(end != null) {
 			params.add(new QueryParameter("date", "endDate", 5, end));
 		}
-		return super.find(params);
+		return super.find(params, OrderByParameter.init("date", 1));
 	}
 
 }

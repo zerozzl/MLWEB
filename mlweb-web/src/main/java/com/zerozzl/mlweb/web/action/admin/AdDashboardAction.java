@@ -2,6 +2,7 @@ package com.zerozzl.mlweb.web.action.admin;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -71,9 +72,10 @@ public class AdDashboardAction extends _BaseAction {
 		Date begin = calendar.getTime();
 		MLSystemVisitorDistribution distribution = systemVisitorDistributionService.findByDate(begin, end);
 		Map<String, MLSystemVisitorDistribution.Country> countries = distribution.getCountries();
-		Map<String, String> mapCode = HighmapsUtils.getChinaMapCode();
 		
-		StringBuffer mapDataBuf = new StringBuffer("[");
+		// 生成地图数据
+		Map<String, String> mapCode = HighmapsUtils.getChinaMapCode();
+		StringBuffer dataBuf = new StringBuffer("[");
 		if(countries != null && countries.containsKey("中国")) {
 			Map<String, MLSystemVisitorDistribution.Province> provinces = countries.get("中国").getProvinces();
 			for (String name : mapCode.keySet()) {
@@ -81,15 +83,55 @@ public class AdDashboardAction extends _BaseAction {
 				if(provinces.containsKey(name)) {
 					val = provinces.get(name).getQuantity();
 				}
-				mapDataBuf.append("{'hc-key':'").append(mapCode.get(name)).append("','value':" + val + "},");
+				dataBuf.append("{'hc-key':'").append(mapCode.get(name)).append("','value':").append(val).append("},");
 			}
 		} else {
 			for (String name : mapCode.keySet()) {
-				mapDataBuf.append("{'hc-key':'").append(mapCode.get(name)).append("','value':0},");
+				dataBuf.append("{'hc-key':'").append(mapCode.get(name)).append("','value':0},");
 			}
 		}
-		String mapData = mapDataBuf.substring(0, mapDataBuf.length() - 1) + "]";
+		String mapData = dataBuf.substring(0, dataBuf.length() - 1) + "]";
+		
+		// 生成饼图数据
+		dataBuf = new StringBuffer("[");
+		StringBuffer dataBuf2 = new StringBuffer("[");
+		int other = 0;
+		if(countries != null) {
+			Iterator<String> it = countries.keySet().iterator();
+			while(it.hasNext()) {
+				String country = it.next();
+				if(country.equals("中国")) {
+					Map<String, MLSystemVisitorDistribution.Province> provinces = countries.get(country).getProvinces();
+					if(provinces != null) {
+						for(MLSystemVisitorDistribution.Province p : provinces.values()) {
+							dataBuf.append("{'name':'").append(p.getName())
+									.append("','y':").append(p.getQuantity())
+									.append(",'drilldown':'").append(p.getName()).append("'},");
+							
+							StringBuffer tmpBuf = new StringBuffer("");
+							tmpBuf.append("{'name':'").append(p.getName())
+									.append("','id':'").append(p.getName())
+									.append("','data':[");
+							Map<String, MLSystemVisitorDistribution.City> cities = p.getCities();
+							if(cities != null) {
+								for(MLSystemVisitorDistribution.City c : cities.values()) {
+									tmpBuf.append("['").append(c.getName()).append("',").append(c.getQuantity()).append("],");
+								}
+							}
+							dataBuf2.append(tmpBuf.substring(0, tmpBuf.length() - 1) + "]},");
+						}
+					}
+				} else {
+					other += countries.get(country).getQuantity();
+				}
+			}
+		}
+		String pieData = dataBuf.append("{'name':'其他','y':").append(other).append(",'drilldown':null}]").toString();
+		String pieDrillData = dataBuf2.substring(0, dataBuf2.length() - 1) + "]";
+		
 		ajaxObj.put("mapData", mapData);
+		ajaxObj.put("pieData", pieData);
+		ajaxObj.put("pieDrillData", pieDrillData);
 		return "ajaxInvoSuccess";
 	}
 
