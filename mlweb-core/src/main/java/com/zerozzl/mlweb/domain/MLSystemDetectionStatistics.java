@@ -7,23 +7,19 @@ import java.util.Date;
 import java.util.List;
 
 import com.zerozzl.mlweb.common.tools.FormatUtils;
-import com.zerozzl.mlweb.persistent.SystemVisitsRecord;
+import com.zerozzl.mlweb.persistent.SystemDetectionStatistics;
 
-public class MLSystemVisitsRecord implements Serializable {
+public class MLSystemDetectionStatistics implements Serializable {
 
 	private static final long serialVersionUID = -4428781821362259099L;
 	private Date Date;
-	private int Year;
-	private int Month;
-	private int Day;
-	private int UniqueVisitorCount;
 	private int VisitorOpinionCount;
 	private int PedestrianDetectionCount;
 	private int FaceDetectionCount;
 	private int SemanticSegmentationCount;
 	private double AverageDetectTimes;
 	
-	public MLSystemVisitsRecord(Date date, int vocount, int pdcount, int fdcount, int sscount) {
+	public MLSystemDetectionStatistics(Date date, int vocount, int pdcount, int fdcount, int sscount) {
 		Calendar calendar = Calendar.getInstance();
 		if(date != null) {
 			calendar.setTime(date);
@@ -33,10 +29,6 @@ public class MLSystemVisitsRecord implements Serializable {
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		this.Date = calendar.getTime();
-		this.Year = calendar.get(Calendar.YEAR);
-		this.Month = calendar.get(Calendar.MONTH) + 1;
-		this.Day = calendar.get(Calendar.DAY_OF_MONTH);
-		this.UniqueVisitorCount = 0;
 		this.VisitorOpinionCount = vocount;
 		this.PedestrianDetectionCount = pdcount;
 		this.FaceDetectionCount = fdcount;
@@ -44,24 +36,20 @@ public class MLSystemVisitsRecord implements Serializable {
 		this.AverageDetectTimes = (PedestrianDetectionCount + FaceDetectionCount + SemanticSegmentationCount) / 3.0;
 	}
 	
-	public MLSystemVisitsRecord(SystemVisitsRecord record) {
-		this.Date = record.getDate();
-		this.Year = record.getYear();
-		this.Month = record.getMonth();
-		this.Day = record.getDay();
-		this.UniqueVisitorCount = record.getUniqueVisitorCount();
-		this.VisitorOpinionCount = record.getVisitorOpinionCount();
-		this.PedestrianDetectionCount = record.getPedestrianDetectionCount();
-		this.FaceDetectionCount = record.getFaceDetectionCount();
-		this.SemanticSegmentationCount = record.getSemanticSegmentationCount();
+	public MLSystemDetectionStatistics(SystemDetectionStatistics stat) {
+		this.Date = stat.getDate();
+		this.VisitorOpinionCount = stat.getVisitorOpinionCount();
+		this.PedestrianDetectionCount = stat.getPedestrianDetectionCount();
+		this.FaceDetectionCount = stat.getFaceDetectionCount();
+		this.SemanticSegmentationCount = stat.getSemanticSegmentationCount();
 		this.AverageDetectTimes = (PedestrianDetectionCount + FaceDetectionCount + SemanticSegmentationCount) / 3.0;
 	}
 	
-	public static List<MLSystemVisitsRecord> init(List<SystemVisitsRecord> datas) {
-		List<MLSystemVisitsRecord> list = new ArrayList<MLSystemVisitsRecord>();
+	public static List<MLSystemDetectionStatistics> init(List<SystemDetectionStatistics> datas) {
+		List<MLSystemDetectionStatistics> list = new ArrayList<MLSystemDetectionStatistics>();
 		if(datas != null && !datas.isEmpty()) {
-			for(SystemVisitsRecord o : datas) {
-				list.add(new MLSystemVisitsRecord(o));
+			for(SystemDetectionStatistics o : datas) {
+				list.add(new MLSystemDetectionStatistics(o));
 			}
 		}
 		return list;
@@ -75,22 +63,6 @@ public class MLSystemVisitsRecord implements Serializable {
 		return FormatUtils.dateFormat(Date, "yyyy-MM-dd");
 	}
 
-	public int getYear() {
-		return Year;
-	}
-	
-	public int getMonth() {
-		return Month;
-	}
-	
-	public int getDay() {
-		return Day;
-	}
-	
-	public int getUniqueVisitorCount() {
-		return UniqueVisitorCount;
-	}
-	
 	public int getVisitorOpinionCount() {
 		return VisitorOpinionCount;
 	}

@@ -80,29 +80,29 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 	}
 
 	@Override
-	public List<T> find(String HQL) {
-		List<T> list = new ArrayList<T>();
+	public List find(String HQL) {
+		List list = new ArrayList();
 		if (HQL != null) {
-			list = (List<T>) hibernateTemplate.find(HQL);
+			list = hibernateTemplate.find(HQL);
 		}
 		return list;
 	}
 
-	protected List<T> find(final String HQL, final PagedBean pagedBean) {
+	protected List find(final String HQL, final PagedBean pagedBean) {
 		return find(HQL, null, pagedBean);
 	}
 
-	protected List<T> find(String HQL, Map parameters) {
+	protected List find(String HQL, Map parameters) {
 		return this.find(HQL, parameters, null, false);
 	}
 
-	protected List<T> find(String HQL, Map parameters, PagedBean pagedBean) {
+	protected List find(String HQL, Map parameters, PagedBean pagedBean) {
 		return this.find(HQL, parameters, pagedBean, false);
 	}
 
-	protected List<T> find (final String HQL, final Map parameters,
+	protected List find (final String HQL, final Map parameters,
 			final PagedBean pagedBean, final boolean useCache) {
-		return (List<T>) hibernateTemplate.execute(new HibernateCallback() {
+		return (List) hibernateTemplate.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				Query query = session.createQuery(HQL);
 				query.setCacheable(useCache);

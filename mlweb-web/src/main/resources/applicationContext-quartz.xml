@@ -8,7 +8,7 @@
 	<!-- 每小时运行一次，把当天检测数量、访客意见数量、访问人数等信息更新到数据库 -->
 	<!-- JOB -->
 	<bean id="hourlyVisitsCountPersistentJob" class="com.zerozzl.mlweb.quartz.job.HourlyVisitsCountPersistentJob">
-        <property name="systemVisitsRecordService" ref="systemVisitsRecordService" />
+        <property name="systemDetectionStatisticsService" ref="systemDetectionStatisticsService" />
 	</bean>
 	<!-- Task -->
     <bean id="hourlyVisitsCountPersistentTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

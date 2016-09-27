@@ -2,6 +2,7 @@ package com.zerozzl.mlweb.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.zerozzl.mlweb.dao.SystemVisitorDistributionDao;
 import com.zerozzl.mlweb.domain.MLSystemVisitorDistribution;
@@ -56,6 +57,11 @@ public class SystemVisitorDistributionServiceImpl implements SystemVisitorDistri
 		MLSystemVisitorDistribution distribution = new MLSystemVisitorDistribution();
 		distribution.convertFromDBModel(systemVisitorDistributionDao.findByDate(begin, end));
 		return distribution;
+	}
+
+	@Override
+	public Map<Date, Integer> countVisitorAccess(Date begin, Date end) {
+		return systemVisitorDistributionDao.sumByDate(begin, end);
 	}
 	
 }

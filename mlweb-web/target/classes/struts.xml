@@ -73,6 +73,7 @@
 		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
 		<action name="getCurrentVisitsCount" class="adDashboardAction" method="getCurrentVisitsCount" />
 		<action name="getVisitorDistribution" class="adDashboardAction" method="getVisitorDistribution" />
+		<action name="getVisitorAccess" class="adDashboardAction" method="getVisitorAccess" />
 		
 		<!-- 用户意见 -->
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />

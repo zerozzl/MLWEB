@@ -2,7 +2,10 @@ package com.zerozzl.mlweb.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.zerozzl.mlweb.common.paging.QueryParameter;
 import com.zerozzl.mlweb.dao.SystemVisitorDistributionDao;
@@ -31,6 +34,22 @@ public class SystemVisitorDistributionDaoImpl extends _GenericDaoImpl<SystemVisi
 			params.add(new QueryParameter("date", "endDate", 5, end));
 		}
 		return super.find(params);
+	}
+
+	@Override
+	public Map<Date, Integer> sumByDate(Date begin, Date end) {
+		Map<Date, Integer> map = new TreeMap<Date, Integer>();
+		Map<String, Date> params = new HashMap<String, Date>();
+		params.put("beginDate", begin);
+		params.put("endDate", end);
+		@SuppressWarnings("unchecked")
+		List<Object[]> list = super.find("select o.date, sum(o.quantity) from SystemVisitorDistribution o where o.date >= :beginDate and o.date < :endDate group by o.date order by o.date asc", params);
+		if(list != null && !list.isEmpty()) {
+			for(Object[] o : list) {
+				map.put((Date)o[0], Integer.parseInt(o[1].toString()));
+			}
+		}
+		return map;
 	}
 
 }

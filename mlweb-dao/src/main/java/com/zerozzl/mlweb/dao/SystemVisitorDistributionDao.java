@@ -2,6 +2,7 @@ package com.zerozzl.mlweb.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.zerozzl.mlweb.persistent.SystemVisitorDistribution;
 
@@ -17,4 +18,8 @@ public interface SystemVisitorDistributionDao extends _GenericDao<SystemVisitorD
 	 */
 	List<SystemVisitorDistribution> findByDate(Date begin, Date end);
 	
+	/**
+	 * 统计给定时间范围内的每日访问量
+	 */
+	Map<Date, Integer> sumByDate(Date begin, Date end);
 }

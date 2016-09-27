@@ -1,5 +1,6 @@
 package com.zerozzl.mlweb.web.action.admin;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -7,17 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.zerozzl.mlweb.common.statistics.WebTraffic;
+import com.zerozzl.mlweb.common.tools.FormatUtils;
 import com.zerozzl.mlweb.common.tools.HighmapsUtils;
+import com.zerozzl.mlweb.domain.MLSystemDetectionStatistics;
 import com.zerozzl.mlweb.domain.MLSystemVisitorDistribution;
-import com.zerozzl.mlweb.domain.MLSystemVisitsRecord;
+import com.zerozzl.mlweb.service.SystemDetectionStatisticsService;
 import com.zerozzl.mlweb.service.SystemVisitorDistributionService;
-import com.zerozzl.mlweb.service.SystemVisitsRecordService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
 public class AdDashboardAction extends _BaseAction {
 
 	private static final long serialVersionUID = -5182179450681803699L;
-	private SystemVisitsRecordService systemVisitsRecordService;
+	private SystemDetectionStatisticsService systemDetectionStatisticsService;
 	private SystemVisitorDistributionService systemVisitorDistributionService;
 
 	public String getGeneralOverview() {
@@ -30,10 +32,10 @@ public class AdDashboardAction extends _BaseAction {
 		Date end = calendar.getTime();
 		calendar.add(Calendar.DATE, -30);
 		Date begin = calendar.getTime();
-		List<MLSystemVisitsRecord> records = systemVisitsRecordService.findByDate(begin, end);
+		List<MLSystemDetectionStatistics> records = systemDetectionStatisticsService.findByDate(begin, end);
 		
 		int pdCount = 0, fdCount = 0, ssCount = 0;
-		for(MLSystemVisitsRecord o : records) {
+		for(MLSystemDetectionStatistics o : records) {
 			pdCount += o.getPedestrianDetectionCount();
 			fdCount += o.getFaceDetectionCount();
 			ssCount += o.getSemanticSegmentationCount();
@@ -52,7 +54,7 @@ public class AdDashboardAction extends _BaseAction {
 	}
 	
 	public String getCurrentVisitsCount() {
-		MLSystemVisitsRecord record = systemVisitsRecordService.getCurrentVisitsCount();
+		MLSystemDetectionStatistics record = systemDetectionStatisticsService.getCurrentVisitsCount();
 		ajaxObj.put("vocount", record.getVisitorOpinionCount());
 		ajaxObj.put("pdcount", record.getPedestrianDetectionCount());
 		ajaxObj.put("fdcount", record.getFaceDetectionCount());
@@ -135,6 +137,33 @@ public class AdDashboardAction extends _BaseAction {
 		return "ajaxInvoSuccess";
 	}
 
+	public String getVisitorAccess() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.add(Calendar.DATE, 1);
+		Date end = calendar.getTime();
+		calendar.add(Calendar.DATE, -30);
+		Date begin = calendar.getTime();
+		Map<Date, Integer> data = systemVisitorDistributionService.countVisitorAccess(begin, end);
+		List<String> dateList = new ArrayList<String>();
+		List<Integer> countList = new ArrayList<Integer>();
+		if(data != null && !data.isEmpty()) {
+			Iterator<Date> it = data.keySet().iterator();
+			while(it.hasNext()) {
+				Date d = it.next();
+				dateList.add(FormatUtils.dateFormat(d, "yyyy-MM-dd"));
+				countList.add(data.get(d));
+			}
+		}
+		
+		ajaxObj.put("date", dateList);
+		ajaxObj.put("count", countList);
+		return "ajaxInvoSuccess";
+	}
+	
 	/********** get() and set() **********/
 	
 	@Override
@@ -142,8 +171,8 @@ public class AdDashboardAction extends _BaseAction {
 		return super.ajaxObj;
 	}
 
-	public void setSystemVisitsRecordService(SystemVisitsRecordService systemVisitsRecordService) {
-		this.systemVisitsRecordService = systemVisitsRecordService;
+	public void setSystemDetectionStatisticsService(SystemDetectionStatisticsService systemDetectionStatisticsService) {
+		this.systemDetectionStatisticsService = systemDetectionStatisticsService;
 	}
 
 	public void setSystemVisitorDistributionService(SystemVisitorDistributionService systemVisitorDistributionService) {

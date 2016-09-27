@@ -6,22 +6,20 @@ import java.util.List;
 
 import com.zerozzl.mlweb.common.paging.OrderByParameter;
 import com.zerozzl.mlweb.common.paging.QueryParameter;
-import com.zerozzl.mlweb.dao.SystemVisitsRecordDao;
-import com.zerozzl.mlweb.persistent.SystemVisitsRecord;
+import com.zerozzl.mlweb.dao.SystemDetectionStatisticsDao;
+import com.zerozzl.mlweb.persistent.SystemDetectionStatistics;
 
-public class SystemVisitsRecordDaoImpl extends _GenericDaoImpl<SystemVisitsRecord, String> implements SystemVisitsRecordDao {
+public class SystemDetectionStatisticsDaoImpl extends _GenericDaoImpl<SystemDetectionStatistics, String> implements SystemDetectionStatisticsDao {
 
 	@Override
-	public List<SystemVisitsRecord> findByDate(int year, int month, int day) {
+	public List<SystemDetectionStatistics> findByDate(Date date) {
 		List<QueryParameter> params = new ArrayList<QueryParameter>();
-		params.add(new QueryParameter("year", year));
-		params.add(new QueryParameter("month", month));
-		params.add(new QueryParameter("day", day));
+		params.add(new QueryParameter("date", date));
 		return super.find(params);
 	}
 
 	@Override
-	public List<SystemVisitsRecord> findByDate(Date begin, Date end) {
+	public List<SystemDetectionStatistics> findByDate(Date begin, Date end) {
 		List<QueryParameter> params = new ArrayList<QueryParameter>();
 		if(begin != null) {
 			params.add(new QueryParameter("date", "beginDate", 4, begin));

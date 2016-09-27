@@ -17,6 +17,10 @@
 	height: 300px;
 }
 
+#visitor_access {
+	height: 300px;
+}
+
 #statistical-today-container {
 	margin-bottom: 20px;
 }
@@ -91,8 +95,9 @@ function init_dashboard() {
 	load_general_overview();
 	load_uv_info();
 	load_current_visits_count();
-	load_visitor_opinion();
+	load_visitor_access();
 	load_visitor_distribution();
+	load_visitor_opinion();
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
@@ -474,6 +479,48 @@ function plot_visitor_distribution_pie(pieData, pieDrillData) {
     });	
 }
 
+function load_visitor_access() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getVisitorAccess.action",
+		success : function(data, textStatus) {
+			plot_visitor_access(data.ajaxObj.date, data.ajaxObj.count);
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#visitor-distribution").html(ERROR_MSG);
+		}
+	});
+}
+
+function plot_visitor_access(date, count) {
+	$("#visitor_access").highcharts({
+        title: null,
+        xAxis: {
+            categories: date
+        },
+        yAxis: {
+            title: null
+        },
+        tooltip: {
+            valueSuffix: "人"
+        },
+        credits: {
+            enabled: false
+        },
+        legend: {
+        	enabled: false
+        },
+        series: [{
+            name: "访问人数",
+            data: count
+        }]
+    });
+}
+
 </script>
 
 <h2 class="page-header">控制台</h2>
@@ -510,6 +557,14 @@ function plot_visitor_distribution_pie(pieData, pieDrillData) {
 				<img src="../images/sys/loading_l.gif" />
 			</div>
 		</div>
+	</div>
+</div>
+
+<!-- 访客登录情况 -->
+<h3 class="sub-header font-blod">访客登录情况</h3>
+<div id="visitor_access">
+	<div class="loading-container">
+		<img src="../images/sys/loading_l.gif" />
 	</div>
 </div>
 

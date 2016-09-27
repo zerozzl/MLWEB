@@ -30,8 +30,8 @@
 		<property name="openCVService" ref="openCVService" />
 	</bean>
 	
-	<bean id="systemVisitsRecordService" class="com.zerozzl.mlweb.service.impl.SystemVisitsRecordServiceImpl">
-		<property name="systemVisitsRecordDao" ref="systemVisitsRecordDao" />
+	<bean id="systemDetectionStatisticsService" class="com.zerozzl.mlweb.service.impl.SystemDetectionStatisticsServiceImpl">
+		<property name="systemDetectionStatisticsDao" ref="systemDetectionStatisticsDao" />
 		<property name="detectionRecordService" ref="detectionRecordService" />
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
 	</bean>
