@@ -218,11 +218,15 @@ public abstract class _BaseAction extends ActionSupport
 	}
 	
 	protected ByteArrayInputStream _getImage(String path) {
+		return _getImage(path, _getNotFoundImage());
+	}
+	
+	protected ByteArrayInputStream _getImage(String path, String insuranceFile) {
 		ByteArrayInputStream bis = null;
 		try {
 			File image = new File(path);
 			if(!image.exists() || !image.isFile()) {
-				image = new File(_getNotFoundImage());
+				image = new File(insuranceFile);
 			}
 			FileInputStream fos = new FileInputStream(image);
 			InputStream is = new BufferedInputStream(fos);

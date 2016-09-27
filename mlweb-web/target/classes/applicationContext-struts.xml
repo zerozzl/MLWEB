@@ -10,6 +10,10 @@
 		<property name="visitorService" ref="visitorService" />
 	</bean>
 	
+	<bean id="userAction" class="com.zerozzl.mlweb.web.action.user.UserAction" scope="prototype">
+		<property name="userService" ref="userService" />
+	</bean>
+	
 	<bean id="showcaseAction" class="com.zerozzl.mlweb.web.action.visitor.ShowcaseAction" scope="prototype">
 		<property name="detectionRecordService" ref="detectionRecordService" />
 	</bean>

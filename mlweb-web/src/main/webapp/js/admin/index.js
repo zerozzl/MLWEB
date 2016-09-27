@@ -6,6 +6,25 @@ function init() {
 	$("#main").load("dashboard.html", function() {
 		init_dashboard();
 	});
+	check_server_time();
+}
+
+function check_server_time() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getServerTime.action",
+		success : function(data, textStatus) {
+			$("#user-info-container-server-time").html(data.ajaxObj.time);
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#user-info-container-server-time").html("获取服务器时间失败");
+		}
+	});
+	setTimeout("check_server_time()", 60000);
 }
 
 function init_header() {
@@ -20,7 +39,9 @@ function init_header() {
 			if (data.ajaxObj.hasLogin == 0 || data.ajaxObj.isAdmin == 0) {
 				location.href = "../ad_login.html";
 			} else {
-				$("#user-email").html(data.ajaxObj.email);
+				$("#user-nickname").html(data.ajaxObj.nickname);
+				$("#user-info-container-info-nickname").html(data.ajaxObj.nickname);
+				$("#user-info-container-info-email").html(data.ajaxObj.email);
 			}
 		},
 		error : function(jqXHR, status, errorThrown) {

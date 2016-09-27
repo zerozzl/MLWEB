@@ -7,12 +7,14 @@ import com.zerozzl.mlweb.persistent.User;
 public class MLUser implements Serializable {
 
 	private static final long serialVersionUID = -582046468666438535L;
+	private String DBID;
 	private String Nickname;
 	private String Email;
 	private boolean IsAdmin;
 
 	public MLUser(User user) {
 		if(user != null) {
+			this.DBID = user.getDBID();
 			this.Nickname = user.getNickname();
 			this.Email = user.getEmail();
 			if (user.getSysRole() == 1) {
@@ -21,10 +23,15 @@ public class MLUser implements Serializable {
 				this.IsAdmin = false;
 			}
 		} else {
+			this.DBID = "";
 			this.Nickname = "";
 			this.Email = "";
 			this.IsAdmin = false;
 		}
+	}
+	
+	public String getDBID() {
+		return DBID;
 	}
 
 	public String getNickname() {

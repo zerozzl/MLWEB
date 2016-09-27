@@ -14,4 +14,9 @@ public interface UserService {
 	 */
 	MLUser doAdminLogin(String email, String password);
 	
+	/**
+	 * 查找用户头像文件
+	 */
+	String getUserAvatar(String uuid);
+	
 }

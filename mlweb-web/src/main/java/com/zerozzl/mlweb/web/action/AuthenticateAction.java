@@ -40,6 +40,7 @@ public class AuthenticateAction extends _BaseAction {
 		MLUser user = _getSessionUser();
 		if (user != null) {
 			ajaxObj.put("hasLogin", 1);
+			ajaxObj.put("nickname", user.getNickname());
 			ajaxObj.put("email", user.getEmail());
 			ajaxObj.put("isAdmin", user.isAdmin() ? 1 : 0);
 		} else {

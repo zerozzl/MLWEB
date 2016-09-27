@@ -16,6 +16,9 @@ public class ConstantStub {
 	public final static String NOT_FOUND_IMAGE = "images" + File.separator + "sys" + File.separator + "not_found_image.jpg";
 	
 	// 检测记录目录
+	public final static String ROOT_USER = ROOT + "user" + File.separator;
+	
+	// 检测记录目录
 	public final static String ROOT_DETECTION_RECORD = ROOT + "detection_record" + File.separator;
 	
 	// 访客意见目录

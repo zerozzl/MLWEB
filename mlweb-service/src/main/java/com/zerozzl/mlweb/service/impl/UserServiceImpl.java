@@ -1,9 +1,11 @@
 package com.zerozzl.mlweb.service.impl;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.zerozzl.mlweb.common.configuration.ConstantStub;
 import com.zerozzl.mlweb.common.tools.ValidatorUtils;
 import com.zerozzl.mlweb.dao.UserDao;
 import com.zerozzl.mlweb.domain.MLUser;
@@ -46,6 +48,25 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return mluser;
+	}
+
+	@Override
+	public String getUserAvatar(String uuid) {
+		String image = "";
+		File dir = new File(ConstantStub.initPath(ConstantStub.ROOT_USER, uuid));
+		if (dir.exists() && dir.isDirectory()) {
+			File[] files = dir.listFiles();
+			if (files != null && files.length > 0) {
+				for (int i = 0; i < files.length; i++) {
+					File f = files[i];
+					if (f.getName().contains("avatar")) {
+						image = f.getAbsolutePath();
+						break;
+					}
+				}
+			}
+		}
+		return image;
 	}
 
 }

@@ -32,7 +32,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="../index.html" target="blank">
-					<img src="../images/sys/logo_web.png" height="20" />
+					<img src="../images/sys/logo_web.png" />
 				</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
@@ -41,7 +41,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
 								aria-haspopup="true" aria-expanded="false">
-							<span id="user-email"></span><span class="caret"></span>
+							<span id="user-nickname"></span><span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="../adLogout.action">退出</a></li>
@@ -56,6 +56,29 @@
 		<div class="row">
 			<!-- 引入左侧导航栏 -->
 			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar">
+					<li>
+						<div id="user-info-container">
+							<div id="user-info-container-avatar">
+								<img src="../getUserAvatar.action" class="img-circle">
+							</div>
+							<div id="user-info-container-info">
+								<div>
+									<span><i class="icon icon-black icon-user"></i></span>
+									<span id="user-info-container-info-nickname"></span>
+								</div>
+								<div>
+									<span><i class="icon icon-black icon-mail-closed"></i></span>
+									<span id="user-info-container-info-email"></span>
+								</div>
+								<div>
+									<span><i class="icon icon-black icon-clock"></i></span>
+									<span id="user-info-container-server-time"></span>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
 				<ul id="nav-left" class="nav nav-sidebar">
 					<li module="dashboard" class="active" onclick="switch_module(this);"><a href="#">概览 </a></li>
 					<li module="visitor-opinion" onclick="switch_module(this);"><a href="#">访客意见</a></li>

@@ -1,7 +1,9 @@
 package com.zerozzl.mlweb.web.action.admin;
 
+import java.util.Date;
 import java.util.Map;
 
+import com.zerozzl.mlweb.common.tools.FormatUtils;
 import com.zerozzl.mlweb.quartz.job.DailyVisitorInfoPersistentJob;
 import com.zerozzl.mlweb.quartz.job.HourlyVisitsCountPersistentJob;
 import com.zerozzl.mlweb.service.VisitorOpinionService;
@@ -16,6 +18,11 @@ public class AdminAction extends _BaseAction {
 	
 	public String initNavLeft() {
 		ajaxObj.put("opinions", visitorOpinionService.countUnreadOpinions());
+		return "ajaxInvoSuccess";
+	}
+	
+	public String getServerTime() {
+		ajaxObj.put("time", FormatUtils.dateFormat(new Date(), "yyyy-MM-dd HH:mm"));
 		return "ajaxInvoSuccess";
 	}
 	
