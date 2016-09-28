@@ -53,4 +53,18 @@ public class FormatUtils {
 		return result;
 	}
 	
+	// 数字处理：字符串转数字
+	public static int toNaturalNumber(String orginal) {
+		int result = 0;
+		try {
+			if(ValidatorUtils.isNaturalNumber(orginal)) {
+				result = Integer.parseInt(orginal);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }

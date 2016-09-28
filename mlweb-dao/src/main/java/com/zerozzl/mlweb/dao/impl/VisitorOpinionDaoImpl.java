@@ -62,32 +62,32 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 	@Override
 	public PagedList findByPage(String title, String content, String visitorId,
 			List<Integer> status, Date begin, Date end, PagedBean pagedBean) {
-		List<QueryParameter> qparams = new ArrayList<QueryParameter>();
+		List<QueryParameter> params = new ArrayList<QueryParameter>();
 		List<OrderByParameter> orders = null;
 		
 		if(StringUtils.isNotBlank(title)) {
-			qparams.add(new QueryParameter("title", 7, "%" + title + "%"));
+			params.add(new QueryParameter("title", 7, "%" + title + "%"));
 		}
 		if(StringUtils.isNotBlank(content)) {
-			qparams.add(new QueryParameter("content", 7, "%" + content + "%"));
+			params.add(new QueryParameter("content", 7, "%" + content + "%"));
 		}
 		if(StringUtils.isNotBlank(visitorId)) {
-			qparams.add(new QueryParameter("visitorId", 7, "%" + visitorId + "%"));
+			params.add(new QueryParameter("visitorId", 7, "%" + visitorId + "%"));
 		}
 		if(status != null && !status.isEmpty()) {
-			qparams.add(new QueryParameter("status", 8, status));
+			params.add(new QueryParameter("status", 8, status));
 		}
 		if(begin != null) {
-			qparams.add(new QueryParameter("createDate", "beginDate", 4, begin));
+			params.add(new QueryParameter("createDate", "beginDate", 4, begin));
 		}
 		if(end != null) {
-			qparams.add(new QueryParameter("createDate", "endDate", 5, end));
+			params.add(new QueryParameter("createDate", "endDate", 5, end));
 		}
 		
 		if(StringUtils.isNotBlank(pagedBean.getSortColumn())) {
 			orders = OrderByParameter.init(pagedBean.getSortColumn(), pagedBean.getSortOrder());
 		}
-		return super.findByPage(qparams, orders, pagedBean);
+		return super.findByPage(params, orders, pagedBean);
 	}
 
 }

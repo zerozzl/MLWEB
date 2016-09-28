@@ -33,6 +33,10 @@
 		<property name="systemVisitorDistributionService" ref="systemVisitorDistributionService" />
 	</bean>
 	
+	<bean id="adDetectionRecordAction" class="com.zerozzl.mlweb.web.action.admin.AdDetectionRecordAction" scope="prototype">
+		<property name="detectionRecordService" ref="detectionRecordService" />
+	</bean>
+	
 	<bean id="adVisitorOpinionAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorOpinionAction" scope="prototype">
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
 	</bean>

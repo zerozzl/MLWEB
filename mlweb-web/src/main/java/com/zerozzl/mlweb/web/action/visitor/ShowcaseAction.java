@@ -55,12 +55,12 @@ public class ShowcaseAction extends _BaseAction {
 		int type = FormatUtils.toPositiveInteger(typeS);
 		image = StringUtils.isNotBlank(image) ? ConstantStub.initPath(ConstantStub.TEMP, "images", image.trim()) : "";
 		MLDetectionRecord record = detectionRecordService.detect(type, image, visitorId);
-		if (record.getRecordCode() == 1) {
+		if (record.getDetectCode() == 1) {
 			ajaxObj.put("flag", 1);
 		} else {
 			ajaxObj.put("flag", 0);
 		}
-		ajaxObj.put("record", record.getRecordId());
+		ajaxObj.put("record", record.getDBID());
 		return "ajaxInvoSuccess";
 	}
 	

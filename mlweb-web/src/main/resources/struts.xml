@@ -77,14 +77,17 @@
 		<action name="getVisitorDistribution" class="adDashboardAction" method="getVisitorDistribution" />
 		<action name="getVisitorAccess" class="adDashboardAction" method="getVisitorAccess" />
 		
-		<!-- 用户意见 -->
+		<!-- 检测记录 -->
+		<action name="findDetectionRecords" class="adDetectionRecordAction" method="findDetectionRecords" />
+		
+		<!-- 访客意见 -->
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
 		<action name="readVisitorOpinion" class="adVisitorOpinionAction" method="readOpinion" />
 		<action name="getImageOfVisitorOpinion" class="adVisitorOpinionAction" method="getImageOfOpinion" />
 		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
 		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
 		
-		<!-- 用户 -->
+		<!-- 访客 -->
 		<action name="findVisitors" class="adVisitorAction" method="findVisitors" />
 	    
 	</package>

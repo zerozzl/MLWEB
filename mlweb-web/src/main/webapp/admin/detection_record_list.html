@@ -40,13 +40,65 @@
 
 #msg-container {
 	margin-bottom: 30px;
-	padding: 0px 8px;
+	padding: 30px 8px;
 	text-align: left;
 	display: none;
 }
 
 #msg-container .loading {
 	text-align: center;
+}
+
+#detection-record-container {
+	overflow: auto;
+}
+
+#detection-record-container>.item {
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	background-color: #ffffff;
+	border: 1px solid #dddddd;
+	border-radius: 3px;
+}
+
+#detection-record-container>.item>.item-img {
+	padding: 5px;
+	border-bottom: 1px solid #dddddd;
+}
+
+#detection-record-container>.item>.item-info {
+	padding: 5px 10px;
+}
+
+#detection-record-container>.item>.item-info>.header {
+	overflow: auto;
+	margin-bottom: 5px;
+}
+
+#detection-record-container>.item>.item-info>.header>.tag {
+	float: left;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#detection-record-container>.item>.item-info>.header>.label {
+	float: right;
+	padding: 5px;
+	font-size: 14px;
+}
+
+#detection-record-container>.item>.item-info>.body {
+	margin-bottom: 5px;
+}
+
+#detection-record-container>.item>.item-info>.operator {
+	text-align: right;
+}
+
+#detection-record-container>.item>.item-img>img {
+	max-width: 270px;
+	max-height: 270px;
 }
 
 </style>
@@ -60,10 +112,67 @@ function init_detection_record_list() {
 		changeMonth: true,
 		changeYear: true
 	});
+	$("#pagination-container").load("../common/pagination.html", function() {
+		search_detection_record();
+	});
+}
+
+function toPage(page) {
+	$("#inpage").val(page);
+	search_detection_record();
 }
 
 function search_detection_record() {
-	alert("test");
+	var container = $("#detection-record-container"), msg_container = $("#msg-container");
+	container.html("");
+	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
+	msg_container.show();
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "findDetectionRecords.action",
+		data: $("#search-form").serialize(),
+		success : function(data, textStatus) {
+			var pagedList = data.ajaxObj.pagedList,
+					items = pagedList.currentPageList;
+			if(typeof (items) != "undefined" &&　items != null
+					&& items.length > 0) {
+				msg_container.hide();
+				fill_datacontainer(container, items);
+			} else {
+				msg_container.html("<p class='help-block'>暂无相关记录</p>");
+			}
+			init_pagination(pagedList.empty, pagedList.pageCount, pagedList.pagesDisplayed,
+					pagedList.currentPage, pagedList.backPage, pagedList.fwdPage, "toPage");
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg_container.html(ERROR_MSG);
+		}
+	});
+}
+
+function fill_datacontainer(container, datas) {
+	for(var i = 0; i < datas.length; i++) {
+		var data = datas[i], code = "";
+		if(data.detectCode == 0) {
+			code = "<div class='label label-primary'>未检测</div>";
+		} else if(data.detectCode == 1) {
+			code = "<div class='label label-success'>成功</div>";
+		} else if(data.detectCode == -1) {
+			code = "<div class='label label-danger'>失败</div>";
+		} else {
+			code = "<div class='label label-default'>异常</div>";
+		}
+		var item = "<div class='item'><div class='item-img'><img src=''></div>"
+				+ "<div class='item-info'><div class='header'><div class='tag'><i class='icon icon-black icon-tag'></i>"
+				+ data.detectTypeS + "</div>" + code + "</div><div class='body'><i class='icon icon-black icon-clock'></i>"
+				+ data.detectDateS + "</div><div class='body'><i class='icon icon-black icon-user'></i>"
+				+ data.visitorId + "</div><div class='operator'><button class='btn btn-primary'>详情</button></div></div></div>";
+		container.append(item);
+	}
 }
 
 </script>
@@ -83,8 +192,8 @@ function search_detection_record() {
 		<div class="form-group">
 			<label>检测结果:</label>
 			<div class="checkbox-container" style="width:120px;">
-				<input type="checkbox" name="instatus" value="1"> 成功
-				<input type="checkbox" name="instatus" value="0"> 失败
+				<input type="checkbox" name="incode" value="1"> 成功
+				<input type="checkbox" name="incode" value="0"> 失败
 			</div>
 		</div>
 		<div class="form-group">
@@ -99,17 +208,37 @@ function search_detection_record() {
 	</form>
 </div>
 
-<div class="row">
-	<div class="col-xs-6 col-md-3">
-		<div class="thumbnail">
-			<img src="../images/sys/not_found_image.jpg">
-			<div class="caption">
-				<h3>Thumbnail label</h3>
-				<p>...</p>
-				<p>
-					<a href="#" class="btn btn-primary" role="button">Button</a>
-					<a href="#" class="btn btn-default" role="button">Button</a>
-				</p>
+<div id="detection-record-container">
+	<div class="item">
+		<div class="item-img">
+			<img src="../images/sys/not_found_avatar.png">
+		</div>
+		<div class="item-info">
+			<div class="header">
+				<div class="tag"><i class="icon icon-black icon-tag"></i>行人检测</div>
+				<div class="label label-success">成功</div>
+			</div>
+			<div class="body"><i class="icon icon-black icon-clock"></i>2016-09-28 20:24:01</div>
+			<div class="body"><i class="icon icon-black icon-user"></i>ff808181576b3f3e01576b4d23b60001</div>
+			<div class="operator">
+				<button class="btn btn-primary">详情</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="item">
+		<div class="item-img">
+			<img src="../images/sys/not_found_avatar.png">
+		</div>
+		<div class="item-info">
+			<div class="header">
+				<div class="tag"><i class="icon icon-black icon-tag"></i>行人检测</div>
+				<div class="label label-danger">成功</div>
+			</div>
+			<div class="body"><i class="icon icon-black icon-clock"></i>2016-09-28 20:24:01</div>
+			<div class="body"><i class="icon icon-black icon-user"></i>ff808181576b3f3e01576b4d23b60001</div>
+			<div class="operator">
+				<button class="btn btn-primary">详情</button>
 			</div>
 		</div>
 	</div>
