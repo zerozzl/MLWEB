@@ -80,18 +80,16 @@ function init_visitor_record_list() {
 	});
 	
 	$("#pagination-container").load("../common/pagination.html", function() {
-		search();
+		search_visitor();
 	});
-	// $("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
-	$("#dialog-msg-container").load("../common/dialog_msg.html");
 }
 
 function toPage(page) {
 	$("#inpage").val(page);
-	search();
+	search_visitor();
 }
 
-function search() {
+function search_visitor() {
 	var table = $("#visitor-table"), msg_container = $("#msg-container");
 	table.find("tr:not(:first)").remove();
 	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
@@ -163,7 +161,7 @@ function fill_datatable(table, datas) {
 			<label for="indateend" class="sr-only">结束时间</label>
 			<input type="text" class="form-control date-picker" id="indateend" name="indateend" placeholder="结束时间">
 		</div>
-		<input type="button" class="btn btn-default" value="搜索" onclick="search();">
+		<input type="button" class="btn btn-default" value="搜索" onclick="search_visitor();">
 	</form>
 </div>
 <div class="table-responsive">
@@ -172,9 +170,9 @@ function fill_datatable(table, datas) {
 			<tr>
 				<th width="5%">序号</th>
 				<th width="20%">IP地址</th>
-				<th width="20%">国家</th>
-				<th width="20%">省份</th>
-				<th width="20%">城市</th>
+				<th width="15%">国家</th>
+				<th width="15%">省份</th>
+				<th width="15%">城市</th>
 				<th>登录日期</th>
 			</tr>
 		</thead>
@@ -183,6 +181,3 @@ function fill_datatable(table, datas) {
 	<div id="msg-container"></div>
 	<div id="pagination-container"></div>
 </div>
-
-<!-- <div id="visitor-opinion-dialog-container"></div> -->
-<div id="dialog-msg-container"></div>

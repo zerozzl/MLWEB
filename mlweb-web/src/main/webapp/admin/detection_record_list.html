@@ -1,0 +1,119 @@
+<style>
+.search-container {
+	margin-bottom: 20px;
+	padding: 5px 0px;
+	background-color: #f8f8f8;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+}
+
+.form-group, .form-inline .form-group {
+	margin: 5px 0px;
+}
+
+.form-group>label {
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+.form-group .checkbox-container {
+	display:inline-block;
+}
+
+.form-group .checkbox-container>input {
+	margin-left: 5px;
+}
+
+.form-inline .btn {
+	padding: 6px 15px;
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+#indatebegin {
+	width: 110px;
+}
+
+#indateend {
+	width: 110px;
+}
+
+#msg-container {
+	margin-bottom: 30px;
+	padding: 0px 8px;
+	text-align: left;
+	display: none;
+}
+
+#msg-container .loading {
+	text-align: center;
+}
+
+</style>
+
+<script>
+function init_detection_record_list() {
+	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+	$("#ui-datepicker-div").remove();
+	$(".date-picker").datepicker({
+		dateFormat: "yy-mm-dd",
+		changeMonth: true,
+		changeYear: true
+	});
+}
+
+function search_detection_record() {
+	alert("test");
+}
+
+</script>
+
+<h2 class="page-header">检测记录</h2>
+<div class="search-container">
+	<form id="search-form" class="form-inline">
+		<input type="hidden" id="inpage" name="inpage" value="1">
+		<div class="form-group">
+			<label>检测类型:</label>
+			<div class="checkbox-container" style="width:280px;">
+				<input type="checkbox" name="intype" value="1"> 行人检测
+				<input type="checkbox" name="intype" value="2"> 人脸检测
+				<input type="checkbox" name="intype" value="3"> 图像语义分割
+			</div>
+		</div>
+		<div class="form-group">
+			<label>检测结果:</label>
+			<div class="checkbox-container" style="width:120px;">
+				<input type="checkbox" name="instatus" value="1"> 成功
+				<input type="checkbox" name="instatus" value="0"> 失败
+			</div>
+		</div>
+		<div class="form-group">
+			<label>检测日期:</label>
+			<label for="indatebegin" class="sr-only">开始时间</label>
+			<input type="text" class="form-control date-picker" id="indatebegin" name="indatebegin" placeholder="开始时间">
+			<span>-</span>
+			<label for="indateend" class="sr-only">结束时间</label>
+			<input type="text" class="form-control date-picker" id="indateend" name="indateend" placeholder="结束时间">
+		</div>
+		<input type="button" class="btn btn-default" value="搜索" onclick="search_detection_record();">
+	</form>
+</div>
+
+<div class="row">
+	<div class="col-xs-6 col-md-3">
+		<div class="thumbnail">
+			<img src="../images/sys/not_found_image.jpg">
+			<div class="caption">
+				<h3>Thumbnail label</h3>
+				<p>...</p>
+				<p>
+					<a href="#" class="btn btn-primary" role="button">Button</a>
+					<a href="#" class="btn btn-default" role="button">Button</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="msg-container"></div>
+<div id="pagination-container"></div>

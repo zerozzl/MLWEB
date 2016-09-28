@@ -73,7 +73,7 @@ function init_visitor_opinion_list() {
 	});
 	
 	$("#pagination-container").load("../common/pagination.html", function() {
-		search();
+		search_opinion();
 	});
 	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 	$("#dialog-msg-container").load("../common/dialog_msg.html");
@@ -81,10 +81,10 @@ function init_visitor_opinion_list() {
 
 function toPage(page) {
 	$("#inpage").val(page);
-	search();
+	search_opinion();
 }
 
-function search() {
+function search_opinion() {
 	var table = $("#opinion-table"), msg_container = $("#msg-container");
 	table.find("tr:not(:first)").remove();
 	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
@@ -157,7 +157,7 @@ function confirm_delete_visitor_opinion(id) {
 		data: "id=" + id,
 		success : function(data, textStatus) {
 			if(data.ajaxObj.flag == 1) {
-				search();
+				search_opinion();
 				$("#dialog-msg").modal("hide");
 			} else {
 				init_dialog_msg(1, "删除失败", "<i class='icon icon-red icon-cross'></i>删除访客意见失败", ["返回"]);
@@ -202,7 +202,7 @@ function confirm_delete_visitor_opinion(id) {
 			<label for="indateend" class="sr-only">结束时间</label>
 			<input type="text" class="form-control date-picker" id="indateend" name="indateend" placeholder="结束时间">
 		</div>
-		<input type="button" class="btn btn-default" value="搜索" onclick="search();">
+		<input type="button" class="btn btn-default" value="搜索" onclick="search_opinion();">
 	</form>
 </div>
 <div class="table-responsive">

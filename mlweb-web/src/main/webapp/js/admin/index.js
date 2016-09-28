@@ -82,6 +82,10 @@ function switch_module(item) {
 		$("#main").load("dashboard.html", function() {
 			init_dashboard();
 		});
+	} else if(module == "detection-record") {
+		$("#main").load("detection_record_list.html", function() {
+			init_detection_record_list();
+		});
 	} else if(module == "visitor-opinion") {
 		$("#main").load("visitor_opinion_list.html", function() {
 			init_visitor_opinion_list();
