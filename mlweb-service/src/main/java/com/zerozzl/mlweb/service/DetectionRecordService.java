@@ -14,9 +14,19 @@ public interface DetectionRecordService {
 	MLDetectionRecord detect(int type, String image, String visitorId);
 	
 	/**
-	 * 根据检测记录ID获取相应的图片
+	 * 根据检测记录ID获取检测前的图片
+	 */
+	String getOriginalImage(String uuid);
+	
+	/**
+	 * 根据检测记录ID获取检测后的图片
 	 */
 	String getDetectImage(String uuid);
+	
+	/**
+	 * 根据ID获取检测记录
+	 */
+	MLDetectionRecord getDetectionRecord(String uuid);
 	
 	/**
 	 * 根据类型和时间，获取相关检测提交次数

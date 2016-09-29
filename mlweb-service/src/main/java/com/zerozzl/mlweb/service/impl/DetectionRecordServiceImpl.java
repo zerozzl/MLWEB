@@ -77,6 +77,18 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 	}
 
 	@Override
+	public String getOriginalImage(String uuid) {
+		String image = "";
+		if (StringUtils.isNotBlank(uuid)) {
+			DetectionRecord record = detectionRecordDao.get(uuid);
+			if(record != null) {
+				image = ConstantStub.initPath(ConstantStub.ROOT_DETECTION_RECORD, uuid, "upload." + record.getImageType());
+			}
+		}
+		return image;
+	}
+
+	@Override
 	public String getDetectImage(String uuid) {
 		String image = "";
 		if (StringUtils.isNotBlank(uuid)) {
@@ -86,6 +98,18 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 			}
 		}
 		return image;
+	}
+
+	@Override
+	public MLDetectionRecord getDetectionRecord(String uuid) {
+		MLDetectionRecord record = null;
+		if (StringUtils.isNotBlank(uuid)) {
+			DetectionRecord o = detectionRecordDao.get(uuid);
+			if(o != null) {
+				record = new MLDetectionRecord(o);
+			}
+		}
+		return record;
 	}
 
 	@Override

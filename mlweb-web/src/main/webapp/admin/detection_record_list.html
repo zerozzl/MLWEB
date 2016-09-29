@@ -50,55 +50,73 @@
 }
 
 #detection-record-container {
-	overflow: auto;
+	-webkit-column-width: 215px;
+	-moz-column-width: 215px;
+	-o-colum-width: 215px;
+	-webkit-column-gap: 1px;
+	-moz-column-gap: 1px;
+	-o-column-gap: 1px;
 }
 
 #detection-record-container>.item {
 	float: left;
 	margin-right: 5px;
 	margin-bottom: 10px;
+	width: 212px;
 	background-color: #ffffff;
 	border: 1px solid #dddddd;
 	border-radius: 3px;
+	-webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	-o-column-break-inside: avoid;
 }
 
 #detection-record-container>.item>.item-img {
 	padding: 5px;
 	border-bottom: 1px solid #dddddd;
+	text-align: center;
 }
 
 #detection-record-container>.item>.item-info {
 	padding: 5px 10px;
 }
 
-#detection-record-container>.item>.item-info>.header {
+#detection-record-container>.item>.item-info>.content {
 	overflow: auto;
 	margin-bottom: 5px;
 }
 
-#detection-record-container>.item>.item-info>.header>.tag {
+#detection-record-container>.item>.item-info>.content>.tag {
 	float: left;
-	font-size: 18px;
+	width: 20px;
+}
+
+#detection-record-container>.item>.item-info>.content>.title {
+	float: left;
+	width: 120px;
+	font-size: 16px;
 	font-weight: bold;
 }
 
-#detection-record-container>.item>.item-info>.header>.label {
-	float: right;
-	padding: 5px;
-	font-size: 14px;
+#detection-record-container>.item>.item-info>.content>.font {
+	float: left;
+	width: 170px;
+	word-break: break-all;
 }
 
-#detection-record-container>.item>.item-info>.body {
-	margin-bottom: 5px;
+#detection-record-container>.item>.item-info>.content>.label {
+	float: right;
+	padding: 5px;
+	font-size: 12px;
+}
+
+#detection-record-container>.item>.item-img>img {
+	max-width: 200px;
+	max-height: 200px;
 }
 
 #detection-record-container>.item>.item-info>.operator {
 	text-align: right;
-}
-
-#detection-record-container>.item>.item-img>img {
-	max-width: 270px;
-	max-height: 270px;
 }
 
 </style>
@@ -115,6 +133,8 @@ function init_detection_record_list() {
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search_detection_record();
 	});
+	
+	$("#detection-record-dialog-container").load("detection_record_show.html");
 }
 
 function toPage(page) {
@@ -166,11 +186,12 @@ function fill_datacontainer(container, datas) {
 		} else {
 			code = "<div class='label label-default'>异常</div>";
 		}
-		var item = "<div class='item'><div class='item-img'><img src=''></div>"
-				+ "<div class='item-info'><div class='header'><div class='tag'><i class='icon icon-black icon-tag'></i>"
-				+ data.detectTypeS + "</div>" + code + "</div><div class='body'><i class='icon icon-black icon-clock'></i>"
-				+ data.detectDateS + "</div><div class='body'><i class='icon icon-black icon-user'></i>"
-				+ data.visitorId + "</div><div class='operator'><button class='btn btn-primary'>详情</button></div></div></div>";
+		var item = "<div class='item'><div class='item-img'><img src='getDetectionImage.action?uuid="
+				+ data.DBID + "'></div><div class='item-info'><div class='content'><div class='tag'><i class='icon icon-black icon-tag'></i></div><div class='title'>"
+				+ data.detectTypeS + "</div>" + code + "</div><div class='content'><div class='tag'><i class='icon icon-black icon-clock'></i></div><div class='font'>"
+				+ data.detectDateS + "</div></div><div class='content'><div class='tag'><i class='icon icon-black icon-user'></i></div><div class='font'><a>"
+				+ data.visitorId + "</a></div></div><div class='operator'><button class='btn btn-primary' onclick='show_detection_record(\""
+				+ data.DBID + "\");'>详情</button></div></div></div>";
 		container.append(item);
 	}
 }
@@ -208,41 +229,9 @@ function fill_datacontainer(container, datas) {
 	</form>
 </div>
 
-<div id="detection-record-container">
-	<div class="item">
-		<div class="item-img">
-			<img src="../images/sys/not_found_avatar.png">
-		</div>
-		<div class="item-info">
-			<div class="header">
-				<div class="tag"><i class="icon icon-black icon-tag"></i>行人检测</div>
-				<div class="label label-success">成功</div>
-			</div>
-			<div class="body"><i class="icon icon-black icon-clock"></i>2016-09-28 20:24:01</div>
-			<div class="body"><i class="icon icon-black icon-user"></i>ff808181576b3f3e01576b4d23b60001</div>
-			<div class="operator">
-				<button class="btn btn-primary">详情</button>
-			</div>
-		</div>
-	</div>
-	
-	<div class="item">
-		<div class="item-img">
-			<img src="../images/sys/not_found_avatar.png">
-		</div>
-		<div class="item-info">
-			<div class="header">
-				<div class="tag"><i class="icon icon-black icon-tag"></i>行人检测</div>
-				<div class="label label-danger">成功</div>
-			</div>
-			<div class="body"><i class="icon icon-black icon-clock"></i>2016-09-28 20:24:01</div>
-			<div class="body"><i class="icon icon-black icon-user"></i>ff808181576b3f3e01576b4d23b60001</div>
-			<div class="operator">
-				<button class="btn btn-primary">详情</button>
-			</div>
-		</div>
-	</div>
-</div>
+<div id="detection-record-container"></div>
 
 <div id="msg-container"></div>
 <div id="pagination-container"></div>
+
+<div id="detection-record-dialog-container"></div>

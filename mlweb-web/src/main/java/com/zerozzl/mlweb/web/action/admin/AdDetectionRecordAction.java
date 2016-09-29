@@ -1,5 +1,6 @@
 package com.zerozzl.mlweb.web.action.admin;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,12 +9,14 @@ import java.util.Map;
 
 import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
+import com.zerozzl.mlweb.domain.MLDetectionRecord;
 import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
 public class AdDetectionRecordAction extends _BaseAction {
 
 	private static final long serialVersionUID = -1801305508271295361L;
+	private ByteArrayInputStream imageStream;
 	private DetectionRecordService detectionRecordService;
 	
 	public String findDetectionRecords() {
@@ -64,20 +67,34 @@ public class AdDetectionRecordAction extends _BaseAction {
 			page = 1;
 		}
 		
-		System.out.println(types);
-		System.out.println(codes);
-		System.out.println(FormatUtils.dateFormat(begin, "yyyy-MM-dd HH:mm:ss"));
-		System.out.println(FormatUtils.dateFormat(end, "yyyy-MM-dd HH:mm:ss"));
-		
 		PagedList pagedList = detectionRecordService.findDetectionRecords(types, codes, begin, end,
 				page, DEFAULT_PAGE_SIZE, null, 0);
-		
-		System.out.println(pagedList.getCurrentPageList().size());
 		
 		ajaxObj.put("pagedList", pagedList);
 		return "ajaxInvoSuccess";
 	}
 	
+	public String getDetectionRecord() {
+		String uuid = _getRequestParameter("id");
+		MLDetectionRecord record = detectionRecordService.getDetectionRecord(uuid);
+		if(record != null) {
+			ajaxObj.put("flag", 1);
+			ajaxObj.put("record", record);
+		} else {
+			ajaxObj.put("flag", 0);
+		}
+		return "ajaxInvoSuccess";
+	}
+	
+	public String getOriginalImageOfDetection() {
+		imageStream = _getImage(detectionRecordService.getOriginalImage(_getRequestParameter("uuid")));
+		return "getImageSuccess";
+	}
+	
+	public String getDetectionImage() {
+		imageStream = _getImage(detectionRecordService.getDetectImage(_getRequestParameter("uuid")));
+		return "getImageSuccess";
+	}
 
 	/********** get() and set() **********/
 	
@@ -86,6 +103,10 @@ public class AdDetectionRecordAction extends _BaseAction {
 		return super.ajaxObj;
 	}
 	
+	public ByteArrayInputStream getImageStream() {
+		return imageStream;
+	}
+
 	public void setDetectionRecordService(DetectionRecordService detectionRecordService) {
 		this.detectionRecordService = detectionRecordService;
 	}

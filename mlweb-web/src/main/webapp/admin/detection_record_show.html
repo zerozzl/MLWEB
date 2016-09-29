@@ -1,0 +1,141 @@
+<style>
+#detection-record-dialog-body>.info>.item {
+	overflow: auto;
+	margin-bottom: 5px;
+}
+
+#detection-record-dialog-body>.info>.item>.item-label {
+	float: left;
+	width: 70px;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#detection-record-dialog-body>.info>.item>.text {
+	float: left;
+	word-break: break-all;
+}
+
+#detection-record-dialog-body>.info>.item>.text img {
+	max-width: 400px;
+	max-height: 400px;
+}
+</style>
+
+<script>
+
+function show_detection_record(uuid) {
+	var container = $("#detection-record-dialog-body"),
+			msg = container.find(".msg"), info = container.find(".info");
+	info.hide();
+	msg.html("<div style='text-align:center;'><img src='../images/sys/loading_l.gif' /></div>");
+	msg.show();
+	$("#detection-record-dialog").modal("show");
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getDetectionRecord.action",
+		data : "id=" + uuid,
+		success : function(data, textStatus) {
+			if (data.ajaxObj.flag == 1) {
+				msg.hide();
+				var record = data.ajaxObj.record, code = "";
+				if(record.detectCode == 0) {
+					code = "<div class='label label-primary'>未检测</div>";
+				} else if(record.detectCode == 1) {
+					code = "<div class='label label-success'>成功</div>";
+				} else if(record.detectCode == -1) {
+					code = "<div class='label label-danger'>失败</div>";
+				} else {
+					code = "<div class='label label-default'>异常</div>";
+				}
+				$("#visitor-opinion-dialog-body-code").html(code);
+				$("#visitor-opinion-dialog-body-type").html(record.detectTypeS);
+				$("#visitor-opinion-dialog-body-date").html(record.detectDateS);
+				$("#visitor-opinion-dialog-body-visitorid").html("<a>" + record.visitorId + "</a>");
+				$("#visitor-opinion-dialog-body-pic-src").html("<img src='getOriginalImageOfDetection.action?uuid=" + record.DBID + "'>");
+				$("#visitor-opinion-dialog-body-pic-res").html("<img src='getDetectionImage.action?uuid=" + record.DBID + "'>");
+				info.show();
+			} else {
+				msg.html("<div class='alert alert-warning'><i class='icon icon-orange icon-alert'></i>没有相关记录</div>");
+				msg.show();
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg.html(ERROR_MSG);
+		}
+	});
+}
+</script>
+
+<div class="modal fade" id="detection-record-dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">检测记录</h4>
+			</div>
+			<div class="modal-body" id="detection-record-dialog-body">
+				<div class="msg"></div>
+				<div class="info">
+					<div class="item">
+						<div class="item-label">
+				  			<label for="visitor-opinion-dialog-body-code">检测结果:</label>
+						</div>
+						<div class="text">
+				  			<span id="visitor-opinion-dialog-body-code"></span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="item-label">
+							<label for="visitor-opinion-dialog-body-type">检测类型:</label>
+						</div>
+						<div class="text">
+							<span id="visitor-opinion-dialog-body-type"></span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="item-label">
+				  			<label for="visitor-opinion-dialog-body-date">检测时间:</label>
+						</div>
+						<div class="text">
+				  			<span id="visitor-opinion-dialog-body-date"></span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="item-label">
+				  			<label for="visitor-opinion-dialog-body-visitorid">访客ID:</label>
+						</div>
+						<div class="text">
+				  			<span id="visitor-opinion-dialog-body-visitorid"></span>
+						</div>
+					</div>
+		  			<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-pic-src">原图:</label>
+						</div>
+						<div class="text">
+		  					<span id="visitor-opinion-dialog-body-pic-src"></span>
+						</div>
+		  			</div>
+	  				<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-pic-res">检测图:</label>
+						</div>
+						<div class="text">
+		  					<div id="visitor-opinion-dialog-body-pic-res"></div>
+						</div>
+	  				</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>

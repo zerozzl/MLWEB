@@ -79,6 +79,9 @@
 		
 		<!-- 检测记录 -->
 		<action name="findDetectionRecords" class="adDetectionRecordAction" method="findDetectionRecords" />
+		<action name="getDetectionRecord" class="adDetectionRecordAction" method="getDetectionRecord" />
+		<action name="getDetectionImage" class="adDetectionRecordAction" method="getDetectionImage" />
+		<action name="getOriginalImageOfDetection" class="adDetectionRecordAction" method="getOriginalImageOfDetection" />
 		
 		<!-- 访客意见 -->
 		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
