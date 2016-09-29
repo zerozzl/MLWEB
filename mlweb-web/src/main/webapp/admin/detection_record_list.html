@@ -1,52 +1,10 @@
 <style>
-.search-container {
-	margin-bottom: 20px;
-	padding: 5px 0px;
-	background-color: #f8f8f8;
-	border: 1px solid #dddddd;
-	border-radius: 4px;
-}
-
-.form-group, .form-inline .form-group {
-	margin: 5px 0px;
-}
-
-.form-group>label {
-	margin-left: 10px;
-	margin-right: 5px;
-}
-
-.form-group .checkbox-container {
-	display:inline-block;
-}
-
-.form-group .checkbox-container>input {
-	margin-left: 5px;
-}
-
-.form-inline .btn {
-	padding: 6px 15px;
-	margin-left: 10px;
-	margin-right: 5px;
-}
-
 #indatebegin {
 	width: 110px;
 }
 
 #indateend {
 	width: 110px;
-}
-
-#msg-container {
-	margin-bottom: 30px;
-	padding: 30px 8px;
-	text-align: left;
-	display: none;
-}
-
-#msg-container .loading {
-	text-align: center;
 }
 
 #detection-record-container {
@@ -212,7 +170,7 @@ function fill_datacontainer(container, datas) {
 		</div>
 		<div class="form-group">
 			<label>检测结果:</label>
-			<div class="checkbox-container" style="width:120px;">
+			<div class="checkbox-container" style="width:110px;">
 				<input type="checkbox" name="incode" value="1"> 成功
 				<input type="checkbox" name="incode" value="0"> 失败
 			</div>
@@ -231,7 +189,7 @@ function fill_datacontainer(container, datas) {
 
 <div id="detection-record-container"></div>
 
-<div id="msg-container"></div>
+<div id="msg-container" class="msg-container"></div>
 <div id="pagination-container"></div>
 
 <div id="detection-record-dialog-container"></div>

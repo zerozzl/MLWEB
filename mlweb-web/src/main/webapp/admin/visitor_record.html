@@ -1,27 +1,4 @@
 <style>
-.search-container {
-	margin-bottom: 20px;
-	padding: 5px 0px;
-	background-color: #f8f8f8;
-	border: 1px solid #dddddd;
-	border-radius: 4px;
-}
-
-.form-group, .form-inline .form-group {
-	margin: 5px 0px;
-}
-
-.form-group>label {
-	margin-left: 10px;
-	margin-right: 5px;
-}
-
-.form-inline .btn {
-	padding: 6px 15px;
-	margin-left: 10px;
-	margin-right: 5px;
-}
-
 #incountry {
 	width: 150px;
 }
@@ -41,32 +18,6 @@
 #indateend {
 	width: 150px;
 }
-
-table .operator {
-	padding: 3px;
-	border: 1px solid transparent;
-	border-radius: 5px;
-}
-
-table .operator:hover {
-	border: 1px solid #dddddd;
-}
-
-table .operator .icon {
-	margin: 0px;
-}
-
-#msg-container {
-	margin-bottom: 30px;
-	padding: 0px 8px;
-	text-align: left;
-	display: none;
-}
-
-#msg-container .loading {
-	text-align: center;
-}
-
 </style>
 
 <script>
@@ -178,6 +129,6 @@ function fill_datatable(table, datas) {
 		</thead>
 		<tbody></tbody>
 	</table>
-	<div id="msg-container"></div>
+	<div id="msg-container" class="msg-container"></div>
 	<div id="pagination-container"></div>
 </div>

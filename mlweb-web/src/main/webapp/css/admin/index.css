@@ -88,6 +88,93 @@ a {
 	font-weight: bold;
 }
 
+/* 搜索区域 */
+.search-container {
+	margin-bottom: 20px;
+	padding: 5px 0px;
+	background-color: #f8f8f8;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+}
+
+.form-group, .form-inline .form-group {
+	margin: 5px 0px;
+}
+
+.form-group>label {
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+.form-inline .btn {
+	padding: 6px 15px;
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+.form-group .checkbox-container {
+	display:inline-block;
+}
+
+.form-group .checkbox-container>input {
+	margin-left: 5px;
+}
+
+/* 表格 */
+table .operator {
+	padding: 3px;
+	border: 1px solid transparent;
+	border-radius: 5px;
+}
+
+table .operator:hover {
+	border: 1px solid #dddddd;
+}
+
+table .operator .icon {
+	margin: 0px;
+}
+
+/* 对话框 */
+.dialog-info>.item {
+	overflow: auto;
+	margin-bottom: 5px;
+}
+
+.dialog-info>.item>.item-label {
+	float: left;
+	width: 70px;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.dialog-info>.item>.text {
+	float: left;
+	word-break: break-all;
+}
+
+.dialog-info>.item>.text .label {
+	font-size: 12px;
+}
+
+.dialog-info>.item>.text img {
+	max-width: 400px;
+	max-height: 400px;
+}
+
+/* 其他 */
+.msg-container {
+	margin-bottom: 30px;
+	padding: 10px 8px;
+	text-align: left;
+	display: none;
+}
+
+.msg-container>.loading {
+	text-align: center;
+}
+
+/* 管理台用户信息 */
 #user-info-container {
 	overflow: auto;
 	padding-left: 20px;

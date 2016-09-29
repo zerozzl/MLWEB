@@ -1,31 +1,11 @@
-<style>
-#visitor-opinion-dialog-body .info div {
-	margin: 0px 0px 13px 0px;
-	padding: 6px 12px;
-	max-height: 200px;
-	color: #555555;
-	border: 1px solid #cccccc;
-	border-radius: 4px;
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	word-break: break-all;
-	overflow-x: none;
-	overflow-y: auto;
-}
-
-#visitor-opinion-dialog-body img {
-	max-width: 250px;
-	max-height: 250px;
-}
-</style>
-
 <script>
-
 function show_visitor_opinion(item) {
 	var container = $("#visitor-opinion-dialog-body"),
-			msg = container.find(".msg").hide(),
-			info = container.find(".info").hide();
+			msg = container.find(".msg"), info = container.find(".dialog-info");
+	info.hide();
+	msg.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
+	msg.show();
+	$("#visitor-opinion-dialog").modal("show");
 	item = $(item);
 	$.ajax({
 		traditional : true,
@@ -37,6 +17,7 @@ function show_visitor_opinion(item) {
 		data : "id=" + item.attr("uuid"),
 		success : function(data, textStatus) {
 			if (data.ajaxObj.flag == 1) {
+				msg.hide();
 				var opinion = data.ajaxObj.opinion;
 				if(opinion.includePic == "1") {
 					$("#visitor-opinion-dialog-body-pic").html("<img src='getImageOfVisitorOpinion.action?uuid=" + opinion.DBID + "'>");
@@ -51,14 +32,10 @@ function show_visitor_opinion(item) {
 				item.removeClass("font-blod");
 			} else {
 				msg.html("<div class='alert alert-warning'><i class='icon icon-orange icon-alert'></i>没有相关记录</div>");
-				msg.show();
 			}
-			$("#visitor-opinion-dialog").modal("show");
 		},
 		error : function(jqXHR, status, errorThrown) {
 			msg.html(ERROR_MSG);
-			msg.show();
-			$("#visitor-opinion-dialog").modal("show");
 		}
 	});
 }
@@ -75,17 +52,47 @@ function show_visitor_opinion(item) {
 			</div>
 			<div class="modal-body" id="visitor-opinion-dialog-body">
 				<div class="msg"></div>
-				<div class="info">
-		  			<label for="visitor-opinion-dialog-body-pic">图片</label>
-		  			<p id="visitor-opinion-dialog-body-pic"></p>
-		  			<label for="visitor-opinion-dialog-body-visitorid">访客ID</label>
-		  			<div id="visitor-opinion-dialog-body-visitorid"></div>
-		  			<label for="visitor-opinion-dialog-body-createdate">提交时间</label>
-		  			<div id="visitor-opinion-dialog-body-createdate"></div>
-		  			<label for="visitor-opinion-dialog-body-title">标题</label>
-		  			<div id="visitor-opinion-dialog-body-title"></div>
-					<label for="visitor-opinion-dialog-body-content">意见反馈</label>
-					<div id="visitor-opinion-dialog-body-content"></div>
+				<div class="dialog-info">
+		  			<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-title">标题:</label>
+		  				</div>
+		  				<div class="text">
+		  					<span id="visitor-opinion-dialog-body-title"></span>
+		  				</div>
+		  			</div>
+		  			<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-createdate">提交时间:</label>
+		  				</div>
+		  				<div class="text">
+		  					<span id="visitor-opinion-dialog-body-createdate"></span>
+		  				</div>
+		  			</div>
+		  			<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-visitorid">访客ID:</label>
+		  				</div>
+		  				<div class="text">
+		  					<span id="visitor-opinion-dialog-body-visitorid"></span>
+		  				</div>
+		  			</div>
+		  			<div class="item">
+						<div class="item-label">
+							<label for="visitor-opinion-dialog-body-content">意见反馈:</label>
+						</div>
+						<div class="text">
+							<span id="visitor-opinion-dialog-body-content"></span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="item-label">
+		  					<label for="visitor-opinion-dialog-body-pic">图片:</label>
+		  				</div>
+		  				<div class="text">
+		  					<span id="visitor-opinion-dialog-body-pic"></span>
+		  				</div>
+		  			</div>
 				</div>
 			</div>
 			<div class="modal-footer">
