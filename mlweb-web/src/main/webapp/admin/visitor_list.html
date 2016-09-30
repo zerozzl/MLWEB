@@ -21,7 +21,7 @@
 </style>
 
 <script>
-function init_visitor_record_list() {
+function init_visitor_list() {
 	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
 	$("#ui-datepicker-div").remove();
 	$(".date-picker").datepicker({
@@ -75,8 +75,10 @@ function search_visitor() {
 function fill_datatable(table, datas) {
 	for(var i = 0; i < datas.length; i++) {
 		var item = datas[i];
-		var tr = "<tr><td>" + (i+1) + "</td><td><a>" + item.ip
-				+ "</a></td><td>" + item.country + "</td><td>" + item.province + "</td><td>"
+		var tr = "<tr><td>" + (i+1)
+				+ "</td><td><a href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
+				+ item.DBID +　"')});\">"　+ item.ip + "</a></td><td>"
+				+ item.country + "</td><td>" + item.province + "</td><td>"
 				+ item.city + "</td><td>" + item.loginDateS + "</td></tr>";
 		table.append(tr);
 	}

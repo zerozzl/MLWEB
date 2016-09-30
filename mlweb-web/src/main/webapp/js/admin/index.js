@@ -82,6 +82,10 @@ function switch_module(item) {
 		$("#main").load("dashboard.html", function() {
 			init_dashboard();
 		});
+	} else if(module == "visitor") {
+		$("#main").load("visitor_list.html", function() {
+			init_visitor_list();
+		});
 	} else if(module == "detection-record") {
 		$("#main").load("detection_record_list.html", function() {
 			init_detection_record_list();
@@ -89,10 +93,6 @@ function switch_module(item) {
 	} else if(module == "visitor-opinion") {
 		$("#main").load("visitor_opinion_list.html", function() {
 			init_visitor_opinion_list();
-		});
-	} else if(module == "visitor-record") {
-		$("#main").load("visitor_record.html", function() {
-			init_visitor_record_list();
 		});
 	}
 	init_nav_left();
