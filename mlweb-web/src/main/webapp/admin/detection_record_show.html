@@ -1,5 +1,13 @@
 <script>
-function show_detection_record(uuid) {
+function show_detection_record(arm1, arm2) {
+	if (arguments.length == 1) {
+		_show_detection_record(arm1, true)
+	} else {
+		_show_detection_record(arm1, arm2)
+	}
+}
+
+function _show_detection_record(uuid, show_visitor) {
 	var container = $("#detection-record-dialog-body"),
 			msg = container.find(".msg"), info = container.find(".dialog-info");
 	info.hide();
@@ -27,12 +35,18 @@ function show_detection_record(uuid) {
 				} else {
 					code = "<div class='label label-default'>异常</div>";
 				}
-				$("#visitor-opinion-dialog-body-code").html(code);
-				$("#visitor-opinion-dialog-body-type").html(record.detectTypeS);
-				$("#visitor-opinion-dialog-body-date").html(record.detectDateS);
-				$("#visitor-opinion-dialog-body-visitorid").html("<a>" + record.visitorId + "</a>");
-				$("#visitor-opinion-dialog-body-pic-src").html("<img src='getOriginalImageOfDetection.action?uuid=" + record.DBID + "'>");
-				$("#visitor-opinion-dialog-body-pic-res").html("<img src='getDetectionImage.action?uuid=" + record.DBID + "'>");
+				$("#detection-record-dialog-body-code").html(code);
+				$("#detection-record-dialog-body-type").html(record.detectTypeS);
+				$("#detection-record-dialog-body-date").html(record.detectDateS);
+				if(show_visitor) {
+					$("#detection-record-dialog-body-visitorid").html("<a href=\"javascript:$('#detection-record-dialog').modal('hide');$('#main').load('visitor_show.html', function(){show_visitor('"
+							+ record.visitorId +　"')});\">" + record.visitorId + "</a>");
+					$("#detection-record-dialog-body-item-visitorid").show();
+				} else {
+					$("#detection-record-dialog-body-item-visitorid").hide();
+				}
+				$("#detection-record-dialog-body-pic-src").html("<img src='getOriginalImageOfDetection.action?uuid=" + record.DBID + "'>");
+				$("#detection-record-dialog-body-pic-res").html("<img src='getDetectionImage.action?uuid=" + record.DBID + "'>");
 				info.show();
 			} else {
 				msg.html("<div class='alert alert-warning'><i class='icon icon-orange icon-alert'></i>没有相关记录</div>");
@@ -59,50 +73,50 @@ function show_detection_record(uuid) {
 				<div class="dialog-info">
 					<div class="item">
 						<div class="item-label">
-				  			<label for="visitor-opinion-dialog-body-code">检测结果:</label>
+				  			<label for="detection-record-dialog-body-code">检测结果:</label>
 						</div>
 						<div class="text">
-				  			<span id="visitor-opinion-dialog-body-code"></span>
+				  			<span id="detection-record-dialog-body-code"></span>
 						</div>
 					</div>
 					<div class="item">
 						<div class="item-label">
-							<label for="visitor-opinion-dialog-body-type">检测类型:</label>
+							<label for="detection-record-dialog-body-type">检测类型:</label>
 						</div>
 						<div class="text">
-							<span id="visitor-opinion-dialog-body-type"></span>
+							<span id="detection-record-dialog-body-type"></span>
 						</div>
 					</div>
 					<div class="item">
 						<div class="item-label">
-				  			<label for="visitor-opinion-dialog-body-date">检测时间:</label>
+				  			<label for="detection-record-dialog-body-date">检测时间:</label>
 						</div>
 						<div class="text">
-				  			<span id="visitor-opinion-dialog-body-date"></span>
+				  			<span id="detection-record-dialog-body-date"></span>
 						</div>
 					</div>
-					<div class="item">
+					<div id="detection-record-dialog-body-item-visitorid" class="item">
 						<div class="item-label">
-				  			<label for="visitor-opinion-dialog-body-visitorid">访客ID:</label>
+				  			<label for="detection-record-dialog-body-visitorid">访客ID:</label>
 						</div>
 						<div class="text">
-				  			<span id="visitor-opinion-dialog-body-visitorid"></span>
+				  			<span id="detection-record-dialog-body-visitorid"></span>
 						</div>
 					</div>
 		  			<div class="item">
 						<div class="item-label">
-		  					<label for="visitor-opinion-dialog-body-pic-src">原图:</label>
+		  					<label for="detection-record-dialog-body-pic-src">原图:</label>
 						</div>
 						<div class="text">
-		  					<span id="visitor-opinion-dialog-body-pic-src"></span>
+		  					<span id="detection-record-dialog-body-pic-src"></span>
 						</div>
 		  			</div>
 	  				<div class="item">
 						<div class="item-label">
-		  					<label for="visitor-opinion-dialog-body-pic-res">检测图:</label>
+		  					<label for="detection-record-dialog-body-pic-res">检测图:</label>
 						</div>
 						<div class="text">
-		  					<span id="visitor-opinion-dialog-body-pic-res"></span>
+		  					<span id="detection-record-dialog-body-pic-res"></span>
 						</div>
 	  				</div>
 				</div>

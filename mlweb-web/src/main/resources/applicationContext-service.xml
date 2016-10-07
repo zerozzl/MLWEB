@@ -19,6 +19,8 @@
 		<property name="ipInfoUrl" value="${ipinfo.sina}" />
 		<property name="useProxy" value="${ipinfo.proxy.use}" />
 		<property name="visitorDao" ref="visitorDao" />
+		<property name="detectionRecordService" ref="detectionRecordService" />
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
 	</bean>
             
 	<bean id="visitorOpinionService" class="com.zerozzl.mlweb.service.impl.VisitorOpinionServiceImpl">

@@ -38,12 +38,27 @@
         <property name="cronExpression" value="0 30 23 * * ?" />  
     </bean>
     
+	<!-- 每日23:30运行一次, 清空临时文件目录 -->
+	<!-- JOB -->
+	<bean id="dailyCleanJob" class="com.zerozzl.mlweb.quartz.job.DailyCleanJob" />
+	<!-- Task -->
+    <bean id="dailyCleanTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dailyCleanJob" />
+        <property name="targetMethod" value="execute" />
+    </bean>
+    <!-- Trigger -->  
+    <bean id="dailyCleanTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail" ref="dailyCleanTask" />  
+        <property name="cronExpression" value="0 30 23 * * ?" />  
+    </bean>
+    
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" autowire="no">
 		<property name="waitForJobsToCompleteOnShutdown" value="true" />
 		<property name="triggers">
 			<list>
 				<ref bean="hourlyVisitsCountPersistentTaskCronTrigger" />
 				<ref bean="dailyVisitorInfoPersistentTaskCronTrigger" />
+				<ref bean="dailyCleanTaskCronTrigger" />
 			</list>
 		</property>
 		<property name="quartzProperties">

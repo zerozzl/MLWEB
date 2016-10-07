@@ -10,19 +10,36 @@ import java.util.Map;
 import com.zerozzl.mlweb.common.statistics.WebTraffic;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
 import com.zerozzl.mlweb.common.tools.HighmapsUtils;
+import com.zerozzl.mlweb.domain.MLDetectionRecord;
 import com.zerozzl.mlweb.domain.MLSystemDetectionStatistics;
 import com.zerozzl.mlweb.domain.MLSystemVisitorDistribution;
+import com.zerozzl.mlweb.domain.MLVisitorOpinion;
+import com.zerozzl.mlweb.service.DetectionRecordService;
 import com.zerozzl.mlweb.service.SystemDetectionStatisticsService;
 import com.zerozzl.mlweb.service.SystemVisitorDistributionService;
+import com.zerozzl.mlweb.service.VisitorOpinionService;
+import com.zerozzl.mlweb.service.VisitorService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
 public class AdDashboardAction extends _BaseAction {
 
 	private static final long serialVersionUID = -5182179450681803699L;
+	private VisitorService visitorService;
+	private VisitorOpinionService visitorOpinionService;
+	private DetectionRecordService detectionRecordService;
 	private SystemDetectionStatisticsService systemDetectionStatisticsService;
 	private SystemVisitorDistributionService systemVisitorDistributionService;
 
 	public String getGeneralOverview() {
+		ajaxObj.put("visitors", visitorService.countVisitors());
+		ajaxObj.put("opinions", visitorOpinionService.countOpinions());
+		ajaxObj.put("pdtimes", detectionRecordService.countDetectionRecords(MLDetectionRecord.getTypeCodeOfDedestrianDetection()));
+		ajaxObj.put("fdtimes", detectionRecordService.countDetectionRecords(MLDetectionRecord.getTypeCodeOfFaceDetection()));
+		ajaxObj.put("sstimes", detectionRecordService.countDetectionRecords(MLDetectionRecord.getTypeCodeOfSegmentationDivision()));
+		return "ajaxInvoSuccess";
+	}
+	
+	public String getDetectionOverview() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
@@ -163,12 +180,30 @@ public class AdDashboardAction extends _BaseAction {
 		ajaxObj.put("count", countList);
 		return "ajaxInvoSuccess";
 	}
-	
+
+	public String findUnreadOpinions() {
+		List<MLVisitorOpinion> opinions = visitorOpinionService.findUnreadOpinions();
+		ajaxObj.put("opinions", opinions);
+		return "ajaxInvoSuccess";
+	}
+
 	/********** get() and set() **********/
 	
 	@Override
 	public Map<String, Object> getAjaxObj() {
 		return super.ajaxObj;
+	}
+	
+	public void setVisitorService(VisitorService visitorService) {
+		this.visitorService = visitorService;
+	}
+	
+	public void setVisitorOpinionService(VisitorOpinionService visitorOpinionService) {
+		this.visitorOpinionService = visitorOpinionService;
+	}
+	
+	public void setDetectionRecordService(DetectionRecordService detectionRecordService) {
+		this.detectionRecordService = detectionRecordService;
 	}
 
 	public void setSystemDetectionStatisticsService(SystemDetectionStatisticsService systemDetectionStatisticsService) {

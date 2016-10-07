@@ -1,5 +1,6 @@
 package com.zerozzl.mlweb.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import com.zerozzl.mlweb.common.paging.OrderByParameter;
 import com.zerozzl.mlweb.common.paging.PagedBean;
 import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.common.tools.HttpUtils;
@@ -15,6 +17,8 @@ import com.zerozzl.mlweb.common.tools.ValidatorUtils;
 import com.zerozzl.mlweb.dao.VisitorDao;
 import com.zerozzl.mlweb.domain.MLVisitor;
 import com.zerozzl.mlweb.persistent.Visitor;
+import com.zerozzl.mlweb.service.DetectionRecordService;
+import com.zerozzl.mlweb.service.VisitorOpinionService;
 import com.zerozzl.mlweb.service.VisitorService;
 
 public class VisitorServiceImpl implements VisitorService {
@@ -23,6 +27,8 @@ public class VisitorServiceImpl implements VisitorService {
 	private String ipInfoUrl;
 	private boolean useProxy;
 	private VisitorDao visitorDao;
+	private DetectionRecordService detectionRecordService;
+	private VisitorOpinionService visitorOpinionService;
 
 	public void setIpInfoUrl(String ipInfoUrl) {
 		this.ipInfoUrl = ipInfoUrl;
@@ -34,6 +40,14 @@ public class VisitorServiceImpl implements VisitorService {
 
 	public void setVisitorDao(VisitorDao visitorDao) {
 		this.visitorDao = visitorDao;
+	}
+	
+	public void setDetectionRecordService(DetectionRecordService detectionRecordService) {
+		this.detectionRecordService = detectionRecordService;
+	}
+	
+	public void setVisitorOpinionService(VisitorOpinionService visitorOpinionService) {
+		this.visitorOpinionService = visitorOpinionService;
 	}
 
 	@Override
@@ -80,24 +94,38 @@ public class VisitorServiceImpl implements VisitorService {
 		province = StringUtils.isNotBlank(province) ? province.trim() : "";
 		city = StringUtils.isNotBlank(city) ? city.trim() : "";
 		
-		PagedBean pagedBean = null;
+		PagedBean pagedBean = new PagedBean(page, pageSize);
+		List<OrderByParameter> orders = null;
 		if(StringUtils.isNotBlank(sortColumn)) {
-			pagedBean = new PagedBean(page, pageSize, sortColumn, sortType);
+			orders = OrderByParameter.init(sortColumn, sortType);
 		} else {
-			pagedBean = new PagedBean(page, pageSize, "loginDate", 0);
+			orders = OrderByParameter.init("loginDate");
 		}
 		
-		PagedList pagedList = visitorDao.findByPage(
-				ip, country, province, city, begin, end, pagedBean);
+		PagedList pagedList = visitorDao.findByPage(ip, country, province, city, begin, end,
+				orders, pagedBean);
 		@SuppressWarnings("unchecked")
-		List<MLVisitor> dataList = MLVisitor.init(pagedList.getCurrentPageList());
-		pagedList.setCurrentPageList(dataList);
+		List<Visitor> datas = pagedList.getCurrentPageList();
+		List<MLVisitor> visitors = new ArrayList<MLVisitor>();
+		if(datas != null && !datas.isEmpty()) {
+			for(Visitor o : datas) {
+				visitors.add(new MLVisitor(o,
+						(int) detectionRecordService.countByVisitor(o.getDBID()),
+						(int) visitorOpinionService.countByVisitor(o.getDBID())));
+			}
+		}
+		pagedList.setCurrentPageList(visitors);
 		return pagedList;
 	}
 
 	@Override
 	public List<MLVisitor> findByDate(Date begin, Date end) {
 		return MLVisitor.init(visitorDao.findByDate(begin, end));
+	}
+
+	@Override
+	public long countVisitors() {
+		return visitorDao.count();
 	}
 
 }

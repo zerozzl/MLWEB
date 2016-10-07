@@ -30,4 +30,9 @@ public interface VisitorService {
 	 */
 	List<MLVisitor> findByDate(Date begin, Date end);
 	
+	/**
+	 * 统计访客数量
+	 */
+	long countVisitors();
+	
 }

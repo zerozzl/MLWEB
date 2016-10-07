@@ -11,22 +11,27 @@ public class MLUser implements Serializable {
 	private String Nickname;
 	private String Email;
 	private boolean IsAdmin;
+	private boolean IsSuperAdmin;
 
 	public MLUser(User user) {
 		if(user != null) {
 			this.DBID = user.getDBID();
 			this.Nickname = user.getNickname();
 			this.Email = user.getEmail();
-			if (user.getSysRole() == 1) {
+			this.IsAdmin = false;
+			this.IsSuperAdmin = false;
+			if (user.getSysRole() >= 1) {
 				this.IsAdmin = true;
-			} else {
-				this.IsAdmin = false;
+				if(user.getSysRole() == 2) {
+					this.IsSuperAdmin = true;
+				}
 			}
 		} else {
 			this.DBID = "";
 			this.Nickname = "";
 			this.Email = "";
 			this.IsAdmin = false;
+			this.IsSuperAdmin = false;
 		}
 	}
 	
@@ -46,4 +51,8 @@ public class MLUser implements Serializable {
 		return IsAdmin;
 	}
 
+	public boolean isIsSuperAdmin() {
+		return IsSuperAdmin;
+	}
+	
 }

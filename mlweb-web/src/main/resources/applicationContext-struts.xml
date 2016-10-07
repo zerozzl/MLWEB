@@ -26,9 +26,13 @@
 		<property name="visitorOpinionService" ref="visitorOpinionService" />
 		<property name="hourlyVisitsCountPersistentJob" ref="hourlyVisitsCountPersistentJob" />
 		<property name="dailyVisitorInfoPersistentJob" ref="dailyVisitorInfoPersistentJob" />
+		<property name="dailyCleanJob" ref="dailyCleanJob" />
 	</bean>
 	
 	<bean id="adDashboardAction" class="com.zerozzl.mlweb.web.action.admin.AdDashboardAction" scope="prototype">
+		<property name="visitorService" ref="visitorService" />
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
+		<property name="detectionRecordService" ref="detectionRecordService" />
 		<property name="systemDetectionStatisticsService" ref="systemDetectionStatisticsService" />
 		<property name="systemVisitorDistributionService" ref="systemVisitorDistributionService" />
 	</bean>
@@ -43,6 +47,8 @@
 	
 	<bean id="adVisitorAction" class="com.zerozzl.mlweb.web.action.admin.AdVisitorAction" scope="prototype">
 		<property name="visitorService" ref="visitorService" />
+		<property name="visitorOpinionService" ref="visitorOpinionService" />
+		<property name="detectionRecordService" ref="detectionRecordService" />
 	</bean>
 
 </beans>

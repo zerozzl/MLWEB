@@ -47,8 +47,23 @@ public interface VisitorOpinionService {
 	String getImageOfOpinion(String uuid);
 	
 	/**
+	 * 统计访客意见数量
+	 */
+	long countOpinions();
+	
+	/**
 	 * 统计本日提交的访客意见数量
 	 */
 	long countOpinions(Date date);
-		
+	
+	/**
+	 * 根据访客ID统计
+	 */
+	long countByVisitor(String visitorId);
+	
+	/**
+	 * 根据访客ID查找
+	 */
+	List<MLVisitorOpinion> findByVisitor(String visitorId);
+	
 }

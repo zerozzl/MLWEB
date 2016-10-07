@@ -41,9 +41,18 @@ public class DetectionRecordDaoImpl extends _GenericDaoImpl<DetectionRecord, Str
 	}
 
 	@Override
-	public PagedList findByPage(List<Integer> types, List<Integer> codes, Date begin, Date end, PagedBean pagedBean) {
+	public long countByType(int type) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("type", type);
+		@SuppressWarnings("rawtypes")
+		List list = super.find("select count(DBID) from DetectionRecord where detectType = :type", params);
+		return (long) list.get(0);
+	}
+	
+	@Override
+	public PagedList findByPage(List<Integer> types, List<Integer> codes, Date begin, Date end,
+			List<OrderByParameter> orders, PagedBean pagedBean) {
 		List<QueryParameter> params = new ArrayList<QueryParameter>();
-		List<OrderByParameter> orders = null;
 		
 		if(types != null && !types.isEmpty()) {
 			params.add(new QueryParameter("detectType", 8, types));
@@ -58,10 +67,25 @@ public class DetectionRecordDaoImpl extends _GenericDaoImpl<DetectionRecord, Str
 			params.add(new QueryParameter("detectDate", "endDate", 5, end));
 		}
 		
-		if(StringUtils.isNotBlank(pagedBean.getSortColumn())) {
-			orders = OrderByParameter.init(pagedBean.getSortColumn(), pagedBean.getSortOrder());
-		}
 		return super.findByPage(params, orders, pagedBean);
+	}
+
+	@Override
+	public List<DetectionRecord> findByVisitor(String visitorId, List<OrderByParameter> orders) {
+		List<QueryParameter> params = new ArrayList<QueryParameter>();
+		if(StringUtils.isNotBlank(visitorId)) {
+			params.add(new QueryParameter("visitorId", visitorId));
+		}
+		return super.find(params, orders);
+	}
+	
+	@Override
+	public long countByVisitor(String visitorId) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("visitorId", visitorId);
+		@SuppressWarnings("rawtypes")
+		List list = super.find("select count(DBID) from DetectionRecord where visitorId = :visitorId", params);
+		return (long) list.get(0);
 	}
 
 }

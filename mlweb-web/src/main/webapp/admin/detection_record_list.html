@@ -6,79 +6,7 @@
 #indateend {
 	width: 110px;
 }
-
-#detection-record-container {
-	-webkit-column-width: 215px;
-	-moz-column-width: 215px;
-	-o-colum-width: 215px;
-	-webkit-column-gap: 1px;
-	-moz-column-gap: 1px;
-	-o-column-gap: 1px;
-}
-
-#detection-record-container>.item {
-	float: left;
-	margin-right: 5px;
-	margin-bottom: 10px;
-	width: 212px;
-	background-color: #ffffff;
-	border: 1px solid #dddddd;
-	border-radius: 3px;
-	-webkit-column-break-inside: avoid;
-	-moz-column-break-inside: avoid;
-	-o-column-break-inside: avoid;
-}
-
-#detection-record-container>.item>.item-img {
-	padding: 5px;
-	border-bottom: 1px solid #dddddd;
-	text-align: center;
-}
-
-#detection-record-container>.item>.item-info {
-	padding: 5px 10px;
-}
-
-#detection-record-container>.item>.item-info>.content {
-	overflow: auto;
-	margin-bottom: 5px;
-}
-
-#detection-record-container>.item>.item-info>.content>.tag {
-	float: left;
-	width: 20px;
-}
-
-#detection-record-container>.item>.item-info>.content>.title {
-	float: left;
-	width: 120px;
-	font-size: 16px;
-	font-weight: bold;
-}
-
-#detection-record-container>.item>.item-info>.content>.font {
-	float: left;
-	width: 170px;
-	word-break: break-all;
-}
-
-#detection-record-container>.item>.item-info>.content>.label {
-	float: right;
-	padding: 5px;
-	font-size: 12px;
-}
-
-#detection-record-container>.item>.item-img>img {
-	max-width: 200px;
-	max-height: 200px;
-}
-
-#detection-record-container>.item>.item-info>.operator {
-	text-align: right;
-}
-
 </style>
-
 <script>
 function init_detection_record_list() {
 	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
@@ -91,8 +19,6 @@ function init_detection_record_list() {
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search_detection_record();
 	});
-	
-	$("#detection-record-dialog-container").load("detection_record_show.html");
 }
 
 function toPage(page) {
@@ -115,11 +41,12 @@ function search_detection_record() {
 		data: $("#search-form").serialize(),
 		success : function(data, textStatus) {
 			var pagedList = data.ajaxObj.pagedList,
-					items = pagedList.currentPageList;
+					items = pagedList.currentPageList,
+					deleteAuthority = data.ajaxObj.deleteAuthority;
 			if(typeof (items) != "undefined" &&　items != null
 					&& items.length > 0) {
 				msg_container.hide();
-				fill_datacontainer(container, items);
+				fill_datacontainer(container, items, deleteAuthority);
 			} else {
 				msg_container.html("<p class='help-block'>暂无相关记录</p>");
 			}
@@ -132,9 +59,13 @@ function search_detection_record() {
 	});
 }
 
-function fill_datacontainer(container, datas) {
+function fill_datacontainer(container, datas, deleteAuthority) {
+	var max_width = container.width() - 20,
+		item_num = parseInt(max_width / 220),
+		remaining_width = max_width - item_num * 220,
+		margin_right = parseInt(remaining_width / item_num) + 8;
 	for(var i = 0; i < datas.length; i++) {
-		var data = datas[i], code = "";
+		var data = datas[i], item_attr = "", code = "", operator = "";
 		if(data.detectCode == 0) {
 			code = "<div class='label label-primary'>未检测</div>";
 		} else if(data.detectCode == 1) {
@@ -144,14 +75,52 @@ function fill_datacontainer(container, datas) {
 		} else {
 			code = "<div class='label label-default'>异常</div>";
 		}
-		var item = "<div class='item'><div class='item-img'><img src='getDetectionImage.action?uuid="
-				+ data.DBID + "'></div><div class='item-info'><div class='content'><div class='tag'><i class='icon icon-black icon-tag'></i></div><div class='title'>"
+		item_attr = "style='margin-right:" + margin_right + "px;'";
+		if(deleteAuthority) {
+			item_attr += " onmouseover='show_waterfall_item_operator(this);' onmouseout='hide_waterfall_item_operator(this);'";
+			operator = "<div class='item-operator'><a onclick='delete_detection_record(\""
+					+ data.DBID + "\");'><i class='icon icon-close'></i></a></div>";
+		}
+		var item = "<div class='detection-record-item' " + item_attr + ">"
+				+ operator + "<div class='item-img'><a onclick='show_detection_record(\""
+				+ data.DBID + "\");'><img src='getDetectionImage.action?uuid=" + data.DBID + "'></a></div><div class='item-info'><div class='content'><div class='tag'><i class='icon icon-black icon-tag'></i></div><div class='title'>"
 				+ data.detectTypeS + "</div>" + code + "</div><div class='content'><div class='tag'><i class='icon icon-black icon-clock'></i></div><div class='font'>"
-				+ data.detectDateS + "</div></div><div class='content'><div class='tag'><i class='icon icon-black icon-user'></i></div><div class='font'><a>"
-				+ data.visitorId + "</a></div></div><div class='operator'><button class='btn btn-primary' onclick='show_detection_record(\""
-				+ data.DBID + "\");'>详情</button></div></div></div>";
+				+ data.detectDateS + "</div></div><div class='content'><div class='tag'><i class='icon icon-black icon-user'></i></div><div class='font'><a href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
+				+ data.visitorId +　"')});\">" + data.visitorId + "</a></div></div></div></div>";
 		container.append(item);
 	}
+}
+
+function delete_detection_record(id) {
+	init_dialog_msg(3, "删除确认",
+			"<i class='icon icon-orange icon-alert'></i>是否删除选定检测记录？",
+			["确认删除"], ["confirm_delete_detection_record('" + id + "')"]);
+	$("#dialog-msg").modal("show");
+}
+
+function confirm_delete_detection_record(id) {
+	init_dialog_msg(0, "正在删除",
+			"<div style='padding:10px 0px;text-align:center;'><img src='../images/sys/loading_l.gif' /></div>");
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "deleteDetectionRecord.action",
+		data: "id=" + id,
+		success : function(data, textStatus) {
+			if(data.ajaxObj.flag == 1) {
+				search_detection_record();
+				$("#dialog-msg").modal("hide");
+			} else {
+				init_dialog_msg(1, "删除失败", "<i class='icon icon-red icon-cross'></i>删除检测记录失败", ["返回"]);
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			init_dialog_msg(1, ERROR_MSG, ["返回"]);
+		}
+	});
 }
 
 </script>
@@ -187,9 +156,6 @@ function fill_datacontainer(container, datas) {
 	</form>
 </div>
 
-<div id="detection-record-container"></div>
-
+<div id="detection-record-container" class="detection-record-showcase"></div>
 <div id="msg-container" class="msg-container"></div>
 <div id="pagination-container"></div>
-
-<div id="detection-record-dialog-container"></div>

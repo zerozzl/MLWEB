@@ -56,6 +56,18 @@ public class MLDetectionRecord implements Serializable {
 			return false;
 		}
 	}
+	
+	public static int getTypeCodeOfDedestrianDetection() {
+		return 1;
+	}
+	
+	public static int getTypeCodeOfFaceDetection() {
+		return 2;
+	}
+	
+	public static int getTypeCodeOfSegmentationDivision() {
+		return 3;
+	}
 
 	public static List<Integer> getDetectTypes() {
 		List<Integer> types = new ArrayList<Integer>();
@@ -86,7 +98,7 @@ public class MLDetectionRecord implements Serializable {
 		}
 		return s;
 	}
-
+	
 	public Date getDetectDate() {
 		return DetectDate;
 	}

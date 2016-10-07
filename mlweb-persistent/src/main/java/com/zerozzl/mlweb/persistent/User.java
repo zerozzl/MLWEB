@@ -22,7 +22,7 @@ public class User implements Serializable {
 	private String Nickname; // 昵称
 	private String Email; // 邮箱
 	private String Password; // 登陆密码
-	private int SysRole; // 系统角色, 0:user, 1:admin
+	private int SysRole; // 系统角色, 0:user, 1:admin, 2:super admin
 
 	public User() {
 		super();

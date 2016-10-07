@@ -63,6 +63,10 @@ body {
 	margin-left: 5px;
 }
 
+#cron-job-nav {
+	display: none;
+}
+
 /* 页面主体*/
 .main {
 	padding: 20px;
@@ -77,6 +81,7 @@ body {
 
 .main .page-header {
 	margin-top: 0;
+	margin-bottom: 10px;
 	font-weight: bold;
 }
 
@@ -121,18 +126,24 @@ a {
 }
 
 /* 表格 */
-table .operator {
-	padding: 3px;
-	border: 1px solid transparent;
-	border-radius: 5px;
-}
-
-table .operator:hover {
-	border: 1px solid #dddddd;
-}
-
 table .operator .icon {
 	margin: 0px;
+}
+
+table .operator .icon-red {
+	background-image: url('../../images/icons/opa-icons-gray16.png');
+}
+
+table .operator .icon-red:hover {
+	background-image: url('../../images/icons/opa-icons-red16.png');
+}
+
+table .operator .icon-blue {
+	background-image: url('../../images/icons/opa-icons-gray16.png');
+}
+
+table .operator .icon-blue:hover {
+	background-image: url('../../images/icons/opa-icons-blue16.png');
 }
 
 /* 对话框 */
@@ -163,9 +174,38 @@ table .operator .icon {
 }
 
 /* 其他 */
+.page-operate-header {
+	overflow: auto;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #eeeeee;
+}
+
+.page-operate-header>.text {
+	float: left;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.page-operate-header>.operators {
+	float: right;
+}
+
+.page-operate-header>.operators>.operator>.icon32 {
+	margin: 0px;
+	cursor: pointer;
+}
+
+.page-operate-header>.operators>.operator>.icon-green,.icons-green .icon32 {
+	background-image: url('../../images/icons/opa-icons-gray32.png');
+}
+
+.page-operate-header>.operators>.operator>.icon-green:hover,.icons-green:hover .icon32 {
+	background-image: url('../../images/icons/opa-icons-green32.png');
+}
+
 .msg-container {
 	margin-bottom: 30px;
-	padding: 10px 8px;
+	padding: 5px 8px;
 	text-align: left;
 	display: none;
 }
@@ -182,7 +222,7 @@ table .operator .icon {
 
 #user-info-container-avatar {
 	float: left;
-	padding: 4px 15px 6px 0px;
+	padding: 3px 15px 5px 0px;
 }
 
 #user-info-container-avatar>img {
@@ -196,4 +236,107 @@ table .operator .icon {
 #user-info-container-info-nickname {
 	font-size: 18px;
 	font-weight: bold;
+}
+
+/* 检测记录展示 */
+.detection-record-showcase {
+	overflow: auto;
+}
+
+.detection-record-item {
+	position: relative;
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	width: 212px;
+	background-color: #ffffff;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	box-shadow: rgba(34, 25, 25, 0.2) 0px 1px 2px;
+	-moz-box-shadow: rgba(34, 25, 25, 0.2) 0px 1px 2px;
+	-webkit-box-shadow: rgba(34, 25, 25, 0.2) 0px 1px 2px;
+}
+
+.detection-record-item:hover {
+	box-shadow: rgba(35, 25, 25, 0.4) 0px 1px 4px;
+	-moz-box-shadow: rgba(35, 25, 25, 0.4) 0px 1px 4px;
+	-webkit-box-shadow: rgba(35, 25, 25, 0.4) 0px 1px 4px;
+}
+
+.detection-record-item>.item-operator {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 1;
+	display: none;
+}
+
+.detection-record-item>.item-operator>a>.icon {
+	margin: 0px;
+}
+
+.detection-record-item>.item-operator>a:hover {
+	background: #d9534f;
+}
+
+.detection-record-item>.item-operator>a:hover>.icon {
+	background-image: url('../../images/icons/opa-icons-white16.png');
+}
+
+.detection-record-item>.item-img {
+	width: 210px;
+	height: 210px;
+	line-height: 208px;
+	border-bottom: 1px solid #eeeeee;
+	text-align: center;
+	overflow: hidden;
+}
+
+.detection-record-item>.item-img>a {
+	cursor:pointer;
+}
+
+.detection-record-item>.item-img>a>img {
+	max-width: 200px;
+	max-height: 200px;
+}
+
+.detection-record-item>.item-img>a:hover>img{
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    box-shadow: #428bca 0px 0px 3px;
+    -moz-box-shadow: #428bca 0px 0px 3px;
+	-webkit-box-shadow: #428bca 0px 0px 3px;
+}
+
+.detection-record-item>.item-info {
+	padding: 5px;
+}
+
+.detection-record-item>.item-info>.content {
+	overflow: auto;
+	margin-bottom: 5px;
+}
+
+.detection-record-item>.item-info>.content>.tag {
+	float: left;
+	width: 20px;
+}
+
+.detection-record-item>.item-info>.content>.title {
+	float: left;
+	width: 120px;
+	font-weight: bold;
+}
+
+.detection-record-item>.item-info>.content>.font {
+	float: left;
+	width: 170px;
+	word-break: break-all;
+}
+
+.detection-record-item>.item-info>.content>.label {
+	float: right;
+	padding: 5px;
+	font-size: 10px;
 }

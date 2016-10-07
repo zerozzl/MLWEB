@@ -13,6 +13,40 @@
 	text-align: center;
 }
 
+.placeholders {
+	padding: 0px 10px;
+}
+
+.placeholders>.item {
+	overflow: auto;
+	border-left: 1px solid #eeeeee;
+}
+
+.placeholders>.item>.grap {
+	float: left;
+	margin-right: 15px;
+}
+
+.placeholders>.item>.grap>img {
+	width: 80px;
+}
+
+.placeholders>.item>.description {
+	float: left;
+	padding: 10px 0px;
+}
+
+.placeholders>.item>.description>.label {
+	padding: 0px;
+	font-size: 18px;
+	font-weight: normal;
+	color: #777777;
+}
+
+.placeholders>.item>.description>.text {
+	font-size: 42px;
+}
+
 #general_overview {
 	height: 300px;
 	margin-bottom: 30px;
@@ -95,15 +129,20 @@
 <script>
 function init_dashboard() {
 	load_general_overview();
+	load_detection_overview();
 	load_uv_info();
 	load_current_visits_count();
 	load_visitor_access();
 	load_visitor_distribution();
 	load_visitor_opinion();
-	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
 }
 
 function load_general_overview() {
+	$("#count-of-visitor").html("<img src='../images/sys/loading_l.gif' width='25' />");
+	$("#count-of-detection-pedestrian").html("<img src='../images/sys/loading_l.gif' width='25' />");
+	$("#count-of-detection-face").html("<img src='../images/sys/loading_l.gif' width='25' />");
+	$("#count-of-detection-segmentation").html("<img src='../images/sys/loading_l.gif' width='25' />");
+	$("#count-of-visitor-opinion").html("<img src='../images/sys/loading_l.gif' width='25' />");
 	$.ajax({
 		traditional : true,
 		type : "post",
@@ -111,6 +150,31 @@ function load_general_overview() {
 		cache : false,
 		timeout : 10000,
 		url : "getGeneralOverview.action",
+		success : function(data, textStatus) {
+			$("#count-of-visitor").html(data.ajaxObj.visitors);
+			$("#count-of-detection-pedestrian").html(data.ajaxObj.pdtimes);
+			$("#count-of-detection-face").html(data.ajaxObj.fdtimes);
+			$("#count-of-detection-segmentation").html(data.ajaxObj.sstimes);
+			$("#count-of-visitor-opinion").html(data.ajaxObj.opinions);
+		},
+		error : function(jqXHR, status, errorThrown) {
+			$("#count-of-visitor").html("");
+			$("#count-of-detection-pedestrian").html("");
+			$("#count-of-detection-face").html("");
+			$("#count-of-detection-segmentation").html("");
+			$("#count-of-visitor-opinion").html("");
+		}
+	});
+}
+
+function load_detection_overview() {
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getDetectionOverview.action",
 		success : function(data, textStatus) {
 			plot_general_overview(data.ajaxObj);
 		},
@@ -123,8 +187,14 @@ function load_general_overview() {
 function plot_general_overview(data) {
 	var xaxis = new Array(), pd = new Array(), fd = new Array(), ss = new Array(), average = new Array();
 	var records = data.records;
+	var xTickInterval = 1;
 	if(typeof (records) != "undefined" &&　records != null
 			&& records.length > 0) {
+		if(records.length > 10 && records.length <= 20) {
+			xTickInterval = 2;
+		} else if(records.length > 20){
+			xTickInterval = 3;
+		}
 		for(var i = 0; i < records.length; i++) {
 			var item = records[i];
 			xaxis.push(item.dateS);
@@ -145,14 +215,15 @@ function plot_general_overview(data) {
             enabled: false
         },
         xAxis: {
-            categories: xaxis
+            categories: xaxis,
+            tickInterval: xTickInterval
         },
         yAxis: {
         	title: null
         },
         labels: {
             items: [{
-                html: "总体检测比例",
+                html: "检测比例",
                 style: {
                     left: "40px",
                     top: "10px",
@@ -363,7 +434,9 @@ function load_visitor_opinion() {
 		timeout : 10000,
 		url : "findUnreadVisitorOpinions.action",
 		success : function(data, textStatus) {
-			var container = $("#visitor-opinion-container"), opinions = data.ajaxObj.opinions;
+			var container = $("#visitor-opinion-container"),
+				opinions = data.ajaxObj.opinions,
+				deleteAuthority = data.ajaxObj.deleteAuthority;
 			if (opinions.length > 0) {
 				container.find(".msg-container").remove();
 				var table = container.find("table");
@@ -374,7 +447,8 @@ function load_visitor_opinion() {
 						image = "<i class='icon icon-blue icon-image'></i>";
 					}
 					var tr = "<tr><td>" + (i+1) + "</td><td><a class='font-blod' uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a></td><td>" + image
-							+ "</td><td>" + item.creationDateS + "</td><td><a visitorid='" + item.visitorId + "'>" + item.visitorId + "</a></td></tr>";
+							+ "</td><td>" + item.creationDateS + "</td><td><a href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
+							+ item.visitorId +　"')});\">" + item.visitorId + "</a></td></tr>";
 					table.append(tr);
 				}
 			} else {
@@ -499,10 +573,17 @@ function load_visitor_access() {
 }
 
 function plot_visitor_access(date, count) {
+	var xTickInterval = 1;
+	if(date.length > 10 && date.length <= 20) {
+		xTickInterval = 2;
+	} else if(date.length > 20){
+		xTickInterval = 3;
+	}
 	$("#visitor_access").highcharts({
         title: null,
         xAxis: {
-            categories: date
+            categories: date,
+            tickInterval: xTickInterval
         },
         yAxis: {
             title: null
@@ -526,10 +607,41 @@ function plot_visitor_access(date, count) {
 </script>
 
 <h2 class="page-header">控制台</h2>
-<!-- 总体检测情况 -->
-<div id="general_overview">
-	<div class="loading-container">
-		<img src="../images/sys/loading_l.gif" />
+<div class="row placeholders">
+	<div class="col-md-2 item" style="border-left:1px solid transparent;">
+		<div class="grap"><img src="../images/admin/dashboard/users.png" /></div>
+		<div class="description">
+			<div class="label">访客总数</div>
+			<div class="text" id="count-of-visitor"></div>
+		</div>
+	</div>
+	<div class="col-md-2 item">
+		<div class="grap"><img src="../images/admin/dashboard/detection-pedestrian.png" /></div>
+		<div class="description">
+			<div class="label">行人检测</div>
+			<div class="text" id="count-of-detection-pedestrian"></div>
+		</div>
+	</div>
+	<div class="col-md-2 item">
+		<div class="grap"><img src="../images/admin/dashboard/detection-face.png" /></div>
+		<div class="description">
+			<div class="label">人脸检测</div>
+			<div class="text" id="count-of-detection-face"></div>
+		</div>
+	</div>
+	<div class="col-md-2 item">
+		<div class="grap"><img src="../images/admin/dashboard/detection-segmentation.png" /></div>
+		<div class="description">
+			<div class="label">图像语义分割</div>
+			<div class="text" id="count-of-detection-segmentation"></div>
+		</div>
+	</div>
+	<div class="col-md-2 item">
+		<div class="grap"><img src="../images/admin/dashboard/opinions.png" /></div>
+		<div class="description">
+			<div class="label">访客意见</div>
+			<div class="text" id="count-of-visitor-opinion"></div>
+		</div>
 	</div>
 </div>
 
@@ -559,6 +671,14 @@ function plot_visitor_access(date, count) {
 				<img src="../images/sys/loading_l.gif" />
 			</div>
 		</div>
+	</div>
+</div>
+
+<!-- 检测提交情况 -->
+<h3 class="sub-header font-blod">检测提交情况</h3>
+<div id="general_overview">
+	<div class="loading-container">
+		<img src="../images/sys/loading_l.gif" />
 	</div>
 </div>
 
@@ -611,5 +731,3 @@ function plot_visitor_access(date, count) {
 		<tbody></tbody>
 	</table>
 </div>
-
-<div id="visitor-opinion-dialog-container"></div>

@@ -80,10 +80,11 @@
 					</li>
 				</ul>
 				<ul id="nav-left" class="nav nav-sidebar">
-					<li module="dashboard" class="active" onclick="switch_module(this);"><a href="#">概览 </a></li>
-					<li module="visitor" onclick="switch_module(this);"><a href="#">访客记录</a></li>
-					<li module="detection-record" onclick="switch_module(this);"><a href="#">检测记录</a></li>
-					<li module="visitor-opinion" onclick="switch_module(this);"><a href="#">访客意见</a></li>
+					<li class="active"><a module="dashboard" onclick="switch_module(this);">概览 </a></li>
+					<li><a module="visitor" onclick="switch_module(this);">访客记录</a></li>
+					<li><a module="detection-record" onclick="switch_module(this);">检测记录</a></li>
+					<li><a module="visitor-opinion" onclick="switch_module(this);">访客意见</a></li>
+					<li id="cron-job-nav"><a module="cron-job" onclick="switch_module(this);">定时任务</a></li>
 				</ul>
 			</div>
 
@@ -91,6 +92,11 @@
 			<div id="main" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 		</div>
 	</div>
+	
+	<!-- 其他页面 -->
+	<div id="detection-record-dialog-container"></div>
+	<div id="visitor-opinion-dialog-container"></div>
+	<div id="msg-dialog-container"></div>
 
 	<!-- ================================================== -->
 	<script src="../jquery/jquery-1.11.3.min.js"></script>

@@ -65,17 +65,18 @@
 			<result type="redirect">/admin/index.html</result>
 		</action>
 		
+		<!-- 管理员 -->
 		<action name="initNavLeft" class="adminAction" method="initNavLeft" />
 		<action name="getServerTime" class="adminAction" method="getServerTime" />
-		<action name="runHourlyVisitsCountPersistentJob" class="adminAction" method="runHourlyVisitsCountPersistentJob" />
-		<action name="runDailyVisitorInfoPersistentJob" class="adminAction" method="runDailyVisitorInfoPersistentJob" />
 		
 		<!-- 控制台 -->
 		<action name="getGeneralOverview" class="adDashboardAction" method="getGeneralOverview" />
+		<action name="getDetectionOverview" class="adDashboardAction" method="getDetectionOverview" />
 		<action name="getUVInfo" class="adDashboardAction" method="getUVInfo" />
 		<action name="getCurrentVisitsCount" class="adDashboardAction" method="getCurrentVisitsCount" />
 		<action name="getVisitorDistribution" class="adDashboardAction" method="getVisitorDistribution" />
 		<action name="getVisitorAccess" class="adDashboardAction" method="getVisitorAccess" />
+		<action name="findUnreadVisitorOpinions" class="adDashboardAction" method="findUnreadOpinions" />
 		
 		<!-- 检测记录 -->
 		<action name="findDetectionRecords" class="adDetectionRecordAction" method="findDetectionRecords" />
@@ -84,15 +85,40 @@
 		<action name="getOriginalImageOfDetection" class="adDetectionRecordAction" method="getOriginalImageOfDetection" />
 		
 		<!-- 访客意见 -->
-		<action name="findUnreadVisitorOpinions" class="adVisitorOpinionAction" method="findUnreadOpinions" />
 		<action name="readVisitorOpinion" class="adVisitorOpinionAction" method="readOpinion" />
 		<action name="getImageOfVisitorOpinion" class="adVisitorOpinionAction" method="getImageOfOpinion" />
 		<action name="findVisitorOpinions" class="adVisitorOpinionAction" method="findOpinions" />
-		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
 		
 		<!-- 访客 -->
 		<action name="findVisitors" class="adVisitorAction" method="findVisitors" />
+		<action name="getVisitorInfo" class="adVisitorAction" method="getVisitorInfo" />
+		<action name="findOpinionByVisitor" class="adVisitorAction" method="findOpinionByVisitor" />
+		<action name="findDetectionRecordByVisitor" class="adVisitorAction" method="findDetectionRecordByVisitor" />
 	    
 	</package>
 
+	<package name="superAdmin" namespace="/admin" extends="base">
+
+		<interceptors>
+			<interceptor name="superAdminInterceptor" class="com.zerozzl.mlweb.web.interceptor.SuperAdminInterceptor" />
+			<interceptor-stack name="superAdminInterceptorStack">
+				<interceptor-ref name="superAdminInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="superAdminInterceptorStack" />
+		
+		<!-- 管理员 -->
+		<action name="runHourlyVisitsCountPersistentJob" class="adminAction" method="runHourlyVisitsCountPersistentJob" />
+		<action name="runDailyVisitorInfoPersistentJob" class="adminAction" method="runDailyVisitorInfoPersistentJob" />
+		<action name="runDailyCleanJob" class="adminAction" method="runDailyCleanJob" />
+		
+		<!-- 检测记录 -->
+		<action name="deleteDetectionRecord" class="adDetectionRecordAction" method="deleteDetectionRecord" />
+		
+		<!-- 访客意见 -->
+		<action name="deleteVisitorOpinion" class="adVisitorOpinionAction" method="deleteOpinion" />
+		
+	</package>
+	
 </struts>

@@ -17,8 +17,14 @@ public class MLVisitor implements Serializable {
 	private String Province;
 	private String City;
 	private Date LoginDate;
+	private int countOfDetection;
+	private int countOfOpinions;
 
 	public MLVisitor(Visitor visitor) {
+		this(visitor, 0, 0);
+	}
+	
+	public MLVisitor(Visitor visitor, int countOfDetection, int countOfOpinions) {
 		if(visitor != null) {
 			this.DBID = visitor.getDBID();
 			this.Ip = visitor.getIp();
@@ -26,6 +32,8 @@ public class MLVisitor implements Serializable {
 			this.Province = visitor.getProvince();
 			this.City = visitor.getCity();
 			this.LoginDate = visitor.getLoginDate();
+			this.countOfDetection = countOfDetection;
+			this.countOfOpinions = countOfOpinions;
 		} else {
 			this.DBID = "";
 			this.Ip = "";
@@ -33,6 +41,8 @@ public class MLVisitor implements Serializable {
 			this.Province = "";
 			this.City = "";
 			this.LoginDate = new Date();
+			this.countOfDetection = countOfDetection;
+			this.countOfOpinions = countOfOpinions;
 		}
 	}
 	
@@ -74,4 +84,12 @@ public class MLVisitor implements Serializable {
 		return FormatUtils.dateFormat(LoginDate, "yyyy-MM-dd HH:mm:ss");
 	}
 
+	public int getCountOfDetection() {
+		return countOfDetection;
+	}
+
+	public int getCountOfOpinions() {
+		return countOfOpinions;
+	}
+	
 }

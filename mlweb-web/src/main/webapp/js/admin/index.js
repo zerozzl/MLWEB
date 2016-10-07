@@ -7,6 +7,10 @@ function init() {
 		init_dashboard();
 	});
 	check_server_time();
+	
+	$("#detection-record-dialog-container").load("detection_record_show.html");
+	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
+	$("#msg-dialog-container").load("../common/dialog_msg.html");
 }
 
 function check_server_time() {
@@ -61,9 +65,14 @@ function init_nav_left() {
 		success : function(data, textStatus) {
 			var obj = data.ajaxObj;
 			if(obj.opinions > 0) {
-				$("#nav-left").find("li[module=visitor-opinion]").find("a").html("访客意见<span class='badge'>" + obj.opinions + "</span>");
+				$("#nav-left").find("a[module=visitor-opinion]").html("访客意见<span class='badge'>" + obj.opinions + "</span>");
 			} else {
-				$("#nav-left").find("li[module=visitor-opinion]").find("a").html("访客意见");
+				$("#nav-left").find("a[module=visitor-opinion]").html("访客意见");
+			}
+			if(obj.cronjob) {
+				$("#cron-job-nav").show();
+			} else {
+				$("#cron-job-nav").hide();
 			}
 		},
 		error : function(jqXHR, status, errorThrown) {
@@ -75,7 +84,7 @@ function init_nav_left() {
 function switch_module(item) {
 	item = $(item);
 	$("#nav-left").find("li").removeClass("active");
-	item.addClass("active");
+	item.parent().addClass("active");
 	$("#main").html("");
 	var module = item.attr("module");
 	if(module == "dashboard") {
@@ -94,8 +103,20 @@ function switch_module(item) {
 		$("#main").load("visitor_opinion_list.html", function() {
 			init_visitor_opinion_list();
 		});
-	}
+	} else if(module == "cron-job") {
+		$("#main").load("cron_job.html");
+	} 
 	init_nav_left();
+}
+
+function show_waterfall_item_operator(item) {
+	item = $(item);
+	item.find(".item-operator").show();
+}
+
+function hide_waterfall_item_operator(item) {
+	item = $(item);
+	item.find(".item-operator").hide();
 }
 
 function load_dependent_js(jsFiles, func) {

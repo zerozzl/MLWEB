@@ -3,7 +3,11 @@ package com.zerozzl.mlweb.web.action.admin;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.zerozzl.mlweb.common.tools.FormatUtils;
+import com.zerozzl.mlweb.quartz.job.DailyCleanJob;
 import com.zerozzl.mlweb.quartz.job.DailyVisitorInfoPersistentJob;
 import com.zerozzl.mlweb.quartz.job.HourlyVisitsCountPersistentJob;
 import com.zerozzl.mlweb.service.VisitorOpinionService;
@@ -12,12 +16,15 @@ import com.zerozzl.mlweb.web.action._BaseAction;
 public class AdminAction extends _BaseAction {
 
 	private static final long serialVersionUID = -1800846113557630796L;
+	private static Logger logger = LogManager.getLogger();
 	private VisitorOpinionService visitorOpinionService;
 	private HourlyVisitsCountPersistentJob hourlyVisitsCountPersistentJob;
 	private DailyVisitorInfoPersistentJob dailyVisitorInfoPersistentJob;
+	private DailyCleanJob dailyCleanJob;
 	
 	public String initNavLeft() {
 		ajaxObj.put("opinions", visitorOpinionService.countUnreadOpinions());
+		ajaxObj.put("cronjob", _getSessionUser().isIsSuperAdmin());
 		return "ajaxInvoSuccess";
 	}
 	
@@ -27,12 +34,38 @@ public class AdminAction extends _BaseAction {
 	}
 	
 	public String runHourlyVisitsCountPersistentJob() {
-		hourlyVisitsCountPersistentJob.execute();
+		try {
+			hourlyVisitsCountPersistentJob.execute();
+			ajaxObj.put("flag", 1);
+		} catch (Exception e) {
+			ajaxObj.put("flag", 0);
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		return "ajaxInvoSuccess";
 	}
 	
 	public String runDailyVisitorInfoPersistentJob() {
-		dailyVisitorInfoPersistentJob.execute();
+		try {
+			dailyVisitorInfoPersistentJob.execute();
+			ajaxObj.put("flag", 1);
+		} catch (Exception e) {
+			ajaxObj.put("flag", 0);
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return "ajaxInvoSuccess";
+	}
+	
+	public String runDailyCleanJob() {
+		try {
+			dailyCleanJob.execute();
+			ajaxObj.put("flag", 1);
+		} catch (Exception e) {
+			ajaxObj.put("flag", 0);
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		return "ajaxInvoSuccess";
 	}
 	
@@ -53,6 +86,10 @@ public class AdminAction extends _BaseAction {
 
 	public void setDailyVisitorInfoPersistentJob(DailyVisitorInfoPersistentJob dailyVisitorInfoPersistentJob) {
 		this.dailyVisitorInfoPersistentJob = dailyVisitorInfoPersistentJob;
+	}
+
+	public void setDailyCleanJob(DailyCleanJob dailyCleanJob) {
+		this.dailyCleanJob = dailyCleanJob;
 	}
 
 }

@@ -1,5 +1,13 @@
 <script>
-function show_visitor_opinion(item) {
+function show_visitor_opinion(arg1, arg2) {
+	if (arguments.length == 1) {
+		_show_visitor_opinion(arg1, true);
+	} else {
+		_show_visitor_opinion(arg1, arg2);
+	}
+}
+
+function _show_visitor_opinion(item, show_visitor) {
 	var container = $("#visitor-opinion-dialog-body"),
 			msg = container.find(".msg"), info = container.find(".dialog-info");
 	info.hide();
@@ -24,7 +32,13 @@ function show_visitor_opinion(item) {
 				} else {
 					$("#visitor-opinion-dialog-body-pic").html("无");
 				}
-				$("#visitor-opinion-dialog-body-visitorid").html("<a>" + opinion.visitorId + "</a>");
+				if(show_visitor) {
+					$("#visitor-opinion-dialog-body-visitorid").html("<a href=\"javascript:$('#visitor-opinion-dialog').modal('hide');$('#main').load('visitor_show.html', function(){show_visitor('"
+							+ opinion.visitorId +　"')});\">" + opinion.visitorId + "</a>");
+					$("#visitor-opinion-dialog-body-item-visitorid").show();
+				} else {
+					$("#visitor-opinion-dialog-body-item-visitorid").hide();
+				}
 				$("#visitor-opinion-dialog-body-createdate").html(opinion.creationDateS);
 				$("#visitor-opinion-dialog-body-title").html(opinion.title);
 				$("#visitor-opinion-dialog-body-content").html(opinion.content);
@@ -69,7 +83,7 @@ function show_visitor_opinion(item) {
 		  					<span id="visitor-opinion-dialog-body-createdate"></span>
 		  				</div>
 		  			</div>
-		  			<div class="item">
+		  			<div id="visitor-opinion-dialog-body-item-visitorid" class="item">
 						<div class="item-label">
 		  					<label for="visitor-opinion-dialog-body-visitorid">访客ID:</label>
 		  				</div>

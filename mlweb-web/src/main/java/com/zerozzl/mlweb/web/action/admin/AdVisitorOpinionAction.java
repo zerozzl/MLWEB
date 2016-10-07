@@ -22,12 +22,6 @@ public class AdVisitorOpinionAction extends _BaseAction {
 	private ByteArrayInputStream imageStream;
 	private VisitorOpinionService visitorOpinionService;
 
-	public String findUnreadOpinions() {
-		List<MLVisitorOpinion> opinions = visitorOpinionService.findUnreadOpinions();
-		ajaxObj.put("opinions", opinions);
-		return "ajaxInvoSuccess";
-	}
-
 	public String readOpinion() {
 		String uuid = _getRequestParameter("id");
 		uuid = StringUtils.isNotBlank(uuid) ? uuid.trim() : "";
@@ -96,6 +90,7 @@ public class AdVisitorOpinionAction extends _BaseAction {
 				page, DEFAULT_PAGE_SIZE, null, 0);
 
 		ajaxObj.put("pagedList", pagedList);
+		ajaxObj.put("deleteAuthority", _getSessionUser().isIsSuperAdmin());
 		return "ajaxInvoSuccess";
 	}
 

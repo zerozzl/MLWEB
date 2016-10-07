@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
+import com.zerozzl.mlweb.common.paging.OrderByParameter;
 import com.zerozzl.mlweb.common.paging.PagedBean;
 import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.dao.DetectionRecordDao;
@@ -113,6 +114,12 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 	}
 
 	@Override
+	public void deleteDetectionRecord(String uuid) throws IOException {
+		detectionRecordDao.delete(uuid);
+		FileUtils.deleteDirectory(new File(ConstantStub.initPath(ConstantStub.ROOT_DETECTION_RECORD, uuid)));
+	}
+
+	@Override
 	public long countDetectionRecords(int type, Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -121,16 +128,36 @@ public class DetectionRecordServiceImpl implements DetectionRecordService {
 	}
 
 	@Override
+	public long countDetectionRecords(int type) {
+		if(type < 1 || type > 3) {
+			type = 0;
+		}
+		return detectionRecordDao.countByType(type);
+	}
+
+	@Override
+	public long countByVisitor(String visitorId) {
+		return detectionRecordDao.countByVisitor(visitorId);
+	}
+
+	@Override
+	public List<MLDetectionRecord> findByVisitor(String visitorId) {
+		return MLDetectionRecord.init(detectionRecordDao.findByVisitor(
+				visitorId, OrderByParameter.init("detectDate")));
+	}
+
+	@Override
 	public PagedList findDetectionRecords(List<Integer> types, List<Integer> codes, Date begin, Date end, int page,
 			int pageSize, String sortColumn, int sortType) {
-		PagedBean pagedBean = null;
+		PagedBean pagedBean = new PagedBean(page, pageSize);
+		List<OrderByParameter> orders = null;
 		if (StringUtils.isNotBlank(sortColumn)) {
-			pagedBean = new PagedBean(page, pageSize, sortColumn, sortType);
+			orders = OrderByParameter.init(sortColumn, sortType);
 		} else {
-			pagedBean = new PagedBean(page, pageSize, "detectDate", 0);
+			orders = OrderByParameter.init("detectDate");
 		}
 
-		PagedList pagedList = detectionRecordDao.findByPage(types, codes, begin, end, pagedBean);
+		PagedList pagedList = detectionRecordDao.findByPage(types, codes, begin, end, orders, pagedBean);
 		@SuppressWarnings("unchecked")
 		List<MLDetectionRecord> dataList = MLDetectionRecord.init(pagedList.getCurrentPageList());
 		pagedList.setCurrentPageList(dataList);

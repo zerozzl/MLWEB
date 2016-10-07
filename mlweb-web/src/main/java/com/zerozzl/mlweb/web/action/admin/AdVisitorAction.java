@@ -6,8 +6,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
+import com.zerozzl.mlweb.service.DetectionRecordService;
+import com.zerozzl.mlweb.service.VisitorOpinionService;
 import com.zerozzl.mlweb.service.VisitorService;
 import com.zerozzl.mlweb.web.action._BaseAction;
 
@@ -15,6 +16,8 @@ public class AdVisitorAction extends _BaseAction {
 
 	private static final long serialVersionUID = -935530807629468816L;
 	private VisitorService visitorService;
+	private VisitorOpinionService visitorOpinionService;
+	private DetectionRecordService detectionRecordService;
 	
 	public String findVisitors() {
 		String ip = _getRequestParameter("inip"),
@@ -51,13 +54,34 @@ public class AdVisitorAction extends _BaseAction {
 			page = 1;
 		}
 
-		PagedList pagedList = visitorService.findVisitors(ip, country, province, city, begin, end,
-				page, DEFAULT_PAGE_SIZE, null, 0);
+		ajaxObj.put("pagedList", visitorService.findVisitors(ip, country, province, city,
+				begin, end,page, DEFAULT_PAGE_SIZE, null, 0));
+		return "ajaxInvoSuccess";
+	}
 
-		ajaxObj.put("pagedList", pagedList);
+	public String getVisitorInfo() {
+		String id = _getRequestParameter("id");
+		id = StringUtils.isNotBlank(id) ? id.trim() : "";
+		ajaxObj.put("opinion", visitorService.getVisitor(id));
 		return "ajaxInvoSuccess";
 	}
 	
+	public String findDetectionRecordByVisitor() {
+		String id = _getRequestParameter("id");
+		id = StringUtils.isNotBlank(id) ? id.trim() : "";
+		ajaxObj.put("records", detectionRecordService.findByVisitor(id));
+		ajaxObj.put("deleteAuthority", _getSessionUser().isIsSuperAdmin());
+		return "ajaxInvoSuccess";
+	}
+	
+	public String findOpinionByVisitor() {
+		String id = _getRequestParameter("id");
+		id = StringUtils.isNotBlank(id) ? id.trim() : "";
+		ajaxObj.put("opinions", visitorOpinionService.findByVisitor(id));
+		ajaxObj.put("deleteAuthority", _getSessionUser().isIsSuperAdmin());
+		return "ajaxInvoSuccess";
+	}
+
 	/********** get() and set() **********/
 	
 	@Override
@@ -67,6 +91,14 @@ public class AdVisitorAction extends _BaseAction {
 
 	public void setVisitorService(VisitorService visitorService) {
 		this.visitorService = visitorService;
+	}
+
+	public void setVisitorOpinionService(VisitorOpinionService visitorOpinionService) {
+		this.visitorOpinionService = visitorOpinionService;
+	}
+
+	public void setDetectionRecordService(DetectionRecordService detectionRecordService) {
+		this.detectionRecordService = detectionRecordService;
 	}
 	
 }

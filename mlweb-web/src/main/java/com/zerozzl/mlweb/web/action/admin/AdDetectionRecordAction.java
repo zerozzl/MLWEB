@@ -1,11 +1,14 @@
 package com.zerozzl.mlweb.web.action.admin;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.common.tools.FormatUtils;
@@ -71,6 +74,7 @@ public class AdDetectionRecordAction extends _BaseAction {
 				page, DEFAULT_PAGE_SIZE, null, 0);
 		
 		ajaxObj.put("pagedList", pagedList);
+		ajaxObj.put("deleteAuthority", _getSessionUser().isIsSuperAdmin());
 		return "ajaxInvoSuccess";
 	}
 	
@@ -82,6 +86,19 @@ public class AdDetectionRecordAction extends _BaseAction {
 			ajaxObj.put("record", record);
 		} else {
 			ajaxObj.put("flag", 0);
+		}
+		return "ajaxInvoSuccess";
+	}
+	
+	public String deleteDetectionRecord() {
+		String uuid = _getRequestParameter("id");
+		uuid = StringUtils.isNotBlank(uuid) ? uuid.trim() : "";
+		try {
+			detectionRecordService.deleteDetectionRecord(uuid);
+			ajaxObj.put("flag", 1);
+		} catch (IOException e) {
+			ajaxObj.put("flag", 0);
+			e.printStackTrace();
 		}
 		return "ajaxInvoSuccess";
 	}

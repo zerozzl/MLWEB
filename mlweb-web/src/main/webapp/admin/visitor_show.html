@@ -1,6 +1,321 @@
-<script>
-function show_visitor(uuid) {
-	alert(uuid);
+<style>
+.main .page-header {
+	margin-top: 15px;
+	margin-bottom: 10px;
 }
+
+#visitor-show-info {
+	padding: 10px 0px;
+}
+
+#visitor-show-info>.item {
+	overflow: auto;
+	margin-bottom: 5px;
+}
+
+#visitor-show-info>.item>.label {
+	float: left;
+	font-weight: bold;
+	color: #333333;
+	font-size: 14px;
+	width: 80px;
+	text-align: right;
+}
+</style>
+<script>
+var visitor_id = null;
+
+function show_visitor(uuid) {
+	visitor_id = uuid;
+	get_visitor_info();
+	search_detection_record();
+	search_opinion();
+}
+
+function refresh_visitor() {
+	get_visitor_info();
+	search_detection_record();
+	search_opinion();
+}
+
+function get_visitor_info() {
+	var container = $("#visitor-show-info"), msg_container = $("#visitor-msg-container");
+	container.hide();
+	$("#visitor-show-info-id").html("");
+	$("#visitor-show-info-ip").html("");
+	$("#visitor-show-info-area").html("");
+	$("#visitor-show-info-date").html("");
+	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
+	msg_container.show();
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "getVisitorInfo.action",
+		data: "id=" + visitor_id,
+		success : function(data, textStatus) {
+			var item = data.ajaxObj.opinion;
+			if(typeof (item) != "undefined" &&　item != null) {
+				msg_container.hide();
+				var area = "";
+				if(item.country == "") {
+					area += "未知-";
+				} else {
+					area += item.country + "-";
+				}
+				if(item.province == "") {
+					area += "未知-";
+				} else {
+					area += item.province + "-";
+				}
+				if(item.city == "") {
+					area += "未知";
+				} else {
+					area += item.city;
+				}
+				$("#visitor-show-info-id").html(item.DBID);
+				$("#visitor-show-info-ip").html(item.ip);
+				$("#visitor-show-info-area").html(area);
+				$("#visitor-show-info-date").html(item.loginDateS);
+				container.show();
+			} else {
+				msg_container.html(ERROR_MSG);
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg_container.html(ERROR_MSG);
+		}
+	});
+}
+
+function search_detection_record() {
+	var container = $("#detection-record-container"), msg_container = $("#detection-msg-container");
+	container.html("");
+	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
+	msg_container.show();
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "findDetectionRecordByVisitor.action",
+		data: "id=" + visitor_id,
+		success : function(data, textStatus) {
+			var items = data.ajaxObj.records,
+				deleteAuthority = data.ajaxObj.deleteAuthority;
+			if(typeof (items) != "undefined" &&　items != null
+					&& items.length > 0) {
+				msg_container.hide();
+				fill_detection_datacontainer(container, items, deleteAuthority);
+			} else {
+				msg_container.html("<p class='help-block'>暂无相关记录</p>");
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg_container.html(ERROR_MSG);
+		}
+	});
+}
+
+function fill_detection_datacontainer(container, datas, deleteAuthority) {
+	var max_width = container.width() - 20,
+		item_num = parseInt(max_width / 220),
+		remaining_width = max_width - item_num * 220,
+		margin_right = parseInt(remaining_width / item_num) + 8;
+	for(var i = 0; i < datas.length; i++) {
+		var data = datas[i], item_attr = "", code = "", operator = "";
+		if(data.detectCode == 0) {
+			code = "<div class='label label-primary'>未检测</div>";
+		} else if(data.detectCode == 1) {
+			code = "<div class='label label-success'>成功</div>";
+		} else if(data.detectCode == -1) {
+			code = "<div class='label label-danger'>失败</div>";
+		} else {
+			code = "<div class='label label-default'>异常</div>";
+		}
+		item_attr = "style='margin-right:" + margin_right + "px;'";
+		if(deleteAuthority) {
+			item_attr += " onmouseover='show_waterfall_item_operator(this);' onmouseout='hide_waterfall_item_operator(this);'";
+			operator = "<div class='item-operator'><a onclick='delete_detection_record(\""
+					+ data.DBID + "\");'><i class='icon icon-close'></i></a></div>";
+		}
+		var item = "<div class='detection-record-item' " + item_attr + ">"
+				+ operator + "<div class='item-img'><a onclick='show_detection_record(\""
+				+ data.DBID + "\", false);'><img src='getDetectionImage.action?uuid=" + data.DBID + "'></a></div><div class='item-info'><div class='content'><div class='tag'><i class='icon icon-black icon-tag'></i></div><div class='title'>"
+				+ data.detectTypeS + "</div>" + code + "</div><div class='content'><div class='tag'><i class='icon icon-black icon-clock'></i></div><div class='font'>"
+				+ data.detectDateS + "</div></div></div></div>";
+		container.append(item);
+	}
+}
+
+function delete_detection_record(id) {
+	init_dialog_msg(3, "删除确认",
+			"<i class='icon icon-orange icon-alert'></i>是否删除选定检测记录？",
+			["确认删除"], ["confirm_delete_detection_record('" + id + "')"]);
+	$("#dialog-msg").modal("show");
+}
+
+function confirm_delete_detection_record(id) {
+	init_dialog_msg(0, "正在删除",
+			"<div style='padding:10px 0px;text-align:center;'><img src='../images/sys/loading_l.gif' /></div>");
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "deleteDetectionRecord.action",
+		data: "id=" + id,
+		success : function(data, textStatus) {
+			if(data.ajaxObj.flag == 1) {
+				search_detection_record();
+				$("#dialog-msg").modal("hide");
+			} else {
+				init_dialog_msg(1, "删除失败", "<i class='icon icon-red icon-cross'></i>删除检测记录失败", ["返回"]);
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			init_dialog_msg(1, ERROR_MSG, ["返回"]);
+		}
+	});
+}
+
+function search_opinion() {
+	var table = $("#opinion-table"), msg_container = $("#opinion-msg-container");
+	table.find("tr:not(:first)").remove();
+	msg_container.html("<div class='loading'><img src='../images/sys/loading_l.gif' /></div>");
+	msg_container.show();
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "findOpinionByVisitor.action",
+		data: "id=" + visitor_id,
+		success : function(data, textStatus) {
+			var opinions = data.ajaxObj.opinions, deleteAuthority = data.ajaxObj.deleteAuthority;
+			if(typeof (opinions) != "undefined" &&　opinions != null
+					&& opinions.length > 0) {
+				msg_container.hide();
+				fill_opinion_datatable(table, opinions, deleteAuthority);
+			} else {
+				msg_container.html("<p class='help-block'>暂无相关记录</p>");
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			msg_container.html(ERROR_MSG);
+		}
+	});
+}
+
+function fill_opinion_datatable(table, datas, deleteAuthority) {
+	for(var i = 0; i < datas.length; i++) {
+		var item = datas[i], title_class="", image = "", status = "", operator = "";
+		if(item.status == 0) {
+			title_class = "font-blod";
+		}
+		if(item.includePic == "1") {
+			image = "<i class='icon icon-blue icon-image'></i>";
+		}
+		if(item.status == "1") {
+			status = "<i class='icon icon-blue icon-mail-open'></i>";
+		} else {
+			status = "<i class='icon icon-blue icon-envelope-closed'></i>";
+		}
+		if(deleteAuthority == true) {
+			operator = "<a class='operator' onclick='delete_visitor_opinion(\""
+					+ item.DBID + "\");'><i class='icon icon-red icon-trash'></i></a>";
+		}
+				
+		var tr = "<tr><td>" + (i+1) + "</td><td><a class='" + title_class + "' uuid='" + item.DBID
+				+ "' onclick='show_visitor_opinion(this, false);'>" + item.title + "</a></td><td>"
+				+ image + "</td><td>" + status + "</td><td>"
+				+ item.creationDateS + "</td><td>" + operator + "</td></tr>";
+		table.append(tr);
+	}
+}
+
+function delete_visitor_opinion(id) {
+	init_dialog_msg(3, "删除确认",
+			"<i class='icon icon-orange icon-alert'></i>是否删除选定访客意见？",
+			["确认删除"], ["confirm_delete_visitor_opinion('" + id + "')"]);
+	$("#dialog-msg").modal("show");
+}
+
+function confirm_delete_visitor_opinion(id) {
+	init_dialog_msg(0, "正在删除",
+			"<div style='padding:10px 0px;text-align:center;'><img src='../images/sys/loading_l.gif' /></div>");
+	$.ajax({
+		traditional : true,
+		type : "post",
+		dataType : "json",
+		cache : false,
+		timeout : 10000,
+		url : "deleteVisitorOpinion.action",
+		data: "id=" + id,
+		success : function(data, textStatus) {
+			if(data.ajaxObj.flag == 1) {
+				search_opinion();
+				$("#dialog-msg").modal("hide");
+			} else {
+				init_dialog_msg(1, "删除失败", "<i class='icon icon-red icon-cross'></i>删除访客意见失败", ["返回"]);
+			}
+		},
+		error : function(jqXHR, status, errorThrown) {
+			init_dialog_msg(1, ERROR_MSG, ["返回"]);
+		}
+	});
+}
+
 </script>
-<h2 class="page-header">访客详情</h2>
+<div class="page-operate-header">
+	<div class="text">访客详情</div>
+	<div class="operators">
+		<a class="operator" onclick="refresh_visitor();"><i class="icon32 icon-green icon-refresh"></i></a>
+	</div>
+</div>
+<div id="visitor-show-info">
+	<div class="item">
+		<div class="label">访客ID:</div>
+		<div class="text" id="visitor-show-info-id">123346dfgdgf</div>
+	</div>
+	<div class="item">
+		<div class="label">IP地址:</div>
+		<div class="text" id="visitor-show-info-ip">123346dfgdgf</div>
+	</div>
+	<div class="item">
+		<div class="label">区域:</div>
+		<div class="text" id="visitor-show-info-area">123346dfgdgf</div>
+	</div>
+	<div class="item">
+		<div class="label">访问日期:</div>
+		<div class="text" id="visitor-show-info-date">123346dfgdgf</div>
+	</div>
+</div>
+<div id="visitor-msg-container" class="msg-container"></div>
+
+<h2 class="page-header">检测记录</h2>
+<div id="detection-record-container" class="detection-record-showcase"></div>
+<div id="detection-msg-container" class="msg-container"></div>
+
+<h2 class="page-header">访客意见</h2>
+<div class="table-responsive">
+	<table id="opinion-table" class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th width="5%">序号</th>
+				<th>标题</th>
+				<th width="5%">图片</th>
+				<th width="5%">状态</th>
+				<th width="12%">提交日期</th>
+				<th width="5%">操作</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<div id="opinion-msg-container" class="msg-container"></div>
+</div>

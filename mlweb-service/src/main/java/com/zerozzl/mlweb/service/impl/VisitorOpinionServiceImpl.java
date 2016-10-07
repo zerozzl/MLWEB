@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.zerozzl.mlweb.common.configuration.ConstantStub;
+import com.zerozzl.mlweb.common.paging.OrderByParameter;
 import com.zerozzl.mlweb.common.paging.PagedBean;
 import com.zerozzl.mlweb.common.paging.PagedList;
 import com.zerozzl.mlweb.dao.VisitorOpinionDao;
@@ -84,7 +85,7 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 
 	@Override
 	public List<MLVisitorOpinion> findUnreadOpinions() {
-		return MLVisitorOpinion.init(visitorOpinionDao.findByStatus(0, null, 0));
+		return MLVisitorOpinion.init(visitorOpinionDao.findByStatus(0, OrderByParameter.init("createDate")));
 	}
 
 	@Override
@@ -109,15 +110,17 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 		content = StringUtils.isNotBlank(content) ? content.trim() : "";
 		visitorId = StringUtils.isNotBlank(visitorId) ? visitorId.trim() : "";
 		
-		PagedBean pagedBean = null;
+		PagedBean pagedBean = new PagedBean(page, pageSize);
+		List<OrderByParameter> orders = null;
 		if(StringUtils.isNotBlank(sortColumn)) {
-			pagedBean = new PagedBean(page, pageSize, sortColumn, sortType);
+			orders = OrderByParameter.init(sortColumn, sortType);
 		} else {
-			pagedBean = new PagedBean(page, pageSize, "createDate", 0);
+			orders = OrderByParameter.init("status", 1);
+			orders.add(new OrderByParameter("createDate"));
 		}
 		
 		PagedList pagedList = visitorOpinionDao.findByPage(
-				title, content, visitorId, status, begin, end, pagedBean);
+				title, content, visitorId, status, begin, end, orders, pagedBean);
 		@SuppressWarnings("unchecked")
 		List<MLVisitorOpinion> dataList = MLVisitorOpinion.init(pagedList.getCurrentPageList());
 		pagedList.setCurrentPageList(dataList);
@@ -142,6 +145,11 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 		}
 		return image;
 	}
+	
+	@Override
+	public long countOpinions() {
+		return visitorOpinionDao.count();
+	}
 
 	@Override
 	public long countOpinions(Date date) {
@@ -151,4 +159,16 @@ public class VisitorOpinionServiceImpl implements VisitorOpinionService {
 				calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 	}
 	
+	@Override
+	public long countByVisitor(String visitorId) {
+		return visitorOpinionDao.countByVisitor(visitorId);
+	}
+	
+	@Override
+	public List<MLVisitorOpinion> findByVisitor(String visitorId) {
+		List<OrderByParameter> orders = OrderByParameter.init("status", 1);
+		orders.add(new OrderByParameter("createDate"));
+		return MLVisitorOpinion.init(visitorOpinionDao.findByVisitor(visitorId, orders));
+	}
+
 }

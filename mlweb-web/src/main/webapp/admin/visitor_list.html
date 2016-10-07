@@ -29,7 +29,6 @@ function init_visitor_list() {
 		changeMonth: true,
 		changeYear: true
 	});
-	
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search_visitor();
 	});
@@ -75,11 +74,12 @@ function search_visitor() {
 function fill_datatable(table, datas) {
 	for(var i = 0; i < datas.length; i++) {
 		var item = datas[i];
-		var tr = "<tr><td>" + (i+1)
-				+ "</td><td><a href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
-				+ item.DBID +　"')});\">"　+ item.ip + "</a></td><td>"
+		var tr = "<tr><td>" + (i+1) + "</td><td>"　+ item.ip + "</td><td>"
 				+ item.country + "</td><td>" + item.province + "</td><td>"
-				+ item.city + "</td><td>" + item.loginDateS + "</td></tr>";
+				+ item.city + "</td><td>" + item.countOfDetection + "</td><td>"
+				+ item.countOfOpinions + "</td><td>" + item.loginDateS
+				+ "</td><td><a class='operator' href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
+				+ item.DBID +　"')});\"><i class='icon icon-blue icon-zoomin'></a></td></tr>";
 		table.append(tr);
 	}
 }
@@ -122,11 +122,14 @@ function fill_datatable(table, datas) {
 		<thead>
 			<tr>
 				<th width="5%">序号</th>
-				<th width="20%">IP地址</th>
-				<th width="15%">国家</th>
-				<th width="15%">省份</th>
-				<th width="15%">城市</th>
-				<th>登录日期</th>
+				<th>IP地址</th>
+				<th width="12%">国家</th>
+				<th width="12%">省份</th>
+				<th width="12%">城市</th>
+				<th width="7%">检测数</th>
+				<th width="7%">意见数</th>
+				<th width="15%">登录日期</th>
+				<th width="5%">操作</th>
 			</tr>
 		</thead>
 		<tbody></tbody>

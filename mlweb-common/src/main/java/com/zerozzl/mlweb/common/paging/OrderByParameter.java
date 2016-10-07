@@ -38,13 +38,26 @@ public class OrderByParameter {
 		return params;
 	}
 	
-	public String buildStatement() {
-		return this.buildStatement("o");
+	public static String buildStatement(List<OrderByParameter> orders) {
+		String orderByStat = "";
+		if(orders != null && !orders.isEmpty()) {
+			orderByStat = " order by ";
+			for (int i = 0; i < orders.size(); i++) {
+				orderByStat += orders.get(i).toStatement();
+				if(i < orders.size() - 1) {
+					orderByStat += ", ";
+				}
+			}
+		}
+		return orderByStat;
 	}
 	
-	public String buildStatement(String  alias) {
-		String stat = " " + alias + "." + this.getAttributeName()
-				+ " " + this.getSortType();
+	private String toStatement() {
+		return this.toStatement("o");
+	}
+	
+	private String toStatement(String alias) {
+		String stat = alias + "." + this.getAttributeName() + " " + this.getSortType();
 		return stat;
 	}
 	
@@ -53,7 +66,7 @@ public class OrderByParameter {
 	}
 	
 	public String getSortType() {
-		return sortType == 0 ? " DESC " : " ASC ";
+		return sortType == 0 ? "DESC" : "ASC";
 	}
 	
 }

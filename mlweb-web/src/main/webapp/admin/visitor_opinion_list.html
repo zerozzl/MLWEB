@@ -20,8 +20,6 @@ function init_visitor_opinion_list() {
 	$("#pagination-container").load("../common/pagination.html", function() {
 		search_opinion();
 	});
-	$("#visitor-opinion-dialog-container").load("visitor_opinion_show.html");
-	$("#dialog-msg-container").load("../common/dialog_msg.html");
 }
 
 function toPage(page) {
@@ -44,11 +42,12 @@ function search_opinion() {
 		data: $("#search-form").serialize(),
 		success : function(data, textStatus) {
 			var pagedList = data.ajaxObj.pagedList,
-					items = pagedList.currentPageList;
+					items = pagedList.currentPageList,
+					deleteAuthority = data.ajaxObj.deleteAuthority;
 			if(typeof (items) != "undefined" &&　items != null
 					&& items.length > 0) {
 				msg_container.hide();
-				fill_datatable(table, items);
+				fill_datatable(table, items, deleteAuthority);
 			} else {
 				msg_container.html("<p class='help-block'>暂无相关记录</p>");
 			}
@@ -61,30 +60,36 @@ function search_opinion() {
 	});
 }
 
-function fill_datatable(table, datas) {
+function fill_datatable(table, datas, deleteAuthority) {
 	for(var i = 0; i < datas.length; i++) {
-		var item = datas[i], title="", image = "", operator = "";
-		if(item.status == 1) {
-			title = "<a uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a>";
-		} else {
-			title = "<a class='font-blod' uuid='" + item.DBID + "' onclick='show_visitor_opinion(this);'>" + item.title + "</a>";
+		var item = datas[i], title_class="", image = "", status = "", operator = "";
+		if(item.status == 0) {
+			title_class = "font-blod";
 		}
 		if(item.includePic == "1") {
 			image = "<i class='icon icon-blue icon-image'></i>";
 		}
-		operator = "<a class='operator' onclick='delete_visitor_opinion(\""
-				+ item.DBID + "\", \"" + item.title + "\");'><i class='icon icon-red icon-trash icon-click'></i></a>";
-		var tr = "<tr><td>" + (i+1) + "</td><td>" + title
-				+ "</td><td>" + image + "</td><td>" + item.statusS + "</td><td>"
-				+ item.creationDateS + "</td><td><a visitorid='" + item.visitorId + "'>"
-				+ item.visitorId + "</a></td><td>" + operator + "</td></tr>";
+		if(item.status == "1") {
+			status = "<i class='icon icon-blue icon-mail-open'></i>";
+		} else {
+			status = "<i class='icon icon-blue icon-envelope-closed'></i>";
+		}
+		if(deleteAuthority == true) {
+			operator = "<a class='operator' onclick='delete_visitor_opinion(\""
+					+ item.DBID + "\");'><i class='icon icon-red icon-trash'></i></a>";
+		}
+		var tr = "<tr><td>" + (i+1) + "</td><td><a class='" + title_class + "' uuid='" + item.DBID
+				+ "' onclick='show_visitor_opinion(this);'>" + item.title + "</a></td><td>"
+				+ image + "</td><td>" + status + "</td><td>"
+				+ item.creationDateS + "</td><td><a href=\"javascript:$('#main').load('visitor_show.html', function(){show_visitor('"
+				+ item.visitorId +　"')});\">" + item.visitorId + "</a></td><td>" + operator + "</td></tr>";
 		table.append(tr);
 	}
 }
 
-function delete_visitor_opinion(id, title) {
+function delete_visitor_opinion(id) {
 	init_dialog_msg(3, "删除确认",
-			"<i class='icon icon-orange icon-alert'></i>是否删除访客意见“" + title + "”？",
+			"<i class='icon icon-orange icon-alert'></i>是否删除选定访客意见？",
 			["确认删除"], ["confirm_delete_visitor_opinion('" + id + "')"]);
 	$("#dialog-msg").modal("show");
 }
@@ -168,6 +173,3 @@ function confirm_delete_visitor_opinion(id) {
 	<div id="msg-container" class="msg-container"></div>
 	<div id="pagination-container"></div>
 </div>
-
-<div id="visitor-opinion-dialog-container"></div>
-<div id="dialog-msg-container"></div>

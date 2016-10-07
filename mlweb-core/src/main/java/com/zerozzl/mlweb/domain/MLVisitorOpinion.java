@@ -81,9 +81,5 @@ public class MLVisitorOpinion implements Serializable {
 	public int getStatus() {
 		return Status;
 	}
-	
-	public String getStatusS() {
-		return Status == 0 ? "未读" : "已读";
-	}
 
 }

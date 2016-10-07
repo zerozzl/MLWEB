@@ -152,7 +152,7 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 	}
 
 	protected List<T> find(final String property, final List<QueryParameter> queryParams,
-			final List<OrderByParameter> orderBys) {
+			final List<OrderByParameter> orders) {
 		StringBuilder buf = new StringBuilder();
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (StringUtils.isNotBlank(property)) {
@@ -167,15 +167,7 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 			}
 		}
 
-		if (orderBys != null && orderBys.size() > 0) {
-			String orderByStat = " order by ";
-			for (OrderByParameter obp : orderBys) {
-				orderByStat = orderByStat + obp.buildStatement();
-			}
-			orderByStat = orderByStat.substring(0, orderByStat.length() - 1);
-			buf.append(orderByStat);
-		}
-		
+		buf.append(OrderByParameter.buildStatement(orders));
 		return this.find(buf.toString(), params);
 	}
 
@@ -183,7 +175,7 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 		return this.findByPage(queryParams, null, pageBean);
 	}
 
-	protected PagedList findByPage(List<QueryParameter> queryParams, List<OrderByParameter> orderBys,
+	protected PagedList findByPage(List<QueryParameter> queryParams, List<OrderByParameter> orders,
 			PagedBean pageBean) {
 		StringBuilder countHql = new StringBuilder(), hql = new StringBuilder();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -199,15 +191,7 @@ public class _GenericDaoImpl<T, PK extends Serializable> implements _GenericDao<
 			}
 		}
 
-		if (orderBys != null && orderBys.size() > 0) {
-			String orderByStat = " order by ";
-			for (OrderByParameter obp : orderBys) {
-				orderByStat = orderByStat + obp.buildStatement();
-			}
-			orderByStat = orderByStat.substring(0, orderByStat.length() - 1);
-			hql.append(orderByStat);
-		}
-		
+		hql.append(OrderByParameter.buildStatement(orders));
 		return this.findByPage(countHql.toString(), hql.toString(), params, pageBean);
 	}
 

@@ -19,6 +19,13 @@ import com.zerozzl.mlweb.persistent.VisitorOpinion;
 public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, String> implements VisitorOpinionDao {
 
 	@Override
+	public long count() {
+		@SuppressWarnings("rawtypes")
+		List list = super.find("select count(DBID) from VisitorOpinion");
+		return (long) list.get(0);
+	}
+
+	@Override
 	public long countByStatus(int status) {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("status", status);
@@ -49,21 +56,32 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 	}
 
 	@Override
-	public List<VisitorOpinion> findByStatus(int status, String sortColumn, int sortType) {
-		List<OrderByParameter> orders = null;
-		if(StringUtils.isNotBlank(sortColumn)) {
-			orders = OrderByParameter.init(sortColumn.trim(), sortType);
-		} else {
-			orders = OrderByParameter.init("createDate");
-		}
+	public long countByVisitor(String visitorId) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("visitorId", visitorId);
+		@SuppressWarnings("rawtypes")
+		List list = super.find("select count(DBID) from VisitorOpinion where visitorId = :visitorId", params);
+		return (long) list.get(0);
+	}
+
+	@Override
+	public List<VisitorOpinion> findByStatus(int status, List<OrderByParameter> orders) {
 		return super.find(QueryParameter.init("status", status), orders);
 	}
 
 	@Override
-	public PagedList findByPage(String title, String content, String visitorId,
-			List<Integer> status, Date begin, Date end, PagedBean pagedBean) {
+	public List<VisitorOpinion> findByVisitor(String visitorId, List<OrderByParameter> orders) {
 		List<QueryParameter> params = new ArrayList<QueryParameter>();
-		List<OrderByParameter> orders = null;
+		if(StringUtils.isNotBlank(visitorId)) {
+			params.add(new QueryParameter("visitorId", visitorId));
+		}
+		return super.find(params, orders);
+	}
+
+	@Override
+	public PagedList findByPage(String title, String content, String visitorId, List<Integer> status, Date begin,
+			Date end, List<OrderByParameter> orders, PagedBean pagedBean) {
+		List<QueryParameter> params = new ArrayList<QueryParameter>();
 		
 		if(StringUtils.isNotBlank(title)) {
 			params.add(new QueryParameter("title", 7, "%" + title + "%"));
@@ -84,9 +102,6 @@ public class VisitorOpinionDaoImpl extends _GenericDaoImpl<VisitorOpinion, Strin
 			params.add(new QueryParameter("createDate", "endDate", 5, end));
 		}
 		
-		if(StringUtils.isNotBlank(pagedBean.getSortColumn())) {
-			orders = OrderByParameter.init(pagedBean.getSortColumn(), pagedBean.getSortOrder());
-		}
 		return super.findByPage(params, orders, pagedBean);
 	}
 
