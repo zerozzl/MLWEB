@@ -6,19 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="icon" href="images/sys/favicon.ico">
+<link rel="icon" href="../images/sys/favicon.ico">
 <title>MLWEB用户体验</title>
-<link href="bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<link href="css/icons.css" rel="stylesheet">
+<link href="../bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/index.css" rel="stylesheet">
 <!--[if lt IE 9]>
 <script src="bootstrap/support/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="bootstrap/support/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 <style>
-body {
-	background-color: #000000;
-}
-
 #bg {
 	position: absolute;
 	top: 0px;
@@ -35,37 +31,6 @@ body {
 	-o-filter: blur(0px);
 	-ms-filter: blur(0px);
 	filter: blur(0px);
-}
-
-.navbar {
-	background-color: #000000;
-	border: none;
-	height: 50px;
-}
-
-.navbar-brand {
-	padding: 12px 20px;
-}
-
-.navbar-brand>img {
-	height: 26px;
-}
-
-.navbar-nav>li>a {
-	margin: 10px 20px;
-	font-family: 'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-	font-size: 18px;
-	font-weight: 400 !important;
-	cursor: pointer;
-	padding: 5px 0px;
-}
-
-.navbar-default .navbar-nav>li>a {
-	color: #ffffff;
-}
-
-.navbar-default .navbar-nav>li>a:hover {
-	color: #66bbff;
 }
 
 .but {
@@ -97,17 +62,19 @@ body {
 			<button type="button" class="navbar-toggle collapsed"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
 				aria-controls="navbar">
-				<span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span>
+				<span class="sr-only">切换导航</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="index.html">
-				<img src="images/sys/logo_web.png" />
+			<a class="navbar-brand" href="../index.html">
+				<img src="../images/sys/logo_web.png" />
 			</a>
 		</div>
 		<div id="navbar" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a>图片识别</a></li>
-				<li><a>手写数字识别</a></li>
+				<li><a href="image_recognize.html">图片识别</a></li>
+				<li><a href="handwritten_recognize.html">手写数字识别</a></li>
 				<li><a>我要吐槽</a></li>
 			</ul>
 		</div>
@@ -135,12 +102,8 @@ body {
 </div>
 
 <!-- ================================================== -->
-<script src="jquery/jquery-1.11.3.min.js"></script>
-<script src="bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="bootstrap/support/assets/js/ie10-viewport-bug-workaround.js"></script>
-<script src="test/particle.js"></script>
-<script>
-draw_particle("bg");
-</script>
+<script src="../jquery/jquery-1.11.3.min.js"></script>
+<script src="../bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="../bootstrap/support/assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>

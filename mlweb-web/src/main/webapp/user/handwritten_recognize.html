@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../images/sys/favicon.ico">
+<title>MLWEB用户体验</title>
+<link href="../bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/index.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="bootstrap/support/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="bootstrap/support/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<style>
+
+.but {
+	width: 230px;
+	padding-top: 13px;
+	padding-bottom: 13px;
+	background: transparent;
+	border: 1px solid #ffffff;
+	font-family: 'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+	font-weight: 400 !important;
+	color: #ffffff;
+	font-size: 18px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.but:hover {
+	border: 1px solid #66bbff;
+	color: #66bbff;
+}
+
+#hand-written-container {
+	background-color: #ffffff;
+	width: 100%;
+	height: 400px;
+}
+
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="../index.html">
+				<img src="../images/sys/logo_web.png" />
+			</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="image_recognize.html">图片识别</a></li>
+				<li><a href="handwritten_recognize.html">手写数字识别</a></li>
+				<li><a>我要吐槽</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="container">
+	<div class="row">
+	  <div class="col-md-6 col-md-offset-3" style="margin-top:30px;padding:25px;">
+	  	<div id="hand-written-container"></div>
+	  </div>
+	</div>
+	<div class="row" style="margin-top:30px;">
+		<div class="col-md-6 col-md-offset-3" style="text-align:center;">
+			<button class="but">识别</button>
+			<button class="but" onclick="clear_drawboard();">清除</button>
+		</div>
+	</div>
+</div>
+
+<!-- ================================================== -->
+<script src="../jquery/jquery-1.11.3.min.js"></script>
+<script src="../bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="../js/user/drawBoard.js"></script>
+<script src="../bootstrap/support/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script>
+DrawBoard.renderDrawer('hand-written-container', {
+	penColor : '#FF0000',
+	penWidth : '1px'
+});
+
+function clear_drawboard() {
+	DrawBoard.redo();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+body {
+	background-color: #000000;
+}
+
+.navbar {
+	background-color: #000000;
+	border: none;
+	height: 50px;
+}
+
+.navbar-brand {
+	padding: 12px 20px;
+}
+
+.navbar-brand>img {
+	height: 26px;
+}
+
+.navbar-nav>li>a {
+	margin: 10px 20px;
+	font-family: 'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+	font-size: 18px;
+	font-weight: 400 !important;
+	cursor: pointer;
+	padding: 5px 0px;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+	color: #66bbff;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #ffffff;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffffff;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: #66bbff;
+}
